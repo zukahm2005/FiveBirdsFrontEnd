@@ -1,0 +1,22 @@
+.header-container{
+    background-color: rgb(175, 223, 240);
+    max-width: 100%;
+   
+
+    .header-container_wrapper{
+        max-width: 80%;
+        display: grid;
+        grid-template-columns: repeat(3,1fr);
+        justify-content: space-between;
+        margin: 0 auto;
+        align-items: center;
+        .header-nav{
+            gap: 1rem;
+            justify-content: space-between;
+          
+        }
+        .header-component{
+            text-align: end;
+        }
+    }
+}
