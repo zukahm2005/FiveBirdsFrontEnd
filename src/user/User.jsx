@@ -3,6 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import Footer from "./footer/Footer";
 import Login from "./header/components/login/Login";
 import Register from "./header/components/register/Register";
+import ForgotPassword from "./header/components/forgotPassword/ForgotPassword";
 import HeaderComponent from "./header/HeaderComponent";
 import Contact from "./main/pages/contacts/Contact";
 import Home from "./main/pages/home/Home";
@@ -16,6 +17,7 @@ const routes = [
   { path: "/news", element: <New /> },
   { path: "/login", element: <Login /> },
   { path: "/register", element: <Register /> },
+  { path: "/forgot-password", element: <ForgotPassword /> },
 ];
 
 const User = () => {

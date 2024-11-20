@@ -1,13 +1,35 @@
 import React from "react";
-import { Form, Input, Button } from "antd";
+import { Form, Input, Button, message } from "antd";
 import { useNavigate } from "react-router-dom";
+import userApi from "../../../../api/userApi/UserApi";
 import "./login.scss";
 
 const Login = () => {
   const navigate = useNavigate();
 
-  const onFinish = (values) => {
-    console.log("Login values:", values);
+  const onFinish = async (values) => {
+    try {
+      const payload = {
+        Username: values.username,
+        Password: values.password,
+      };
+
+      const response = await userApi.post("/login", payload);
+
+      if (response.status === 200) {
+        message.success(response.data.message);
+        navigate("/dashboard");
+      } else {
+        message.error("Failed to login!");
+      }
+    } catch (error) {
+      console.error("Error logging in:", error);
+
+      const errorMessage =
+        error.response?.data?.message ||
+        "Login failed! Please check your credentials.";
+      message.error(errorMessage);
+    }
   };
 
   return (
@@ -19,16 +41,22 @@ const Login = () => {
         className="login-form"
       >
         <Form.Item
-          label="Email"
-          name="email"
-          rules={[{ required: true, message: "Please input your email!" }]}
+          label="Username"
+          name="username"
+          rules={[
+            { required: true, message: "Please input your username!" },
+            { min: 3, message: "Username must be at least 3 characters!" },
+          ]}
         >
-          <Input type="email" placeholder="Enter your email" />
+          <Input placeholder="Enter your username" />
         </Form.Item>
         <Form.Item
           label="Password"
           name="password"
-          rules={[{ required: true, message: "Please input your password!" }]}
+          rules={[
+            { required: true, message: "Please input your password!" },
+            { min: 6, message: "Password must be at least 6 characters!" },
+          ]}
         >
           <Input.Password placeholder="Enter your password" />
         </Form.Item>
@@ -38,11 +66,13 @@ const Login = () => {
           </Button>
         </Form.Item>
         <Form.Item>
-          <Button
-            type="link"
-            onClick={() => navigate("/register")}
-          >
+          <Button type="link" onClick={() => navigate("/register")}>
             Don't have an account? Register here
+          </Button>
+        </Form.Item>
+        <Form.Item>
+          <Button type="link" onClick={() => navigate("/forgot-password")}>
+            Forgot Password?
           </Button>
         </Form.Item>
       </Form>

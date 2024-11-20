@@ -1,10 +1,37 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate  } from "react-router-dom";
 import "./headercomponent.scss";
 import Logo from "./logo/Logo";
+import { Modal, Button, message } from "antd";
 import { FaUserCircle } from "react-icons/fa";
 
 const HeaderComponent = () => {
+
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    Modal.confirm({
+      title: "Confirm Logout",
+      content: "Are you sure you want to logout?",
+      okText: "Yes",
+      cancelText: "No",
+      onOk: () => {
+        localStorage.removeItem("token");
+        
+        message.success("Logged out successfully!");
+
+        navigate("/login");
+      },
+      onCancel: () => {
+        message.info("Logout canceled.");
+      },
+    });
+  };
+
+  const isLoggedIn = document.cookie.split(';').some((cookie) => cookie.trim().startsWith('token'));
+  console.log(isLoggedIn)
+
+
   return (
     <div className="header-container">
       <div className="header-container_wrapper">
@@ -26,10 +53,15 @@ const HeaderComponent = () => {
           </nav>
         </div>
         <div className="header-component">
-          <Link to="/login">
-           
-            <FaUserCircle />
-          </Link>
+          {isLoggedIn ? (
+            <Button type="primary" onClick={handleLogout}>
+              Logout
+            </Button>
+          ) : (
+            <Link to="/login">
+              <FaUserCircle />
+            </Link>
+          )}
         </div>
       </div>
     </div>

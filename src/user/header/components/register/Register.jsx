@@ -1,15 +1,39 @@
 import React from "react";
 import { Form, Input, Button } from "antd";
 import { useNavigate } from "react-router-dom";
+import userApi from '../../../../api/userApi/UserApi';
+import { message } from "antd";
 import "./register.scss";
 
 const Register = () => {
   const navigate = useNavigate();
 
-  const onFinish = (values) => {
-    console.log("Register values:", values);
+  const onFinish = async (values) => {
+    try {
+      const payload = {
+        UserName: values.name,
+        Email: values.email,
+        Password: values.password,
+      };
+  
+      const response = await userApi.post("/register", payload);
+  
+      if (response.status === 200 && response.data?.message) {
+        message.success(response.data.message);
+        navigate("/login");
+      } else {
+        message.error(response.data?.message || "Something went wrong!");
+      }
+    } catch (error) {
+      console.error("Error registering user:", error);
+  
+      const errorMessage = error.response?.data?.message || "Failed to register user!";
+      message.error(errorMessage);
+    }
   };
-
+  
+  
+  
   return (
     <div className="component-container-details">
       <Form
@@ -19,11 +43,11 @@ const Register = () => {
         className="register-form"
       >
         <Form.Item
-          label="Full Name"
+          label="Username"
           name="name"
-          rules={[{ required: true, message: "Please input your full name!" }]}
+          rules={[{ required: true, message: "Please input your username!" }]}
         >
-          <Input placeholder="Enter your full name" />
+          <Input placeholder="Enter your username" />
         </Form.Item>
         <Form.Item
           label="Email"
