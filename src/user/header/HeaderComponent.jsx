@@ -1,36 +1,57 @@
-import React from "react";
-import { Link, useNavigate  } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import "./headercomponent.scss";
 import Logo from "./logo/Logo";
 import { Modal, Button, message } from "antd";
+import userApi from "../../api/userApi/UserApi";
 import { FaUserCircle } from "react-icons/fa";
 
 const HeaderComponent = () => {
-
   const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const handleLogout = () => {
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      try {
+        const response = await userApi.get("/checktoken");
+        if (response.status === 200 && response.data.isLoggedIn) {
+          setIsLoggedIn(true);
+        } else {
+          setIsLoggedIn(false);
+        }
+      } catch (error) {
+        console.error("Lỗi khi kiểm tra đăng nhập:", error);
+        setIsLoggedIn(false);
+      }
+    };
+
+    checkLoginStatus();
+  }, []);
+
+  const handleLogout = async () => {
     Modal.confirm({
       title: "Confirm Logout",
       content: "Are you sure you want to logout?",
       okText: "Yes",
       cancelText: "No",
-      onOk: () => {
-        localStorage.removeItem("token");
-        
-        message.success("Logged out successfully!");
-
-        navigate("/login");
+      onOk: async () => {
+        try {
+          const response = await userApi.post("/logout");
+          if (response.status === 200) {
+            message.success(response.data.message);
+            setIsLoggedIn(false);
+            navigate("/login");
+          }
+        } catch (error) {
+          console.error("Lỗi khi logout:", error);
+          message.error("Failed to logout!");
+        }
       },
       onCancel: () => {
         message.info("Logout canceled.");
       },
     });
   };
-
-  const isLoggedIn = document.cookie.split(';').some((cookie) => cookie.trim().startsWith('token'));
-  console.log(isLoggedIn)
-
 
   return (
     <div className="header-container">
