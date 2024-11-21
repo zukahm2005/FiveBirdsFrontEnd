@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { Form, Input, Button, message } from "antd";
-import { useLocation } from "react-router-dom"; // Import useLocation
+import { useLocation } from "react-router-dom";
 import userApi from "../../../../api/userApi/UserApi";
 
 const VerifyOtp = () => {
   const [loading, setLoading] = useState(false);
-  const location = useLocation(); // Get location
-  const email = location.state?.email || ""; // Lấy email từ state (hoặc mặc định "")
+  const location = useLocation();
+  const email = location.state?.email || ""; 
 
   const onFinish = async (values) => {
     setLoading(true);
@@ -31,14 +31,14 @@ const VerifyOtp = () => {
         name="verify-otp"
         layout="vertical"
         onFinish={onFinish}
-        initialValues={{ email }} // Set giá trị mặc định cho email
+        initialValues={{ email }}
       >
         <Form.Item
           label="Email"
           name="email"
           rules={[{ required: true, message: "Please input your email!" }]}
         >
-          <Input placeholder="Enter your email" disabled /> {/* Disabled vì đã có email */}
+          <Input placeholder="Enter your email" disabled />
         </Form.Item>
         <Form.Item
           label="OTP"

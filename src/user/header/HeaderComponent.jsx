@@ -20,7 +20,7 @@ const HeaderComponent = () => {
           setIsLoggedIn(false);
         }
       } catch (error) {
-        console.error("Lỗi khi kiểm tra đăng nhập:", error);
+        console.error("Error checking login:", error);
         setIsLoggedIn(false);
       }
     };
@@ -43,7 +43,6 @@ const HeaderComponent = () => {
             navigate("/login");
           }
         } catch (error) {
-          console.error("Lỗi khi logout:", error);
           message.error("Failed to logout!");
         }
       },

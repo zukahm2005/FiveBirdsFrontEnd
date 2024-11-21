@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { Form, Input, Button, message } from "antd";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
 import userApi from "../../../../api/userApi/UserApi";
+import "./forgetPassword.scss"
 
 const ForgotPassword = () => {
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
 
   const onFinish = async (values) => {
     setLoading(true);
@@ -16,7 +17,6 @@ const ForgotPassword = () => {
 
       message.success(response.data?.message || "An OTP has been sent to your email!");
 
-      // Chuyển sang trang Verify OTP và gửi email qua state
       navigate("/verify-otp", { state: { email: values.email } });
     } catch (error) {
       message.error(error.response?.data?.message || "Failed to send OTP.");

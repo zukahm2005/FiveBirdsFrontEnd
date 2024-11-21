@@ -27,8 +27,6 @@ const Login = () => {
         const additionalTasksTime = 500;
         const totalDuration = apiDuration + additionalTasksTime;
 
-       
-
         setTimeout(() => {
           navigate("/");
           setLoading(false);
@@ -86,8 +84,7 @@ const Login = () => {
             <Button type="link" onClick={() => navigate("/register")}>
               Don't have an account? Register here
             </Button>
-          </Form.Item>
-          <Form.Item>
+
             <Button type="link" onClick={() => navigate("/forgot-password")}>
               Forgot Password?
             </Button>
