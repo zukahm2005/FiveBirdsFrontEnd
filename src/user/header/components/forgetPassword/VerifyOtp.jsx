@@ -1,22 +1,20 @@
 import React, { useState } from "react";
 import { Form, Input, Button, message } from "antd";
-import { useLocation } from "react-router-dom";
 import userApi from "../../../../api/userApi/UserApi";
 
-const VerifyOtp = () => {
+const VerifyOtp = ({ email, closeModal }) => {
   const [loading, setLoading] = useState(false);
-  const location = useLocation();
-  const email = location.state?.email || ""; 
 
   const onFinish = async (values) => {
     setLoading(true);
     try {
       const response = await userApi.post("/checkotp", {
-        email: values.email,
+        email: email,
         otp: values.otp,
         newPassword: values.newPassword,
       });
       message.success(response.data?.message || "Password reset successfully!");
+      closeModal(); 
     } catch (error) {
       message.error(error.response?.data?.message || "Failed to reset password.");
     } finally {
@@ -26,20 +24,7 @@ const VerifyOtp = () => {
 
   return (
     <div className="verify-otp-container">
-      <h2>Verify OTP</h2>
-      <Form
-        name="verify-otp"
-        layout="vertical"
-        onFinish={onFinish}
-        initialValues={{ email }}
-      >
-        <Form.Item
-          label="Email"
-          name="email"
-          rules={[{ required: true, message: "Please input your email!" }]}
-        >
-          <Input placeholder="Enter your email" disabled />
-        </Form.Item>
+      <Form name="verify-otp" layout="vertical" onFinish={onFinish}>
         <Form.Item
           label="OTP"
           name="otp"

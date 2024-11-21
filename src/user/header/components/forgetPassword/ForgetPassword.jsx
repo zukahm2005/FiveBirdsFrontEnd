@@ -1,12 +1,10 @@
+import { Button, Form, Input, message } from "antd";
 import React, { useState } from "react";
-import { Form, Input, Button, message } from "antd";
-import { useNavigate } from "react-router-dom";
 import userApi from "../../../../api/userApi/UserApi";
-import "./forgetPassword.scss"
+import "./forgetPassword.scss";
 
-const ForgotPassword = () => {
+const ForgotPassword = ({ onOtpSent }) => {
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
 
   const onFinish = async (values) => {
     setLoading(true);
@@ -16,8 +14,7 @@ const ForgotPassword = () => {
       });
 
       message.success(response.data?.message || "An OTP has been sent to your email!");
-
-      navigate("/verify-otp", { state: { email: values.email } });
+      onOtpSent(values.email); 
     } catch (error) {
       message.error(error.response?.data?.message || "Failed to send OTP.");
     } finally {
@@ -27,7 +24,6 @@ const ForgotPassword = () => {
 
   return (
     <div className="forgot-password-container">
-      <h2>Forgot Password</h2>
       <Form name="forgot-password" layout="vertical" onFinish={onFinish}>
         <Form.Item
           label="Email"

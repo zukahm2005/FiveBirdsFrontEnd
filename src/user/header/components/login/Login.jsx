@@ -1,18 +1,22 @@
-import { Button, Form, Input, message } from "antd";
+import { Button, Form, Input, message, Modal } from "antd";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import userApi from "../../../../api/userApi/UserApi";
 import SpinWrapper from "../../../../common/spin/SpinWrapper";
+import ForgotPassword from "../forgetPassword/ForgetPassword";
+import VerifyOtp from "../forgetPassword/VerifyOtp";
 import "./login.scss";
 
 const Login = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [isForgotPasswordModalVisible, setForgotPasswordModalVisible] =
+    useState(false);
+  const [modalContent, setModalContent] = useState("forgotPassword");
+  const [email, setEmail] = useState("");
 
   const onFinish = async (values) => {
     setLoading(true);
-
-    const startTime = Date.now();
     try {
       const payload = {
         Username: values.username,
@@ -20,30 +24,35 @@ const Login = () => {
       };
 
       const response = await userApi.post("/login", payload);
-      const apiEndTime = Date.now();
 
       if (response.status === 200) {
-        const apiDuration = apiEndTime - startTime;
-        const additionalTasksTime = 500;
-        const totalDuration = apiDuration + additionalTasksTime;
-
-        setTimeout(() => {
-          navigate("/");
-          setLoading(false);
-        }, additionalTasksTime);
         message.success(response.data.message);
+        navigate("/");
       } else {
         message.error("Failed to login!");
-        setLoading(false);
       }
     } catch (error) {
       const errorMessage =
         error.response?.data?.message ||
         "Login failed! Please check your credentials.";
       message.error(errorMessage);
-
+    } finally {
       setLoading(false);
     }
+  };
+
+  const handleForgotPasswordClick = () => {
+    setModalContent("forgotPassword");
+    setForgotPasswordModalVisible(true);
+  };
+
+  const handleForgotPasswordClose = () => {
+    setForgotPasswordModalVisible(false);
+  };
+
+  const handleOtpSent = (email) => {
+    setEmail(email);
+    setModalContent("verifyOtp");
   };
 
   return (
@@ -85,11 +94,30 @@ const Login = () => {
               Don't have an account? Register here
             </Button>
 
-            <Button type="link" onClick={() => navigate("/forget-password")}>
+            <Button type="link" onClick={handleForgotPasswordClick}>
               Forgot Password?
             </Button>
           </Form.Item>
         </Form>
+
+        <Modal
+          title={
+            modalContent === "forgotPassword" ? "Forgot Password" : "Verify OTP"
+          }
+          visible={isForgotPasswordModalVisible}
+          onCancel={handleForgotPasswordClose}
+          footer={null}
+        >
+          {modalContent === "forgotPassword" && (
+            <ForgotPassword
+              onOtpSent={handleOtpSent}
+              closeModal={handleForgotPasswordClose}
+            />
+          )}
+          {modalContent === "verifyOtp" && (
+            <VerifyOtp email={email} closeModal={handleForgotPasswordClose} />
+          )}
+        </Modal>
       </div>
     </SpinWrapper>
   );
