@@ -1,38 +1,34 @@
 import React, { useState } from "react";
 import { Form, Input, Button, message } from "antd";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import userApi from "../../../../api/userApi/UserApi";
-// import "./forgotpassword.scss";
 
 const ForgotPassword = () => {
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate(); // Initialize useNavigate
 
   const onFinish = async (values) => {
     setLoading(true);
     try {
-      const response = await userApi.post("/forgot-password", {
+      const response = await userApi.post("/forgot", {
         email: values.email,
       });
 
-      message.success(response.data?.message || "Reset password email sent!");
+      message.success(response.data?.message || "An OTP has been sent to your email!");
+
+      // Chuyển sang trang Verify OTP và gửi email qua state
+      navigate("/verify-otp", { state: { email: values.email } });
     } catch (error) {
-      console.error("Forgot password error:", error);
-      message.error(
-        error.response?.data?.message || "Failed to send reset password email."
-      );
+      message.error(error.response?.data?.message || "Failed to send OTP.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="component-container-details">
+    <div className="forgot-password-container">
       <h2>Forgot Password</h2>
-      <Form
-        name="forgot-password"
-        layout="vertical"
-        onFinish={onFinish}
-        className="forgot-password-form"
-      >
+      <Form name="forgot-password" layout="vertical" onFinish={onFinish}>
         <Form.Item
           label="Email"
           name="email"
@@ -45,7 +41,7 @@ const ForgotPassword = () => {
         </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType="submit" loading={loading} block>
-            Send Reset Link
+            Send OTP
           </Button>
         </Form.Item>
       </Form>

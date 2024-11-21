@@ -9,6 +9,7 @@ import Contact from "./main/pages/contacts/Contact";
 import Home from "./main/pages/home/Home";
 import New from "./main/pages/news/New";
 import Shop from "./main/pages/shop/Shop";
+import VerifyOtp from "./header/components/forgotPassword/VerifyOtp";
 
 const routes = [
   { path: "/", element: <Home /> },
@@ -18,6 +19,7 @@ const routes = [
   { path: "/login", element: <Login /> },
   { path: "/register", element: <Register /> },
   { path: "/forgot-password", element: <ForgotPassword /> },
+  { path: "verify-otp", element: <VerifyOtp /> },
 ];
 
 const User = () => {
