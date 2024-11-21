@@ -1,5 +1,4 @@
 import {
-  LaptopOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   ShoppingOutlined,
@@ -7,13 +6,13 @@ import {
 } from "@ant-design/icons";
 import { Avatar, Breadcrumb, Dropdown, Layout, Menu, theme } from "antd";
 import React, { useState } from "react";
+import "./admin.scss";
 import ListUser from "./components/userAdmin/listUser/ListUser";
-
 const { Header, Content, Sider } = Layout;
 
 const Admin = () => {
   const [collapsed, setCollapsed] = useState(false);
-  const [selectedContent, setSelectedContent] = useState("Dashboard"); // State to manage selected content
+  const [selectedContent, setSelectedContent] = useState("Dashboard"); 
 
   const toggleCollapsed = () => {
     setCollapsed(!collapsed);
@@ -48,16 +47,18 @@ const Admin = () => {
       key: "sub1",
       icon: <UserOutlined />,
       label: "UserAdmin",
+      className: "custom-submenu", 
       children: [
         {
           key: "listUser",
           label: "ListUser",
+          className: "custom-menu-item", 
         },
       ],
     },
     {
       key: "sub2",
-      icon: <ShoppingOutlined />, 
+      icon: <ShoppingOutlined />,
       label: "ProductAdmin",
       children: [
         {
@@ -67,6 +68,7 @@ const Admin = () => {
       ],
     },
   ];
+  
 
   const handleMenuClick = (e) => {
     setSelectedContent(e.key);
@@ -122,8 +124,9 @@ const Admin = () => {
             collapsed={collapsed}
             onCollapse={toggleCollapsed}
             trigger={null}
-            width={200}
+            width={300}
             style={{
+              padding: "1rem",
               background: colorBgContainer,
               minHeight: "100vh",
             }}
@@ -156,7 +159,7 @@ const Admin = () => {
                 borderRight: 0,
               }}
               items={menuItems}
-              onClick={handleMenuClick} 
+              onClick={handleMenuClick}
             />
           </Sider>
           <Layout
@@ -173,7 +176,7 @@ const Admin = () => {
                   title: "List",
                 },
                 {
-                  title: selectedContent, 
+                  title: selectedContent,
                 },
               ]}
               style={{
@@ -189,8 +192,14 @@ const Admin = () => {
                 borderRadius: borderRadiusLG,
               }}
             >
-              {selectedContent === "Dashboard" && <div>Welcome to Dashboard</div>}
-              {selectedContent === "listUser" && <div><ListUser/></div>}
+              {selectedContent === "Dashboard" && (
+                <div>Welcome to Dashboard</div>
+              )}
+              {selectedContent === "listUser" && (
+                <div>
+                  <ListUser />
+                </div>
+              )}
               {selectedContent === "productList" && <div>List of Products</div>}
             </Content>
           </Layout>
