@@ -85,7 +85,7 @@ const Login = () => {
               Don't have an account? Register here
             </Button>
 
-            <Button type="link" onClick={() => navigate("/forgot-password")}>
+            <Button type="link" onClick={() => navigate("/forget-password")}>
               Forgot Password?
             </Button>
           </Form.Item>
