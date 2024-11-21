@@ -27,7 +27,19 @@ const Login = () => {
 
       if (response.status === 200) {
         message.success(response.data.message);
-        navigate("/");
+
+        const token = response.data.token;
+
+        const roleResponse = await userApi.get("/checkrole");
+        const role = roleResponse.data.role;
+
+        if (role === "ROLE_ADMIN") {
+          navigate("/admin");
+        } else if (role === "ROLE_USER") {
+          navigate("/");
+        } else {
+          message.error("Invalid role. Access denied.");
+        }
       } else {
         message.error("Failed to login!");
       }
