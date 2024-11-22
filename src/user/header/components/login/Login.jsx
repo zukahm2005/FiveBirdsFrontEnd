@@ -80,12 +80,34 @@ const Login = () => {
             label="Username"
             name="username"
             rules={[
-              { required: true, message: "Please input your username!" },
-              { min: 3, message: "Username must be at least 3 characters!" },
+              {
+                required: true,
+                message: "Please input your username!",
+              },
+              {
+                min: 3,
+                message: "Username must be at least 3 characters!",
+              },
+              {
+                validator: (_, value) => {
+                  if (value && value.trim().length === 0) {
+                    return Promise.reject(
+                      new Error("Username cannot be empty or only whitespace!")
+                    );
+                  }
+                  if (value && /\s/.test(value)) {
+                    return Promise.reject(
+                      new Error("Username cannot contain whitespace!")
+                    );
+                  }
+                  return Promise.resolve();
+                },
+              },
             ]}
           >
             <Input placeholder="Enter your username" />
           </Form.Item>
+
           <Form.Item
             label="Password"
             name="password"
