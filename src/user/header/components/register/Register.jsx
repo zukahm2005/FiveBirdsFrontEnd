@@ -11,45 +11,31 @@ const Register = () => {
 
   const onFinish = async (values) => {
     setLoading(true);
-
-    const startTime = Date.now(); 
+  
     try {
       const payload = {
         UserName: values.name,
         Email: values.email,
         Password: values.password,
       };
-
+  
       const response = await userApi.post("/register", payload);
-      const apiEndTime = Date.now(); 
-
+  
       if (response.status === 200 && response.data?.message) {
-        const apiDuration = apiEndTime - startTime;
-        const additionalTasksTime = 500; 
-        const totalDuration = apiDuration + additionalTasksTime;
-
-        console.log(`API call duration: ${apiDuration}ms`);
-        console.log(`Total duration (API + tasks): ${totalDuration}ms`);
-
-        setTimeout(() => {
-          navigate("/login");
-          setLoading(false);
-        }, additionalTasksTime);
-
         message.success(response.data.message);
+        navigate("/verify-register", { state: { email: values.email } });
       } else {
         message.error(response.data?.message || "Something went wrong!");
-        setLoading(false);
       }
     } catch (error) {
-      console.error("Error registering user:", error);
-
       const errorMessage =
         error.response?.data?.message || "Failed to register user!";
       message.error(errorMessage);
+    } finally {
       setLoading(false);
     }
   };
+  
 
   return (
     <SpinWrapper loading={loading} tip="Loading...">

@@ -10,6 +10,7 @@ import Home from "./main/pages/home/Home";
 import New from "./main/pages/news/New";
 import Shop from "./main/pages/shop/Shop";
 import VerifyOtp from "./header/components/forgetPassword/VerifyOtp";
+import VerifyRegister from "./header/components/register/VerifyRegister";
 
 const routes = [
   { path: "/", element: <Home /> },
@@ -20,6 +21,7 @@ const routes = [
   { path: "/register", element: <Register /> },
   { path: "/forget-password", element: <ForgetPassword /> },
   { path: "verify-otp", element: <VerifyOtp /> },
+  { path: "/verify-register", element: <VerifyRegister /> },
 ];
 
 const User = () => {
