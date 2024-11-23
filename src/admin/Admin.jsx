@@ -4,10 +4,12 @@ import {
   ShoppingOutlined,
   UserOutlined
 } from "@ant-design/icons";
+import { MdEditNote } from "react-icons/md";
 import { Avatar, Breadcrumb, Dropdown, Layout, Menu, theme } from "antd";
 import React, { useState } from "react";
 import "./admin.scss";
 import ListUser from "./components/userAdmin/listUser/ListUser";
+import EditorColumn from "./components/footereditAdmin/editorColumn/EditorColumn";
 const { Header, Content, Sider } = Layout;
 
 const Admin = () => {
@@ -64,6 +66,17 @@ const Admin = () => {
         {
           key: "productList",
           label: "Product List",
+        },
+      ],
+    },
+    {
+      key: "footerEditAdmin", // Nhóm chính cho FooterEditAdmin
+      icon: <MdEditNote />,
+      label: "FooterEditAdmin",
+      children: [
+        {
+          key: "editorColumn", // Mục con Editor Column
+          label: "Editor Column",
         },
       ],
     },
@@ -201,6 +214,12 @@ const Admin = () => {
                 </div>
               )}
               {selectedContent === "productList" && <div>List of Products</div>}
+              {selectedContent === "editorColumn" && (
+                <div>
+                  <EditorColumn/>
+                </div>
+              )}
+
             </Content>
           </Layout>
         </Layout>
