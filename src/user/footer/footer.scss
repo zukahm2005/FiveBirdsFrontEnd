@@ -1,3 +1,81 @@
-.footer-container{
-    background-color:aquamarine;
-}
+.footer {
+    .footer-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 180px; // Tăng khoảng cách giữa các cột
+      padding: 20px 50px; // Tăng padding đều hai bên để tạo khoảng trắng cân đối
+      width: 100%;
+      max-width: 1500px; // Đặt chiều rộng tối đa cho nội dung để căn giữa
+      margin: 0 auto; // Căn giữa footer-container trên màn hình
+  
+      .footer-column {
+        flex: 1;
+        margin: 0 15px;
+  
+        h3 {
+          margin-bottom: 15px;
+          font-size: 1.2rem;
+          font-weight: bold;
+        }
+  
+        p {
+          margin: 10px 0;
+          line-height: 1.8;
+          display: flex;
+          align-items: center;
+  
+          svg {
+            margin-right: 8px;
+          }
+        }
+  
+        // Điều chỉnh cột 2 và cột 3
+        &:nth-child(2),
+        &:nth-child(3) {
+          margin-top: 30px; // Hạ cột xuống để căn chỉnh với logo
+        }
+  
+        &:first-child {
+          .footer-image {
+            margin-bottom: 15px;
+  
+            img {
+              width: 100px;
+              height: 100px;
+            }
+          }
+        }
+  
+        // CSS cho phần icon mạng xã hội trong cột cuối cùng
+        &:last-child {
+          .footer-social-icons {
+            display: flex;
+            justify-content: start;
+            align-items: center;
+            gap: 15px; // Khoảng cách giữa các biểu tượng
+            margin-top: 20px;
+  
+            .social-icon {
+              width: 40px; // Kích thước box
+              height: 40px; // Kích thước box
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              border: 2px solid #ccc; // Viền cho box
+              border-radius: 8px; // Bo góc
+              transition: all 0.3s ease; // Hiệu ứng hover
+              color: #333; // Màu icon mặc định
+              font-size: 18px; // Làm icon nhỏ hơn
+  
+              &:hover {
+                border-color: #0073e6; // Màu viền khi hover
+                transform: translateY(-5px); // Dịch icon lên khi hover
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  
