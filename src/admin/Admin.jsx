@@ -2,7 +2,7 @@ import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   ShoppingOutlined,
-  UserOutlined
+  UserOutlined,
 } from "@ant-design/icons";
 import { MdEditNote } from "react-icons/md";
 import { Avatar, Breadcrumb, Dropdown, Layout, Menu, theme } from "antd";
@@ -10,11 +10,12 @@ import React, { useState } from "react";
 import "./admin.scss";
 import ListUser from "./components/userAdmin/listUser/ListUser";
 import EditorColumn from "./components/footereditAdmin/editorColumn/EditorColumn";
+import AboutUsAdmin from "./components/aboutUsAdmin/AboutUsAdmin";
 const { Header, Content, Sider } = Layout;
 
 const Admin = () => {
   const [collapsed, setCollapsed] = useState(false);
-  const [selectedContent, setSelectedContent] = useState("Dashboard"); 
+  const [selectedContent, setSelectedContent] = useState("Dashboard");
 
   const toggleCollapsed = () => {
     setCollapsed(!collapsed);
@@ -49,12 +50,12 @@ const Admin = () => {
       key: "sub1",
       icon: <UserOutlined />,
       label: "UserAdmin",
-      className: "custom-submenu", 
+      className: "custom-submenu",
       children: [
         {
           key: "listUser",
           label: "ListUser",
-          className: "custom-menu-item", 
+          className: "custom-menu-item",
         },
       ],
     },
@@ -80,8 +81,22 @@ const Admin = () => {
         },
       ],
     },
+    {
+      key: "aboutUsAdmin",
+      icon: <MdEditNote />,
+      label: "About Us",
+      children: [
+        {
+          key: "aboutUsList",
+          label: "About Us List",
+        },
+        {
+          key: "aboutUsEditor",
+          label: "About Us Editor",
+        },
+      ],
+    },
   ];
-  
 
   const handleMenuClick = (e) => {
     setSelectedContent(e.key);
@@ -216,10 +231,15 @@ const Admin = () => {
               {selectedContent === "productList" && <div>List of Products</div>}
               {selectedContent === "editorColumn" && (
                 <div>
-                  <EditorColumn/>
+                  <EditorColumn />
                 </div>
               )}
-
+              {selectedContent === "aboutUsList" && <AboutUsAdmin />}
+              {selectedContent === "aboutUsEditor" && (
+                <div>
+                  <AboutUsAdmin />
+                </div>
+              )}
             </Content>
           </Layout>
         </Layout>
