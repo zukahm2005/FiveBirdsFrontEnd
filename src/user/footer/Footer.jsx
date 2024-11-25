@@ -32,23 +32,24 @@ export default function Footer() {
 
     fetchFooter();
   }, []);
-
+  const renderFirstLine = (content) => {
+    const parser = new DOMParser();
+    const parsedDocument = parser.parseFromString(content, "text/html");
+    const firstLine = parsedDocument.body.firstChild?.outerHTML || "";
+  
+    return <p dangerouslySetInnerHTML={{ __html: firstLine }} />;
+  };
+  
   // Hàm gán icon cho nội dung động từ API
   const renderContentWithIcons = (content) => {
-    // Sử dụng DOMParser để phân tích cú pháp HTML từ API
     const parser = new DOMParser();
     const parsedDocument = parser.parseFromString(content, "text/html");
     const lines = Array.from(parsedDocument.body.childNodes)
       .map((node) => node.textContent.trim())
       .filter((text) => text !== ""); // Loại bỏ dòng trống hoặc không hợp lệ
   
-    // Render nội dung với icon
-    return lines.map((line, index) => {
-      if (index === 0) {
-        // Dòng đầu tiên không có icon
-        return <p key={index} dangerouslySetInnerHTML={{ __html: line }} />;
-      }
-  
+    // Render chỉ từ dòng thứ hai (bỏ qua dòng đầu tiên)
+    return lines.slice(1).map((line, index) => {
       let icon = null;
   
       // Gán icon tương ứng
@@ -68,27 +69,29 @@ export default function Footer() {
     });
   };
   
+  
 
   return (
     <footer className="footer">
       <div className="footer-container">
-        {/* Cột 1: Logo và thông tin liên hệ */}
         <div className="footer-column">
           <div className="footer-image">
             {footerImage && <img src={footerImage} alt="Footer Logo" />}
           </div>
           <div className="footer-contact">
-            {renderContentWithIcons(footerContent.column1)} {/* Nội dung động với icon */}
+            {/* Hiển thị dòng đầu tiên từ Quill Editor */}
+            {renderFirstLine(footerContent.column1)}
+            {/* Hiển thị các dòng còn lại với icon */}
+            {renderContentWithIcons(footerContent.column1)}
           </div>
         </div>
-
-        {/* Cột 2: Categories */}
+  
+        {/* Các cột khác */}
         <div className="footer-column">
           <h3>Categories</h3>
           <div dangerouslySetInnerHTML={{ __html: footerContent.column2 }} />
         </div>
-
-        {/* Cột 3: FAQs */}
+  
         <div className="footer-column">
           <h3>FAQs</h3>
           <div dangerouslySetInnerHTML={{ __html: footerContent.column3 }} />
@@ -102,5 +105,5 @@ export default function Footer() {
         </div>
       </div>
     </footer>
-  );
+  );  
 }

@@ -9,4 +9,4 @@
 7. Nhánh main pull code:                     git pull origin main
 8. Nhánh main merge code của nhánh phụ:      git merge Tênnhanh
 9. Nhánh main push:                          git push
-10.Cho các dev khác thấy nhánh:              git branch --set-upstream-to=origin/main Tennhanh
+10.Cho các dev khác thấy nhánh:              g  
