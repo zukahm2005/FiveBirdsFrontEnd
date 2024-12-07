@@ -1,5 +1,6 @@
 import { Button, Form, Input, message, Modal } from "antd";
 import React, { useState } from "react";
+import { GoogleLogin } from "react-google-login";
 import { useNavigate } from "react-router-dom";
 import userApi from "../../../../api/userApi/UserApi";
 import SpinWrapper from "../../../../common/spin/SpinWrapper";
@@ -65,6 +66,69 @@ const Login = () => {
   const handleOtpSent = (email) => {
     setEmail(email);
     setModalContent("verifyOtp");
+  };
+  const handleGoogleLoginSuccess = async (response) => {
+    setLoading(true);
+    try {
+      const { credential } = response;
+
+      const backendResponse = await fetch(
+        "http://localhost:5005/api/auth/google/callback",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${credential}`,
+          },
+          credentials: "include", 
+        }
+      );
+
+      if (backendResponse.status === 200) {
+        message.success("Google login successful!");
+
+        const roleResponse = await fetch(
+          "http://localhost:5005/api/auth/checkrole",
+          {
+            method: "GET",
+            credentials: "include", 
+          }
+        );
+
+        if (roleResponse.ok) {
+          const roleResult = await roleResponse.json();
+          const role = roleResult.role;
+
+          if (role === "ROLE_ADMIN") {
+            navigate("/admin");
+          } else if (role === "ROLE_USER") {
+            navigate("/");
+          } else {
+            message.error("Invalid role. Access denied.");
+          }
+        } else {
+          message.error("Failed to fetch user role.");
+        }
+      } else {
+        const errorResult = await backendResponse.json();
+        const errorMessage = errorResult.message || "Google login failed!";
+        message.error(errorMessage);
+      }
+    } catch (error) {
+      console.error("Google login error:", error);
+      message.error("An error occurred during Google login. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleLoginFailure = (error) => {
+    console.error("Google Login Failed: ", error);
+    if (error.error === "popup_closed_by_user") {
+      message.error("Google login canceled by user.");
+    } else {
+      message.error("Google login failed. Please try again.");
+    }
   };
 
   return (
@@ -133,7 +197,15 @@ const Login = () => {
             </Button>
           </Form.Item>
         </Form>
-
+        <div className="google-login">
+          <GoogleLogin
+            clientId="171396104776-o302sm82q27mlmb0spq1tu54r1fvbdgg.apps.googleusercontent.com"
+            buttonText="Login with Google"
+            onSuccess={handleGoogleLoginSuccess}
+            onFailure={handleGoogleLoginFailure}
+            cookiePolicy={"single_host_origin"}
+          />
+        </div>
         <Modal
           title={
             modalContent === "forgotPassword" ? "Forgot Password" : "Verify OTP"
