@@ -9,6 +9,7 @@ import Pages from "./main/pages/pages/Pages";
 import Features from "./main/pages/features/Features";
 import Blog from "./main/pages/blog/Blog";
 import Shop from "./main/pages/shop/Shop";
+import Login from "./login/Login";
 
 const routes = [
   { path: "/", element: <Home /> },
@@ -17,6 +18,8 @@ const routes = [
   { path: "/pages", element: <Pages /> },
   { path: "/features", element: <Features /> },
   { path: "/blog", element: <Blog /> },
+  { path: "/login", element: <Login /> },
+
 ];
 
 const User = () => {

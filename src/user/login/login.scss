@@ -1,0 +1,98 @@
+.login-page {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    height: 100vh;
+    background: url("https://html.modernwebtemplates.com/nafta/images/slide01.jpg")
+      no-repeat center center;
+    background-size: cover;
+    padding-right: 10%;
+  }
+  
+  .login-container {
+    width: 400px; /* Tăng chiều rộng */
+    color: white;
+  }
+  
+  .login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 35px; /* Tăng khoảng cách giữa các phần */
+  
+    .form-group {
+      position: relative;
+  
+      input.custom-input {
+        width: 100%;
+        height: 60px; /* Tăng chiều cao */
+        padding: 0 15px;
+        font-size: 20px; /* Tăng kích thước chữ */
+        text-align: center; /* Căn giữa ngang */
+        background: transparent;
+        border: none;
+        border-bottom: 3px solid white; /* Tăng độ dày viền */
+        color: white;
+        outline: none;
+  
+        &::placeholder {
+          color: white;
+          opacity: 1;
+        }
+  
+        &:focus {
+          border-bottom-color: #f0a500;
+        }
+  
+        &.error {
+          border-bottom-color: red;
+        }
+      }
+  
+      .error-text {
+        color: red;
+        font-size: 16px; /* Tăng kích thước chữ lỗi */
+        margin-top: 8px;
+      }
+    }
+  
+    .custom-button {
+      width: 100%;
+      background: #f0a500;
+      color: white;
+      border: none;
+      font-size: 20px; /* Tăng kích thước chữ */
+      font-weight: bold;
+      padding: 15px; /* Tăng padding cho nút */
+      cursor: pointer;
+      transition: background 0.3s;
+  
+      &:hover {
+        background: #d98900;
+      }
+  
+      &:disabled {
+        background: gray;
+        cursor: not-allowed;
+      }
+    }
+  
+    .link-group {
+      display: flex;
+      flex-direction: column; /* Xếp các link theo cột */
+      align-items: center; /* Căn giữa các link */
+  
+      .custom-link {
+        text-align: center; /* Đảm bảo chữ căn giữa trong chính link */
+        color: white;
+        text-decoration: none;
+        font-size: 20px; /* Tăng kích thước chữ */
+        cursor: pointer;
+        margin-top: 10px; /* Khoảng cách giữa các link */
+  
+        &:hover {
+          color: #f0a500;
+        }
+      }
+    }
+  }
+  
