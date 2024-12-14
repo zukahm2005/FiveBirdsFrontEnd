@@ -23,6 +23,7 @@
     "react-quill": "^2.0.0",
     "react-router-dom": "6",
     "sass": "^1.81.0",
+    "swiper": "^11.1.15",
     "vue-quill-editor": "^3.0.6"
   },
   "devDependencies": {

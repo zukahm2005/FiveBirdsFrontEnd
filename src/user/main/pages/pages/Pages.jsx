@@ -1,9 +1,11 @@
 import React from 'react'
 
-export default function Admin() {
+const Pages = () => {
   return (
     <div>
-      Admin
+      Pages
     </div>
   )
 }
+
+export default Pages

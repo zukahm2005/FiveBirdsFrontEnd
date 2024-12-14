@@ -1,0 +1,44 @@
+.timonial-container {
+    background-image: url(https://html.modernwebtemplates.com/nafta/images/main-testimonial-bg.jpg);
+    background-repeat: no-repeat; 
+    background-size: cover; 
+    background-position: center; 
+    width: 100%; 
+    height: 30rem; 
+    
+    .timonial-main{
+        padding: 10rem;
+        max-width: 80%;
+        margin: 0 auto;
+        gap: 3rem;
+        align-items: center;
+        .left-content-timonial{
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            .title-timonial{
+                p{
+                    font-size: 2.5rem;
+                    font-weight: bold;
+                    color: rgb(9, 68, 89);
+                }
+            }
+            .button-timonial{
+                button{
+                    width: 100%;
+                    border: none;
+                    border-radius: 30px;
+                    background: linear-gradient(to right, #f39c12, #1e4d8b); 
+                    p{
+                        color: white;
+                        padding: 1.2rem;
+                        font-size: 1.2rem;
+                    }
+                }
+            }
+        }
+        .center-content-timonial{
+            text-align: center;
+        }
+    }
+}

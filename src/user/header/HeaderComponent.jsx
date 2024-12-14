@@ -1,87 +1,63 @@
-import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import Component from "../components/component";
+import Logo from "../components/logo/Logo";
 import "./headercomponent.scss";
-import Logo from "./logo/Logo";
-import { Modal, Button, message } from "antd";
-import userApi from "../../api/userApi/UserApi";
-import { FaUserCircle } from "react-icons/fa";
+import { IoIosArrowForward } from "react-icons/io";
+
+const menuItems = [
+  { path: "/", name: "HOME" },
+  { path: "/pages", name: "PAGES" },
+  { path: "/features", name: "FEATURES" },
+  { path: "/blog", name: "BLOG" },
+  { path: "/shop", name: "SHOP" },
+  { path: "/contacts", name: "CONTACT" },
+];
 
 const HeaderComponent = () => {
-  const navigate = useNavigate();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
-    const checkLoginStatus = async () => {
-      try {
-        const response = await userApi.get("/checktoken");
-        if (response.status === 200 && response.data.isLoggedIn) {
-          setIsLoggedIn(true);
-        } else {
-          setIsLoggedIn(false);
-        }
-      } catch (error) {
-        console.error("Error checking login:", error);
-        setIsLoggedIn(false);
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
       }
     };
 
-    checkLoginStatus();
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
 
-  const handleLogout = async () => {
-    Modal.confirm({
-      title: "Confirm Logout",
-      content: "Are you sure you want to logout?",
-      okText: "Yes",
-      cancelText: "No",
-      onOk: async () => {
-        try {
-          const response = await userApi.post("/logout");
-          if (response.status === 200) {
-            message.success(response.data.message);
-            setIsLoggedIn(false);
-            navigate("/login");
-          }
-        } catch (error) {
-          message.error("Failed to logout!");
-        }
-      },
-      onCancel: () => {
-        message.info("Logout canceled.");
-      },
-    });
-  };
-
   return (
-    <div className="header-container">
+    <div
+      className={`header-container ${isScrolled ? "scrolled" : ""}`}
+    >
       <div className="header-container_wrapper">
         <div className="header_logo">
           <Logo />
         </div>
         <div className="header-nav display-flex">
-          <nav>
-            <Link to="/">Home</Link>
-          </nav>
-          <nav>
-            <Link to="/shop">Shop</Link>
-          </nav>
-          <nav>
-            <Link to="/contacts">Contacts</Link>
-          </nav>
-          <nav>
-            <Link to="/news">News</Link>
-          </nav>
+          {menuItems.map((item, index) => (
+            <nav key={index}>
+              <Link to={item.path} className="flex-row  nav-router">
+                <div>
+                  <p>{item.name}</p>
+                </div>
+                <div>
+                  <p className="nav-arrow">
+                    <IoIosArrowForward />
+                  </p>
+                </div>
+              </Link>
+            </nav>
+          ))}
         </div>
         <div className="header-component">
-          {isLoggedIn ? (
-            <Button type="primary" onClick={handleLogout}>
-              Logout
-            </Button>
-          ) : (
-            <Link to="/login">
-              <FaUserCircle />
-            </Link>
-          )}
+          <Component />
         </div>
       </div>
     </div>

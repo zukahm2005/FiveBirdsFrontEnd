@@ -1,22 +1,45 @@
-.header-container{
-    background-color: rgb(175, 223, 240);
-    max-width: 100%;
-   
-
-    .header-container_wrapper{
-        max-width: 80%;
-        display: grid;
-        grid-template-columns: repeat(3,1fr);
-        justify-content: space-between;
-        margin: 0 auto;
-        align-items: center;
-        .header-nav{
-            gap: 1rem;
-            justify-content: space-between;
-          
-        }
-        .header-component{
-            text-align: end;
-        }
+.header-container {
+    width: 100%;
+    position: fixed;
+    z-index: 2;
+    background-color: transparent;
+    transition: background-color 0.3s ease; 
+    transition: 0.3s all ease-in-out;
+  
+    &.scrolled {
+        background-color: rgba(11, 68, 89, 0.95);  // Màu nền khi scroll
     }
-}
+  
+    p {
+      color: white;
+    }
+  
+    .header-container_wrapper {
+      max-width: 90%;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      justify-content: space-between;
+      margin: 0 auto;
+      align-items: center;
+      padding: 1rem 0;
+  
+      .header-nav {
+        gap: 2rem;
+  
+        .nav-router {
+          gap: 0.3rem;
+          align-items: end;
+          font-weight: 600;
+  
+          .nav-arrow {
+            font-size: 0.8rem;
+          }
+        }
+      }
+  
+      .header-component {
+        text-align: end;
+      }
+    }
+  }
+  

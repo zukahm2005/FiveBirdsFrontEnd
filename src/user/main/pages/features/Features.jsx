@@ -1,9 +1,11 @@
 import React from 'react'
 
-export default function Admin() {
+const Features = () => {
   return (
     <div>
-      Admin
+      Features
     </div>
   )
 }
+
+export default Features

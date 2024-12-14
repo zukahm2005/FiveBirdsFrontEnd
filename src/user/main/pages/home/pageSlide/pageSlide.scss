@@ -1,0 +1,98 @@
+.swiper-container {
+    position: relative;
+}
+
+.swiper-pagination-bullet {
+    display: inline-block;
+    width: 50px;
+    height: 2px;
+    background-color: rgba(255, 255, 255, 0.5);
+    margin: 0 5px;
+    position: relative;
+    border-radius: 0;
+    transition:
+        background-color 0.3s ease,
+        transform 0.3s ease;
+}
+
+.swiper-pagination-bullet-active {
+    background-color: white;
+}
+
+.pagination-bullet-number {
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: bold;
+    visibility: hidden;
+    transition:
+        color 0.3s ease,
+        visibility 0.3s ease;
+}
+
+.swiper-pagination-bullet-active .pagination-bullet-number {
+    visibility: visible;
+    color: white;
+}
+.bubble-animation {
+    width: 700px; /* Kích thước phần tử */
+    height: 700px; /* Kích thước phần tử */
+    background: linear-gradient(to top, #dd9044 0%, #09445a 100%); /* Gradient màu */
+    border-radius: 50%; /* Hình dạng ban đầu */
+    animation: bubble 5s linear infinite; /* Gọi animation */
+    position: absolute; /* Vị trí tuyệt đối */
+    top: 50%; /* Căn giữa theo chiều dọc */
+    left: 30%; /* Căn giữa theo chiều ngang */
+    transform: translate(-50%, -50%); /* Căn chỉnh để trung tâm */
+    z-index: 2; /* Hiển thị lên trên slider */
+    pointer-events: none; /*    Đảm bảo không ảnh hưởng đến sự tương tác */
+    color: white;
+    .content {
+        position: absolute;
+        top: 25%;
+        left: 10%;
+        gap: 1.5rem;
+        .title {
+            p {
+                font-size: 6rem;
+                font-weight: lighter;
+            }
+        }
+        .buttons{
+            align-items: center;
+            gap: 1.5rem;
+            p{
+                font-size: 1rem;    
+                color: white;
+                font-weight: bold;
+            }
+            button{
+                background-color: transparent;
+                border: thin solid white;
+                border-radius: 48px;
+                padding: 1.5rem 3rem;
+
+            }
+        }
+    }
+}
+
+/* Keyframes cho hiệu ứng */
+@keyframes bubble {
+    0%,
+    100% {
+        border-radius: 64% 46% 37% 73% / 55% 58% 42% 45%;
+    }
+    25% {
+        border-radius: 43% 47% 47% 38% / 43% 46% 64% 27%;
+    }
+    50% {
+        border-radius: 48% 72% 44% 56% / 49% 40% 60% 51%;
+    }
+    75% {
+        border-radius: 40% 60% 70% 30% / 47% 62% 38% 53%;
+    }
+}

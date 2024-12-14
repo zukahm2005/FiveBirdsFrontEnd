@@ -1,7 +1,11 @@
+
+
 * {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
+  font-family: 'Work Sans', sans-serif;
+
 }
 
 .display-flex{
@@ -17,4 +21,14 @@ a, i{
 
 input{
   outline: none;
+}
+
+.flex-col{
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-row{
+  display: flex;
+  flex-direction: row;
 }

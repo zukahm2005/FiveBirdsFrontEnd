@@ -1,0 +1,50 @@
+.service-grid {
+    background-color: #09445a;
+    margin-top: -0.3rem;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+
+    .service-card-container {
+        text-align: center;
+        padding: 2rem 2rem;
+        gap: 2rem;
+        transition: background-color 0.3s ease; /* Hiệu ứng chuyển đổi màu nền */
+
+        .dash-card {
+            max-width: 3rem;
+            height: 0.2rem;
+            background-color: rgb(222, 145, 69);
+            text-align: center;
+            position: relative;
+            left: 40%;
+        }
+
+        p {
+            color: white;
+        }
+
+        .title-service-card {
+            p {
+                font-size: 1.5rem;
+                font-weight: bold;
+            }
+        }
+
+        .action-card {
+            width: 10%;
+            text-align: center;
+            position: relative;
+            left: 43%;
+            p {
+                border: thin solid white;
+                padding: 0.6rem 1.5rem 0.5rem 0.5rem;
+                border-radius: 50%;
+            }
+        }
+
+        &:hover {
+            transition: background-color 0.3s ease; 
+            cursor: pointer;
+        }
+    }
+}
