@@ -8,10 +8,10 @@
     
     .timonial-main{
         padding: 10rem;
-        max-width: 80%;
+        max-width: 90%;
         margin: 0 auto;
-        gap: 3rem;
-        align-items: center;
+        gap: 4rem;
+        align-items: top;
         .left-content-timonial{
             display: flex;
             flex-direction: column;
@@ -38,7 +38,47 @@
             }
         }
         .center-content-timonial{
+            
             text-align: center;
+            gap: 2rem;
+            p{
+                font-size: 1.2rem;
+            }
+
+            .desc-bottom{
+                p{
+                    color: rgb(166, 153, 173);
+                }
+            }
+        }
+        .right-content-timonial{
+            gap: 2rem;
+            .avatar{
+
+                img{
+                    width: 4rem;
+                    border-radius: 50%;
+                }
+            }
+            .name{
+                gap: 3rem;
+                position: relative;
+                p{
+                    color: #09445a;
+                    font-weight: 600;
+                
+                &::before{
+                    position: absolute;
+                    content: "";
+                    background-color: rgb(222, 145, 69);
+                    width: 3rem;
+                    height: 0.1rem;
+                    bottom: 65%;
+                    right: 12%;
+
+                }
+                }
+            }
         }
     }
 }

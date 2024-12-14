@@ -31,14 +31,14 @@ const Testimonial = () => {
             </p>
           </div>
         </div>
-        <div className="right-content-timonial">
+        <div className="right-content-timonial flex-row">
           <div className="avatar">
             <img
               src="https://html.modernwebtemplates.com/nafta/images/team/testimonial2.jpg"
               alt=""
             />
           </div>
-          <div className="name">
+          <div className="name flex-col">
             <div>
               <p>Diana T.Davis</p>
             </div>

@@ -1,0 +1,66 @@
+.fluid-container {
+    .img-fluid-container {
+        max-width: 50%;
+        img {
+            width: 100%;
+        }
+    }
+    .content-fluid-container {
+        .content-fluid {
+            max-width: 85%;
+            margin: 0 auto;
+            padding: 6rem 3rem;
+
+            .number-heading {
+                font-size: 6rem;
+              
+              
+              
+                p {
+                  background: linear-gradient(to bottom, #4a5a69, #e09e50); /* Áp dụng màu gradient */
+                  -webkit-background-clip: text; /* Chỉ áp dụng gradient cho phần chữ */
+                  -webkit-text-fill-color: transparent; /* Làm trong suốt phần chữ để gradient hiển thị */
+                  font-size: inherit; /* Kế thừa font-size từ .number-heading */
+                }
+              }
+              
+
+            .heading-content {
+                padding: 2rem 1rem;
+                gap: 3rem;
+
+                .title-heading {
+                    p {
+                        font-size: 2.5rem;
+                        color: rgb(9, 68, 89);
+                        font-weight: bold;
+                    }
+                }
+                .content-middle {
+                    color: rgb(166, 156, 152);
+                    line-height: 1.5em;
+                }
+                .list-style {
+                    ul {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 1.5rem;
+                    }
+                    li {
+                        display: flex;
+                        flex-direction: row;
+                        gap: 0.5rem;
+                        align-items: center;
+                        .icon {
+                            color: rgb(222, 145, 69);
+                        }
+                        p {
+                            font-size: 1.2rem;
+                            color: rgb(9, 68, 89);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

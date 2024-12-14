@@ -1,0 +1,27 @@
+.sub-email {
+    gap: 1rem;
+    .name-email {
+        color: rgb(153, 153, 163);
+    }
+    .input-email {
+        position: relative;
+        input {
+            width: 100%;
+            border: 2px solid #f2f5f7;
+            box-shadow: none;
+            color: #999;
+            font-size: 16px;
+            font-weight: 300;
+            height: auto !important;
+            line-height: 30px;
+            padding: 8px 30px;
+            border-radius: 5px;
+        }
+        .icon {
+            position: absolute;
+            top: 30%;
+            right: 5%;
+            color: rgb(227, 148, 68);
+        }
+    }
+}
