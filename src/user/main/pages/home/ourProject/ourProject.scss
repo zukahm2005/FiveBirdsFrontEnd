@@ -1,0 +1,101 @@
+.card-container {
+    max-width: 100%;
+
+    perspective: 1000px;
+    background-image: url(https://html.modernwebtemplates.com/nafta/images/portfolio-bg.jpg);
+    background-size: cover;
+    height: 65rem;
+    background-color: blue;
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(9, 68, 90, 0.85);
+        z-index: 0;
+    }
+
+    .content-card-container {
+        color: white;
+        position: absolute;
+        width: 100%;
+        text-align: center;
+        font-weight: bold;
+        .content-card {
+            max-width: 80%;
+            margin: 0 auto;
+            padding: 10rem;
+            gap: 2rem;
+
+            .title-card {
+                font-size: 40px;
+                font-weight: bold;
+            }
+
+            .nav-bar-card {
+                gap: 1rem;
+                margin: 0 auto;
+
+                button {
+                    cursor: pointer;
+
+                    padding: 10px 27px;
+                    background-color: transparent;
+                    border: 2px solid white;
+                    border-radius: 30px;
+                    p {
+                        color: white;
+                        font-weight: bold;
+                        font-size: 16px;
+                    }
+
+                    &.active {
+                        background: linear-gradient(to right, #dd9044 0%, #09445a 100%);
+                        border: none;
+
+                        p {
+                            color: white;
+                        }
+                    }
+                }
+            }
+            .content-display {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 1rem;
+                margin-top: 2rem;
+
+                .gallery-image {
+                    width: 380px;
+                    height: 260px;
+                    transition: transform 0.3s ease-in-out;
+                    transform-style: preserve-3d;
+                }
+            }
+        }
+    }
+}
+
+//   .card {
+//     width: 100%;
+//     height: 100%;
+//     background: lightgray;
+//     border-radius: 15px;
+//     display: flex;
+//     justify-content: center;
+//     align-items: center;
+//     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+//     transform-style: preserve-3d;
+//   }
+
+//   .card-content {
+//     color: white;
+//     font-size: 18px;
+//     font-weight: bold;
+//     transform: translateZ(30px);
+//   }
