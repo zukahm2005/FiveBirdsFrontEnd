@@ -1,0 +1,104 @@
+.logo-container {
+    gap: 1rem;
+    align-items: center;
+  
+    .content-logo {
+      .top-content {
+        p {
+          font-size: 40px;
+          font-weight: bold;
+          color: #ffffff ; // Màu chữ sáng hơn
+        }
+      }
+  
+      .bottom-content {
+        p {
+          font-size: 14px;
+          color: #dcdcdc; // Sáng hơn nhưng thấp hơn tiêu đề
+        }
+      }
+    }
+  }
+  .ant-layout {
+    height: 100vh; /* Đảm bảo layout full chiều cao màn hình */
+  }
+  
+  .ant-layout-sider {
+    transition: all 0.3s ease-in-out !important; /* Hiệu ứng mượt */
+    width: 300px !important; /* Chiều rộng khi mở */
+    max-width: 280px !important;
+    min-width: 80px !important; /* Chiều rộng khi thu nhỏ */
+  }
+  
+  .ant-layout-sider-collapsed {
+    width: 80px !important; /* Chiều rộng thu nhỏ */
+  }
+  
+  .logo-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    padding: 16px;
+  
+    .img-logo img {
+      width: 80px; /* Kích thước logo lớn */
+      height: auto;
+      transition: width 0.3s ease;
+    }
+  
+    .content-logo {
+      display: flex;
+      flex-direction: column;
+  
+      .top-content p {
+        font-size: 24px;
+        font-weight: bold;
+        color: #ffffff;
+      }
+  
+      .bottom-content p {
+        font-size: 12px;
+        color: #dcdcdc;
+      }
+    }
+  }
+  .ant-menu-item {
+    display: flex;
+    justify-content: center; /* Căn giữa theo chiều ngang */
+    align-items: center; /* Căn giữa theo chiều dọc */
+    padding: 0 !important; /* Loại bỏ padding mặc định */
+    height: 48px; /* Đặt chiều cao cho mục menu */
+    border-radius: 8px; /* Bo góc nền */
+    transition: all 0.3s ease; /* Hiệu ứng mượt */
+  
+    /* Màu nền khi được chọn */
+    &.ant-menu-item-selected {
+      background-color: #1890ff !important;
+      color: #ffffff !important; /* Màu icon khi chọn */
+    }
+  
+    /* Màu nền mặc định */
+    &:hover {
+      background-color: rgba(24, 144, 255, 0.1); /* Màu nền khi hover */
+    }
+  }
+  
+  .ant-menu-item-icon {
+    font-size: 18px; /* Kích thước icon vừa phải */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px; /* Đảm bảo icon có khoảng cách đều */
+    height: 40px; /* Kích thước background bao quanh icon */
+    background-color: transparent; /* Nền trong suốt mặc định */
+    border-radius: 50%; /* Bo tròn nền */
+    transition: all 0.3s ease;
+  }
+  
+  /* Khi được chọn hoặc hover */
+  .ant-menu-item-selected .ant-menu-item-icon,
+  .ant-menu-item:hover .ant-menu-item-icon {
+    color: #ffffff !important; /* Màu icon */
+  }
+  

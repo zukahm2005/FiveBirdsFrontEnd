@@ -26,7 +26,6 @@ export default function Admin() {
           <Route key={index} path={route.path} element={route.element} />
         ))}
       </Routes>
-      <Footer />
     </div>
   );
 }
