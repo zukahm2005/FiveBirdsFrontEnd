@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 import "./login.scss";
 
 const Login = () => {
@@ -14,11 +15,36 @@ const Login = () => {
     setErrors({ ...errors, [name]: "" }); // Clear lỗi khi người dùng nhập
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const newErrors = {};
+  // Hàm gọi API login
+  const handleLogin = async () => {
+    const response = await fetch("http://localhost:5005/api/v1/users/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userName: formValues.username,
+        password: formValues.password,
+      }),
+    });
 
-    // Xử lý validation
+    return response.json(); // Trả về dữ liệu JSON
+  };
+
+  // Hàm gọi API checkrole
+  const checkRole = async (token) => {
+    const response = await fetch("http://localhost:5005/api/v1/users/checkrole", {
+      method: "GET",
+      headers: { Authorization: `Bearer ${token}` },
+      credentials: "include", // Đảm bảo cookie được gửi
+    });
+
+    return response.json(); // Trả về dữ liệu JSON
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const newErrors = {};
+    // Validation
     if (!formValues.username) {
       newErrors.username = "Please input your username!";
     } else if (formValues.username.length < 3) {
@@ -27,7 +53,7 @@ const Login = () => {
 
     if (!formValues.password) {
       newErrors.password = "Please input your password!";
-    } else if (formValues.password.length < 6) {
+    } else if (formValues.password.length < 1) {
       newErrors.password = "Password must be at least 6 characters!";
     }
 
@@ -38,15 +64,34 @@ const Login = () => {
 
     setLoading(true);
 
-    // Giả lập gọi API login
-    setTimeout(() => {
-      setLoading(false);
-      if (formValues.username === "admin" && formValues.password === "123456") {
-        navigate("/home");
+    try {
+      // Gọi API login
+      const loginData = await handleLogin();
+
+      if (loginData.errorCode === 200 && loginData.data) {
+        const token = loginData.data;
+
+        // Lưu token vào cookie
+        Cookies.set("token", token, { expires: 7, secure: false, path: "/" });
+
+        // Gọi API checkrole
+        const roleData = await checkRole(token);
+
+        if (roleData.role === "ROLE_CANDIDATE") {
+          navigate("/home"); // Chuyển hướng đến trang ứng viên
+        } else {
+          alert("Access Denied: Only candidates are allowed!");
+          Cookies.remove("token"); // Xóa token nếu không phải ứng viên
+        }
       } else {
-        alert("Invalid credentials");
+        alert("Login failed: Invalid credentials!");
       }
-    }, 1000);
+    } catch (error) {
+      console.error("Error:", error);
+      alert("An error occurred during login. Please try again!");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
