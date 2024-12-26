@@ -78,7 +78,7 @@ const Login = () => {
         const roleData = await checkRole(token);
 
         if (roleData.role === "ROLE_CANDIDATE") {
-          navigate("/home"); // Chuyển hướng đến trang ứng viên
+          navigate("/exam"); // Chuyển hướng đến trang ứng viên
         } else {
           alert("Access Denied: Only candidates are allowed!");
           Cookies.remove("token"); // Xóa token nếu không phải ứng viên
