@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Outlet, useNavigate } from "react-router-dom"; // Outlet để hiển thị các trang con
+import { Outlet, useNavigate, useLocation } from "react-router-dom"; // Thêm useLocation
 import { Layout, Menu, Button, theme } from "antd";
 import Cookies from "js-cookie";
 import {
@@ -10,25 +10,21 @@ import {
   UserOutlined,
   LogoutOutlined,
 } from "@ant-design/icons";
-import img from "../../common/img/image.png"; // Đường dẫn đến logo của bạn
-import "./../dashboard/dashboard.scss";
-
+import img from "../../common/img/image.png"; // Đường dẫn logo
+import './baselayout.scss'
 const { Header, Sider, Content } = Layout;
 
 const BaseLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation(); // Lấy đường dẫn hiện tại
 
-  // Theme customization
   const {
     token: { colorBgContainer },
   } = theme.useToken();
 
   const handleLogout = () => {
-    // Xóa token khỏi cookie
     Cookies.remove("token");
-
-    // Chuyển hướng về trang login
     navigate("/admin/login");
   };
 
@@ -72,43 +68,52 @@ const BaseLayout = () => {
         </div>
 
         {/* Menu */}
-        <Menu
-          theme="dark"
-          mode="inline"
-          defaultSelectedKeys={["1"]}
-          style={{
-            width: "90%",
-            fontSize: "14px",
-            lineHeight: "1.5",
-          }}
-          items={[
-            {
-              key: "1",
-              icon: <AppstoreOutlined style={{ fontSize: "16px" }} />,
-              label: <a href="/admin">DashBoard</a>,
-            },
-            {
-              key: "2",
-              icon: <FileTextOutlined style={{ fontSize: "16px" }} />,
-              label: "Test",
-              children: [
-                { key: "2-1", label: <a href="/admin/test/all-tests">All Tests</a> },
-                { key: "2-2", label: <a href="/admin/test/create-test">Create Test</a> },
-              ],
-            },
-            {
-              key: "3",
-              icon: <UserOutlined style={{ fontSize: "16px" }} />,
-              label: <a href="/admin/administration">Administration</a>,
-            },
-            {
-              key: "4",
-              icon: <LogoutOutlined style={{ fontSize: "16px" }} />,
-              label: "Logout",
-              onClick: handleLogout,
-            },
-          ]}
-        />
+ <Menu
+  theme="dark"
+  mode="inline" // Chuyển chế độ hiển thị của menu thành inline
+  selectedKeys={[location.pathname]} // Đường dẫn hiện tại
+  defaultOpenKeys={["2"]} // Giữ menu con "Test" mở
+  triggerSubMenuAction="hover" // Hiển thị popup khi hover
+
+  style={{
+    width: "90%",
+    fontSize: "14px",
+    lineHeight: "1.5",
+  }}
+  items={[
+    {
+      key: "/admin",
+      icon: <AppstoreOutlined />,
+      label: <a href="/admin">DashBoard</a>,
+    },
+    {
+      key: "2",
+      icon: <FileTextOutlined />,
+      label: "Test",
+      children: [
+        {
+          key: "/admin/test/all-tests",
+          label: <a href="/admin/test/all-tests">All Tests</a>,
+        },
+        {
+          key: "/admin/test/create-test",
+          label: <a href="/admin/test/create-test">Create Test</a>,
+        },
+      ],
+    },
+    {
+      key: "/admin/administration",
+      icon: <UserOutlined />,
+      label: <a href="/admin/administration">Administration</a>,
+    },
+    {
+      key: "logout",
+      icon: <LogoutOutlined />,
+      label: "Logout",
+      onClick: handleLogout,
+    },
+  ]}
+/>
       </Sider>
 
       {/* Content */}
