@@ -43,7 +43,7 @@ const LoginAdmin = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     // Xử lý validation
     const newErrors = {};
     if (!formValues.username) newErrors.username = "Please input your username!";
@@ -52,23 +52,23 @@ const LoginAdmin = () => {
       setErrors(newErrors);
       return;
     }
-
+  
     setLoading(true);
-
+  
     try {
       // Gọi API login
       const loginData = await handleLogin();
-
+  
       if (loginData.errorCode === 200 && loginData.data) {
         const token = loginData.data;
-
+  
         // Lưu token vào cookie
         Cookies.set("token", token, { expires: 7, secure: false, path: "/" });
         console.log("Token saved in cookie:", Cookies.get("token"));
-
+  
         // Gọi API checkrole
         const roleData = await checkRole(token);
-
+  
         if (roleData.role === "ROLE_ADMIN") {
           navigate("/admin"); // Chuyển hướng vào trang admin
         } else {
@@ -77,14 +77,17 @@ const LoginAdmin = () => {
         }
       } else {
         alert("Login failed: Invalid credentials!");
+        Cookies.remove("token"); // Xóa token trong trường hợp đăng nhập thất bại
       }
     } catch (error) {
       console.error("Error:", error);
       alert("An error occurred during login. Please try again!");
+      Cookies.remove("token"); // Xóa token trong trường hợp có lỗi
     } finally {
       setLoading(false);
     }
   };
+  
 
   return (
     <div className="login-page">
