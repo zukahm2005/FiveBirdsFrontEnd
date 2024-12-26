@@ -4,6 +4,7 @@ import BaseLayout from "./BaseLayout/BaseLayout";
 import DashBoard from "./dashboard/DashBoard";
 import LoginAdmin from "./loginAdmin/LoginAdmin";
 import ProtectedRoute from "./protectedroute/ProtectedRoute";
+import InfoAdmin from "./infoAdmin/infoAdmin";
 
 const routes = [
   { path: "/login", element: <LoginAdmin /> },
@@ -18,7 +19,7 @@ const routes = [
       { path: "", element: <DashBoard /> },
       { path: "test/all-tests", element: <h2>All Tests Page</h2> },
       { path: "test/create-test", element: <h2>Create Test Page</h2> },
-      { path: "administration", element: <h2>Administration Page</h2> },
+      { path: "administration", element: <InfoAdmin/> },
     ],
   },
 ];
