@@ -15,12 +15,18 @@
       color: white;
       text-align: left;
       gap: 1rem;
+
+      .logo-f{
+        text-align: left;
+        padding-right: 15rem;
+      }
       .icon1-f {
         display: flex;
         flex-direction: row;
         gap: 1rem;
 
         color: black;
+        
         cursor: pointer;
         p {
           font-size: 1.2rem;
@@ -85,8 +91,8 @@
       color: white;
       .icon-right {
         display: flex;
-        text-align: left;
         align-items: center;
+        gap: 1rem;
         .icon-footer {
           border: 2px solid white;
           padding: 0.7rem 0.6rem 0.3rem 0.6rem;
@@ -97,6 +103,12 @@
             font-size: 1.1rem;
           }
         }
+        .content-footer1{
+          width: 70%;
+          border-bottom: 2px solid white;
+          padding-bottom: 0.5rem;
+        }
+       
       }
     }
   }

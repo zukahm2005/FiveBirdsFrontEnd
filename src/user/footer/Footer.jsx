@@ -134,7 +134,7 @@ export default function Footer() {
             <div key={iconF2.id} >
               <div className="icon-right">
                 <div className="icon-footer"><p>{iconF2.icon}</p> </div>
-                <div className="content-footer"><p>{iconF2.content}</p></div>
+                <div className="content-footer1"><p>{iconF2.content}</p></div>
               </div>
 
             </div>
