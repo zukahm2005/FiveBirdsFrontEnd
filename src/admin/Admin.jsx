@@ -1,12 +1,12 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 import BaseLayout from "./BaseLayout/BaseLayout";
+import CreateTest from "./createtest/CreateTest";
 import DashBoard from "./dashboard/DashBoard";
+import InfoAdmin from "./infoAdmin/infoAdmin";
+import ListManagerCandidate from "./listcandidate/ListManagerCandidate";
 import LoginAdmin from "./loginAdmin/LoginAdmin";
 import ProtectedRoute from "./protectedroute/ProtectedRoute";
-import InfoAdmin from "./infoAdmin/infoAdmin";
-import CreateTest from "./createtest/CreateTest";
-import LishManagerCandidate from "./listcandidate/LishManagerCandidate";
 const routes = [
   { path: "/login", element: <LoginAdmin /> },
   {
@@ -21,7 +21,7 @@ const routes = [
       { path: "test/all-tests", element: <h2>All Tests Page</h2> },
       { path: "test/create-test", element: <CreateTest/>},
       { path: "administration", element: <InfoAdmin/> },
-      { path: "manager-candidate", element: <LishManagerCandidate/>},
+      { path: "manager-candidate", element: <ListManagerCandidate/>},
     ],
   },
 ];
