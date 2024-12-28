@@ -1,119 +1,100 @@
-.footer {
-  .footer-container {
-    display: flex;
+.footer-container {
+  max-width: 100%;
+  background-color: rgb(9, 68, 89);
+  height: 40rem;
+  padding: 0;
+  .content-footer {
+    max-width: 75%;
+    margin: 0 auto;
     justify-content: space-between;
-    align-items: flex-start;
-    gap: 180px; // Tăng khoảng cách giữa các cột
-    padding: 20px 50px; // Tăng padding đều hai bên để tạo khoảng trắng cân đối
-    width: 100%;
-    max-width: 1500px; // Đặt chiều rộng tối đa cho nội dung để căn giữa
-    margin: 0 auto; // Căn giữa footer-container trên màn hình
-
-    .footer-column {
-      flex: 1;
-      margin: 0 15px;
-
-      h3 {
-        margin-bottom: 15px;
-        font-size: 1.2rem;
-        font-weight: bold;
-      }
-
-      p {
-        pointer-events: auto;
-        margin: 10px 0;
-        line-height: 1.8;
+    position: relative;
+    gap: 3rem;
+    align-items: center;
+    .left-content {
+      width: 100%;
+      color: white;
+      text-align: left;
+      gap: 1rem;
+      .icon1-f {
         display: flex;
-        align-items: center;
+        flex-direction: row;
+        gap: 1rem;
 
-        svg {
-          margin-right: 8px;
-        }
-      }
-
-      // Hiệu ứng hover cho cột 2
-      &:nth-child(2) {
-        margin-top: 30px; // Hạ cột xuống để căn chỉnh với logo
-        a {
-          color: #333; // Màu mặc định
-          text-decoration: none; // Bỏ gạch chân
-          transition: color 0.3s ease; // Hiệu ứng mượt khi đổi màu
-
-          &:hover {
-            color: #0073e6; // Màu xanh khi hover
-          }
-        }
-
+        color: black;
+        cursor: pointer;
         p {
-          color: #333; // Màu mặc định của text không phải link
+          font-size: 1.2rem;
+          padding: 0.4rem 0.6rem;
+          background-color: white;
+          border-radius: 50%;
+          padding-top: 0.7rem;
           &:hover {
-            color: #0073e6; // Màu xanh khi hover
+            background-color: rgb(5, 41, 54);
+            color: white;
           }
         }
       }
+    }
+    .form-container {
+      border-top: 2px solid rgb(222, 145, 69);
+      background-color: white;
+      text-align: center;
+      height: 40rem;
+      width: 100%;
 
-      // Hiệu ứng hover và giữ nguyên màu cho cột 3
-      &:nth-child(3) {
-        margin-top: 30px; // Hạ cột xuống để căn chỉnh với logo
-        a {
-          color: #333; // Màu mặc định
-          text-decoration: none; // Bỏ gạch chân
-          transition: color 0.3s ease; // Hiệu ứng mượt khi đổi màu
-
-          &:hover,
-          &:active,
-          &:visited {
-            color: #0073e6; // Màu xanh khi hover, active, hoặc visited
+      .info-form {
+        gap: 1rem;
+        height: 100%;
+        padding: 0.5rem;
+        .title-form {
+          p {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: rgb(9, 68, 89);
           }
         }
-
-        p {
-          color: #333; // Màu mặc định
-          &:hover {
-            color: #0073e6; // Màu xanh khi hover
-          }
-          &:active {
-            color: #0073e6; // Màu xanh khi active
-          }
-        }
-      }
-
-      &:first-child {
-        .footer-image {
-          margin-bottom: 15px;
-
-          img {
-            width: 100px;
-            height: 100px;
-          }
-        }
-      }
-
-      // CSS cho phần icon mạng xã hội trong cột cuối cùng
-      &:last-child {
-        .footer-social-icons {
+        .input-form {
+          width: 100%;
+          padding: 1rem;
           display: flex;
-          justify-content: start;
-          align-items: center;
-          gap: 15px; // Khoảng cách giữa các biểu tượng
-          margin-top: 20px;
-
-          .social-icon {
-            width: 40px; // Kích thước box
-            height: 40px; // Kích thước box
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border: 2px solid #ccc; // Viền cho box
-            border-radius: 8px; // Bo góc
-            transition: all 0.3s ease; // Hiệu ứng hover
-            color: #333; // Màu icon mặc định
-            font-size: 18px; // Làm icon nhỏ hơn
-
-            &:hover {
-              border-color: #0073e6; // Màu viền khi hover
-              transform: translateY(-5px); // Dịch icon lên khi hover
+          flex-direction: column;
+          gap: 2rem;
+          .phone-form {
+            input {
+              width: 100%;
             }
+          }
+        }
+
+        .btn-send{
+          padding: 0.9rem 4rem;
+          border-radius: 30px;
+          outline: none;
+          border: none;
+          background: linear-gradient(to right, #dd9044 0%, #09445a 100%);
+          p{
+            font-size: 1.2em;
+            color: white;
+          }
+        }
+      }
+    }
+
+    .right-content {
+      width: 100%;
+      color: white;
+      .icon-right {
+        display: flex;
+        text-align: left;
+        align-items: center;
+        .icon-footer {
+          border: 2px solid white;
+          padding: 0.7rem 0.6rem 0.3rem 0.6rem;
+          margin-bottom: 1rem;
+          border-radius: 50%;
+          p {
+            color: white;
+            font-size: 1.1rem;
           }
         }
       }

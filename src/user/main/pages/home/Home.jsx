@@ -2,10 +2,13 @@ import React from "react";
 import Fluid from "./fluid/Fluid";
 import Fluid1 from "./fluid1/Fluid1";
 import Fluid2 from "./fluid2/Fluid2";
+import Map from "./map/Map";
+import Members from "./members/Members";
+import OurProject from "./ourProject/OurProject";
 import PageSlide from "./pageSlide/PageSlide";
+import FAQ from "./question/Question";
 import ServiceGrid from "./serviceGrid/ServiceGrid";
 import Testimonial from "./testimonial/Testimonial";
-import OurProject from "./ourProject/OurProject";
 export default function Home() {
   return (
     <div>
@@ -13,22 +16,31 @@ export default function Home() {
         <PageSlide />
       </div>
       <div>
-        <ServiceGrid/>
+        <ServiceGrid />
       </div>
       <div>
-        <Testimonial/>
+        <Testimonial />
       </div>
       <div>
-        <Fluid/>
+        <Fluid />
       </div>
       <div>
-        <Fluid1/>
+        <Fluid1 />
       </div>
       <div>
-        <Fluid2/>
+        <Fluid2 />
       </div>
       <div>
-        <OurProject/>
+        <OurProject />
+      </div>
+      <div>
+        <FAQ />
+      </div>
+      <div>
+        <Members />
+      </div>
+      <div>
+        <Map />
       </div>
     </div>
   );

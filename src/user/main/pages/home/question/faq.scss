@@ -1,0 +1,80 @@
+.faq-container {
+    max-width: 100%;
+
+    .faq-content {
+        max-width: 70%;
+        margin: 0 auto;
+        padding: 7rem 4rem;
+        max-height: 70%;
+        gap: 3rem;
+
+        .left-faq {
+            width: 100%;
+            gap: 3rem;
+            .title-faq {
+                p {
+                    font-size: 2.5rem;
+                    font-weight: bold;
+                    color: rgb(9, 68, 89);
+                }
+            }
+            .faq-list {
+                width: 100%;
+                gap: 1rem;
+                transition: all 0.5s ease-in-out;
+
+                .faq-item {
+                    width: 100%;
+                }
+                .faq-title {
+                    justify-content: space-between;
+                    padding: 1.2rem;
+                    background-color: rgb(242, 245, 247);
+                    border-radius: 5px;
+                    color: rgb(84, 0, 0);
+                    &:hover {
+                        background-color: white;
+                        border: 1px solid #ddd;
+                        cursor: pointer;
+                    }
+                    .icon {
+                        border: thin solid gray;
+                        border-radius: 50%;
+                        background: linear-gradient(to top, #dd9044 0%, #09445a 100%);
+                        color: white;
+                        p {
+                        }
+                    }
+                }
+                .content {
+                    padding: 1rem;
+                    color: rgb(199, 169, 153);
+                    font-size: 1.2rem;
+                    font-weight: lighter;
+                }
+                .title {
+                    font-size: 1.2rem;
+                }
+            }
+        }
+
+        .right-faq {
+            width: 90%;    
+            .icon-container {
+                width: 100%;
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 1.5rem;
+                justify-content: space-between;
+                img {
+                    border: thin solid rgb(238, 238, 238);
+                    padding: 2.5rem;
+                    width: 28%;
+                    border-radius: 5px;
+                    
+                }
+            }
+        }
+    }
+}
