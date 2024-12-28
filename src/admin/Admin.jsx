@@ -5,7 +5,8 @@ import DashBoard from "./dashboard/DashBoard";
 import LoginAdmin from "./loginAdmin/LoginAdmin";
 import ProtectedRoute from "./protectedroute/ProtectedRoute";
 import InfoAdmin from "./infoAdmin/infoAdmin";
-
+import CreateTest from "./createtest/CreateTest";
+import LishManagerCandidate from "./listcandidate/LishManagerCandidate";
 const routes = [
   { path: "/login", element: <LoginAdmin /> },
   {
@@ -18,8 +19,9 @@ const routes = [
     children: [
       { path: "", element: <DashBoard /> },
       { path: "test/all-tests", element: <h2>All Tests Page</h2> },
-      { path: "test/create-test", element: <h2>Create Test Page</h2> },
+      { path: "test/create-test", element: <CreateTest/>},
       { path: "administration", element: <InfoAdmin/> },
+      { path: "manager-candidate", element: <LishManagerCandidate/>},
     ],
   },
 ];
