@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import Component from "../components/component";
+import Component from "../components/Component";
 import Logo from "../components/logo/Logo";
 import "./headercomponent.scss";
 import { IoIosArrowForward } from "react-icons/io";
