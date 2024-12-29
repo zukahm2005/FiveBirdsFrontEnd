@@ -18,7 +18,7 @@ const LoginAdmin = () => {
 
   // Hàm gọi API login
   const handleLogin = async () => {
-    const response = await fetch("http://localhost:5005/api/v1/users/login", {
+    const response = await fetch("http://46.202.178.139:5050/api/v1/users/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -32,7 +32,7 @@ const LoginAdmin = () => {
 
   // Hàm gọi API checkrole
   const checkRole = async (token) => {
-    const response = await fetch("http://localhost:5005/api/v1/users/checkrole", {
+    const response = await fetch("http://46.202.178.139:5050/api/v1/users/checkrole", {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` }, // Gửi token trong header
       credentials: "include", // Đảm bảo cookie được gửi
@@ -43,7 +43,7 @@ const LoginAdmin = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     // Xử lý validation
     const newErrors = {};
     if (!formValues.username) newErrors.username = "Please input your username!";
@@ -52,23 +52,23 @@ const LoginAdmin = () => {
       setErrors(newErrors);
       return;
     }
-  
+
     setLoading(true);
-  
+
     try {
       // Gọi API login
       const loginData = await handleLogin();
-  
+
       if (loginData.errorCode === 200 && loginData.data) {
         const token = loginData.data;
-  
+
         // Lưu token vào cookie
         Cookies.set("token", token, { expires: 7, secure: false, path: "/" });
         console.log("Token saved in cookie:", Cookies.get("token"));
-  
+
         // Gọi API checkrole
         const roleData = await checkRole(token);
-  
+
         if (roleData.role === "ROLE_ADMIN") {
           navigate("/admin"); // Chuyển hướng vào trang admin
         } else {
@@ -87,7 +87,7 @@ const LoginAdmin = () => {
       setLoading(false);
     }
   };
-  
+
 
   return (
     <div className="login-page">

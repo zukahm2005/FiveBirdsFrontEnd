@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Card, Row, Col, Avatar, Space, Typography } from "antd";
 import { MoreOutlined, ArrowUpOutlined, PrinterOutlined, ExportOutlined, DownloadOutlined } from "@ant-design/icons";
 import TableDashBoard from "./components/TableDashBoard";
@@ -7,6 +7,19 @@ import "./dashboard.scss";
 
 const DashboardContent = () => {
   const { Text, Title } = Typography;
+  const [data, setData] = useState([]);
+
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch("http://46.202.178.139:5050/api/v1/candidates");
+      const result = await response.json();
+      setData(result.data);
+      console.log(data)
+    };
+    fetchData();
+  }, []);
 
   const cardStyle = {
     padding: "35px",
@@ -71,7 +84,7 @@ const DashboardContent = () => {
             </Space>
             <Space style={{ display: "flex", justifyContent: "space-between" }}>
               <Title level={2} style={{ margin: "16px 0" }}>
-                2,345
+                {data.length}
               </Title>
               <Text style={{ color: "green" }}>
                 <ArrowUpOutlined /> 20%
