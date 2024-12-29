@@ -1,5 +1,5 @@
 import React from "react";
-import "./ServiceGrid.scss";
+import "./serviceGrid.scss";
 import { IoIosArrowForward } from "react-icons/io";
 
 // Import ảnh
