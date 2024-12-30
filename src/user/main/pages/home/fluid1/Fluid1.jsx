@@ -16,10 +16,13 @@ const Fluid1 = () => {
             </div>
             <div className="content-middle">
               <p>
-                Rem aperiam, eaque ipsa qillo inventore veritatis etquasi
-                architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam
-                voluptatem quia voluptas sit aspernatur aut odit aut fugit sed
-                quia consequuntur magni dolores eos.
+                We are pioneers in adopting energy-saving technologies to
+                minimize environmental impact. Here, you will join innovative
+                projects aimed at improving energy efficiency, reducing
+                emissions, and optimizing production processes. Your creative
+                ideas will not only generate economic value but also contribute
+                to building a sustainable future for the world. Join our team to
+                bring advanced technology solutions to life!
               </p>
             </div>
             <div className="list-style">

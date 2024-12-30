@@ -15,37 +15,37 @@ const services = [
     id: 1,
     icon: img1,
     title: "Thermal Power",
-    description: "Lorem ipsum dolor amet consectetur",
+    description: "Contribute to sustainable energy solutions",
   },
   {
     id: 2,
     icon: img2,
     title: "Oil Platform",
-    description: "Adipisicing elit, sed do eiusmod tempor",
+    description: "Explore opportunities on modern oil platforms",
   },
   {
     id: 3,
     icon: img3,
     title: "Gas Flaring",
-    description: "Incididunt labore dolore magna aliqua",
+    description: "Reduce emissions and protect the environment",
   },
   {
     id: 4,
     icon: img7,
     title: "Oil Pump",
-    description: "Utenim adminim veniam quis nostrud",
+    description: "Operate advanced oil pump systems",
   },
   {
     id: 5,
     icon: img5,
     title: "Oil Refinery",
-    description: "Ullamco laboris nisi ut aliquip veniam exea",
+    description: "Refine oil into high-quality products.",
   },
   {
     id: 6,
     icon: img6,
     title: "Factory",
-    description: "Commodo conquat duis aute irure dolor",
+    description: "Build sustainable infrastructure collaboratively",
   },
 ];
 
@@ -68,19 +68,24 @@ const ServiceGrid = () => {
           style={{ backgroundColor: colors[index % colors.length] }}
         >
           <div className="icon">
-            <img src={service.icon} alt={service.title} className="service-icon" />
+            <img
+              src={service.icon}
+              alt={service.title}
+              className="service-icon"
+            />
           </div>
-         
+
           <div className="title-service-card">
             <p>{service.title}</p>
           </div>
-          <div className="dash-card">
-          </div>
+          <div className="dash-card"></div>
           <div className="description-card">
             <p>{service.description}</p>
           </div>
           <div className="action-card">
-            <p><IoIosArrowForward /></p>
+            <p>
+              <IoIosArrowForward />
+            </p>
           </div>
         </div>
       ))}

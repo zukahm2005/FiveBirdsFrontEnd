@@ -10,24 +10,20 @@ const Testimonial = () => {
           </div>
           <div className="button-timonial">
             <button>
-              <p>Get A Quote</p>
+              <p>Apply Now</p>
             </button>
           </div>
         </div>
         <div className="center-content-timonial flex-col">
           <div className="desc-top">
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-              eiusmod tempor incididunt ut labore.
-            </p>
+            <p>Welcome to Global Career Opportunities</p>
           </div>
           <div className="desc-bottom">
             <p>
-              Duis aute irure dolor in reprehenderit in voluptate velit esse
-              cillum doloreu fugiat nulla pariatur. Excepteur sint occaecat
-              cupidatat non proident, sunt in culpa qui officia deserunt mollit
-              animest laborum sed ut perspiciatis unde omnis iste natus error
-              sit voluptatem accusantium doloremque.
+              At Nafta, we don’t just offer jobs—we build careers. With a
+              professional work environment, opportunities for growth, and
+              exciting challenges, you’ll discover your full potential. Submit
+              your CV today and start your new career journey with us!
             </p>
           </div>
         </div>

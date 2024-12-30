@@ -1,6 +1,7 @@
 import React from "react";
 import "./fluid.scss";
-import { FaCheck } from "react-icons/fa6";import { LuDot } from "react-icons/lu";
+import { FaCheck } from "react-icons/fa6";
+import { LuDot } from "react-icons/lu";
 
 const Fluid = () => {
   return (
@@ -23,26 +24,35 @@ const Fluid = () => {
             </div>{" "}
             <div className="content-middle">
               <p>
-                Cillum doloreu fugiat nulla pariatur excepteur si occaecat
-                cupdatat non proident sunt culpaq officia deserunt mollt animest
-                laborum sed perspiciatis unde omnis iste natus errosit
-                voluptatem accuantium doloremque laudantium totam.
+                The chemical industry plays a pivotal role in driving global
+                economic development. Here, you will engage in advanced research
+                and production projects, contributing to innovative and
+                sustainable solutions. This is your opportunity to work in a
+                modern environment alongside experienced experts with
+                international influence. Join us today to unlock your potential
+                and help us build a sustainable future together.
               </p>
             </div>
             <div className="list-style">
               <ul>
                 <li>
                   <FaCheck className="icon" />
-                  <p> Laudantium, totam rem aperiam</p>
+                  <p>
+                    {" "}
+                    Participate in cutting-edge chemical technology projects
+                  </p>
                 </li>
                 <li>
                   <FaCheck className="icon" />
-                  <p> Eaque ipsa quae ab illo inventore veritatis</p>{" "}
+                  <p> Collaborate with top experts in the industry.</p>{" "}
                 </li>
                 <li>
-                  
                   <FaCheck className="icon" />
-                  <p> Quasi architecto beatae</p>{" "}
+                  <p>
+                    {" "}
+                    Advance your career in a dynamic and international
+                    environment.
+                  </p>{" "}
                 </li>
               </ul>
             </div>
