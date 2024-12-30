@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Modal, Select, Input, Tag, Button, DatePicker } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
-import "./examRequst.scss";
+import "./ExamRequst.scss";
 
 const { Option } = Select;
 const { TextArea } = Input;
