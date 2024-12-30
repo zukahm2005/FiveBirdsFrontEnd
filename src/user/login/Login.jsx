@@ -20,6 +20,7 @@ const Login = () => {
     const response = await fetch("http://46.202.178.139:5050/api/v1/users/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
+      credentials: "include",
       body: JSON.stringify({
         userName: formValues.username,
         password: formValues.password,
@@ -33,7 +34,6 @@ const Login = () => {
   const checkRole = async (token) => {
     const response = await fetch("http://46.202.178.139:5050/api/v1/users/checkrole", {
       method: "GET",
-      headers: { Authorization: `Bearer ${token}` },
       credentials: "include", // Đảm bảo cookie được gửi
     });
 
