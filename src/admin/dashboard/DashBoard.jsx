@@ -20,33 +20,6 @@ const DashboardContent = () => {
     fetchData();
   }, []);
 
-  const cardStyle = {
-    padding: "35px",
-    textAlign: "left",
-    borderRight: "1px solid  #f0f0f0",
-    borderRadius: 0,
-    borderTopLeftRadius: "15px",
-    borderBottomLeftRadius: "15px",
-  };
-
-  const cardStyle2 = {
-    padding: "35px",
-    textAlign: "left",
-    borderRight: "1px solid  #f0f0f0",
-    borderRadius: 0,
-    borderTop: "1px solid #f0f0f0",
-    borderBottom: "1px solid #f0f0f0",
-    borderLeft: 0,
-  };
-
-  const cardStyle3 = {
-    padding: "35px",
-    textAlign: "left",
-    borderRight: "1px solid  #f0f0f0",
-    borderRadius: 0,
-    borderTopRightRadius: "15px",
-    borderBottomRightRadius: "15px",
-  };
 
   return (
     <div className="container-dashbord">
@@ -75,7 +48,7 @@ const DashboardContent = () => {
       </Row>
       <Row style={{ boxShadow: "0 4px 12px rgba(0,0,0,0.1)", borderRadius: "15px" }}>
         <Col xs={24} sm={6}>
-          <Card style={cardStyle} bodyStyle={{ padding: 0 }}>
+          <Card className="cardStyle" bodyStyle={{ padding: 0 }}>
             <Space style={{ display: "flex", justifyContent: "space-between" }}>
               <Text style={{ fontSize: "16px" }} strong>Total candidates</Text>
               <MoreOutlined style={{ fontSize: "23px" }} />
@@ -92,7 +65,7 @@ const DashboardContent = () => {
         </Col>
 
         <Col xs={24} sm={6}>
-          <Card style={cardStyle2} bodyStyle={{ padding: 0 }}>
+          <Card className="cardStyle2" bodyStyle={{ padding: 0 }}>
             <Space style={{ display: "flex", justifyContent: "space-between" }}>
               <Text style={{ fontSize: "16px" }} strong>Rejected candidates</Text>
               <MoreOutlined style={{ fontSize: "23px" }} />
@@ -109,7 +82,7 @@ const DashboardContent = () => {
         </Col>
 
         <Col xs={24} sm={6} style={{ borderLeft: "1px solid  #f0f0f0" }}>
-          <Card style={cardStyle2} bodyStyle={{ padding: 0 }}>
+          <Card className="cardStyle2" bodyStyle={{ padding: 0 }}>
             <Space style={{ display: "flex", justifyContent: "space-between" }}>
               <Text style={{ fontSize: "16px" }} strong>Pending candidates</Text>
               <MoreOutlined style={{ fontSize: "23px" }} />
@@ -126,7 +99,7 @@ const DashboardContent = () => {
         </Col>
 
         <Col xs={24} sm={6}>
-          <Card style={cardStyle3} bodyStyle={{ padding: 0 }}>
+          <Card className="cardStyle3" bodyStyle={{ padding: 0 }}>
             <Space style={{ display: "flex", justifyContent: "space-between" }}>
               <Text style={{ fontSize: "16px" }} strong>Active candidates</Text>
               <MoreOutlined style={{ fontSize: "23px" }} />
