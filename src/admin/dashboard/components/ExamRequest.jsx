@@ -1,13 +1,9 @@
 import React, { useState } from "react";
 import { Modal, Select, Input, Tag, Button, DatePicker, TimePicker } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
-<<<<<<< HEAD
-import "./ExamRequst.scss";
-=======
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat'
 import "./examRequst.scss";
->>>>>>> Quan
 
 const { Option } = Select;
 const { TextArea } = Input;
