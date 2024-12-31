@@ -91,7 +91,7 @@ const ExamRequest = ({ exam, data, onClose, setClose, setSelectedRows, setSelect
                 </div>
 
                 <div style={{ marginBottom: 16 }}>
-                    <label>Status</label>
+                    <label>Exam</label>
                     <Select
                         style={{ width: "100%", marginTop: 8 }}
                         placeholder="Select status"
