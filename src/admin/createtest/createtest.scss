@@ -1,51 +1,294 @@
-.create-test-container {
-    display: flex;
-    justify-content: flex-start;
-    padding: 20px;
-    background-color: #f5f5f5;
-  }
-  
-  .form-section {
-    width: 300px;
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.manage-questions-answers-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  height: 100%;
+  padding: 20px;
+  background-color: #f5f5f5;
+  box-sizing: border-box;
+
+  .left-section,
+  .right-section {
+    overflow-y: auto; /* Thêm cuộn dọc */
+
     background: white;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    position: relative; /* Đảm bảo nút bám sát góc của section */
+  }
+
+  .left-section {
+    flex: 1;
+    height: 100%;
+    max-width: 550px;
+  }
+
+  .right-section {
+    flex: 2;
+    height: 100%;
+    max-width: 950px;
+    display: flex;
+    flex-direction: column; /* Đặt các phần tử theo chiều dọc */
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    overflow-y: auto; /* Cho phép cuộn nội dung */
   }
   
-  .form-group {
-    margin-bottom: 20px;
+  .question-list {
+    flex: 1; /* Cho phép danh sách câu hỏi chiếm không gian */
+    overflow-y: auto; /* Cuộn danh sách nếu nội dung dài */
   }
   
-  .dropdown-label {
-    display: block;
-    margin-bottom: 8px;
+  .button-group {
+    display: flex;
+    justify-content: space-between; /* Căn đều các nút */
+    margin-top: 20px;
+  }
+  
+  .create-questions-btn {
+    background-color: #28a745;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
     font-size: 1rem;
     font-weight: bold;
-    color: #333;
     cursor: pointer;
+    transition: all 0.3s ease;
   }
   
-  .dropdown-input {
+  .create-questions-btn:hover {
+    background-color: #218838;
+  }
+  
+  h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+}
+
+/* Nút Create Exam */
+/* Styling cho nút Create Exam */
+.create-exam-btn {
+  position: absolute; /* Để căn nút ở dưới góc phải */
+  bottom: 20px;
+  right: 20px;
+  background-color: #007bff; /* Màu nền xanh dương */
+  color: white; /* Màu chữ trắng */
+  padding: 12px 24px; /* Khoảng cách bên trong nút */
+  border: none; /* Loại bỏ viền */
+  border-radius: 8px; /* Bo tròn góc nút */
+  font-size: 1rem; /* Kích thước chữ */
+  font-weight: bold; /* Đậm chữ */
+  cursor: pointer; /* Thay đổi con trỏ khi hover */
+  text-align: center;
+  transition: all 0.3s ease; /* Hiệu ứng chuyển động */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Hiệu ứng bóng */
+}
+
+.create-exam-btn:hover {
+  background-color: #0056b3; /* Đổi màu nền khi hover */
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15); /* Tăng bóng khi hover */
+  transform: translateY(-2px); /* Nút nhô lên khi hover */
+}
+
+.create-exam-btn:active {
+  background-color: #003f7f; /* Màu tối hơn khi click */
+  transform: translateY(0); /* Trả nút về vị trí cũ khi click */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Giảm bóng khi click */
+}
+
+
+/* Nút Create All Questions and Answers */
+.create-questions-btn {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  background-color: #28a745;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  text-align: center;
+}
+
+.create-questions-btn:hover {
+  background-color: #218838;
+}
+
+/* Form Group */
+.form-group {
+  margin-bottom: 20px;
+
+  label {
+    font-size: 1rem;
+    font-weight: bold;
+    margin-bottom: 8px;
+    display: block;
+    color: #333;
+  }
+
+  input,
+  select {
     width: 100%;
-    padding: 8px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    box-sizing: border-box;
+
+    &:focus {
+      border-color: #1890ff;
+      outline: none;
+      box-shadow: 0 0 5px rgba(24, 144, 255, 0.5);
+    }
+  }
+}
+
+/* Dropdown Label */
+.dropdown-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  font-weight: bold;
+  margin-bottom: 10px;
+
+  svg {
+    transition: transform 0.3s ease;
+  }
+
+  &.active svg {
+    transform: rotate(180deg);
+  }
+}
+
+/* Question Group */
+.question-group {
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  padding: 15px;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+
+  .question-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    cursor: pointer;
+
+    span {
+      font-size: 1rem;
+      font-weight: bold;
+    }
+
+    .dropdown-icon {
+      transition: transform 0.3s ease;
+    }
+
+    .dropdown-icon.open {
+      transform: rotate(180deg);
+    }
+  }
+
+  .question-details {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+
+    input {
+      width: 100%;
+      padding: 10px;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+
+      &:focus {
+        border-color: #1890ff;
+        outline: none;
+        box-shadow: 0 0 5px rgba(24, 144, 255, 0.5);
+      }
+    }
+  }
+}
+
+/* Exam Group */
+.exam-group {
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  padding: 15px;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+
+  label {
+    font-size: 1rem;
+    font-weight: bold;
+    margin-bottom: 8px;
+    display: block;
+    color: #333;
+    cursor: pointer;
+
+    &:hover {
+      color: #0056b3;
+    }
+
+    svg {
+      margin-left: 5px;
+      transition: transform 0.3s ease;
+    }
+
+    &.active svg {
+      transform: rotate(180deg);
+    }
+  }
+
+  input {
+    width: 100%;
+    padding: 10px;
     font-size: 1rem;
     border: 1px solid #ccc;
     border-radius: 4px;
-    margin-bottom: 10px;
+    box-sizing: border-box;
   }
-  
-  .submit-btn {
-    background-color: #1890ff;
-    color: white;
-    border: none;
-    padding: 8px 12px;
-    cursor: pointer;
-    border-radius: 4px;
-    font-size: 1rem;
-  }
-  
-  .submit-btn:hover {
-    background-color: #40a9ff;
-  }
-  
+}
+.icon-button-left {
+  display: flex;
+  align-items: center;
+  color: #007bff; /* Màu xanh chữ */
+  font-size: 1rem; /* Kích thước chữ */
+  font-weight: bold; /* Đậm chữ */
+  cursor: pointer; /* Thay đổi con trỏ chuột */
+  transition: color 0.3s ease; /* Hiệu ứng hover */
+  border: none; /* Loại bỏ viền button */
+  background: none; /* Loại bỏ nền button */
+  padding: 0; /* Loại bỏ padding */
+}
+
+.icon-button-left:hover {
+  color: #0056b3; /* Đổi màu khi hover */
+}
+
+.icon-button-left svg {
+  margin-right: 8px; /* Khoảng cách giữa icon và text */
+  font-size: 1.2rem; /* Kích thước icon */
+}
