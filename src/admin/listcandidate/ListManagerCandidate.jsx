@@ -9,14 +9,15 @@ export default function ListManagerCandidate() {
   useEffect(() => {
     // Fetch the list of candidates
     axios
-      .get('http://localhost:5005/api/v1/candidates')
+      .get('http://46.202.178.139:5050/api/v1/candidates')
       .then((response) => {
-        setCandidates(response.data);
+        setCandidates(response.data.data);
       })
       .catch((error) => {
         console.error('Error fetching candidates:', error);
       });
   }, []);
+
 
   return (
     <div className="list-manager-candidate">
@@ -34,9 +35,9 @@ export default function ListManagerCandidate() {
         </thead>
         <tbody>
           {candidates.length > 0 ? (
-            candidates.map((candidate, index) => (
+            candidates.map((candidate) => (
               <tr key={candidate.id}>
-                <td>{index + 1}</td>
+                <td>{candidate.id}</td>
                 <td>{candidate.fullName}</td>
                 <td>{candidate.email}</td>
                 <td>{candidate.phone}</td>

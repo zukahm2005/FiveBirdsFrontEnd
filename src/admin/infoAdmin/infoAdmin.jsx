@@ -60,7 +60,7 @@ const InfoAdmin = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`http://localhost:5005/api/v1/users/all/1`, {
+                const response = await axios.get(`http://46.202.178.139:5050/api/v1/users/get/all?pageNumber=1&pageSize=10`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                         "Content-Type": "application/json",
