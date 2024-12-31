@@ -2,6 +2,10 @@ import React, { useEffect, useState } from "react";
 import { Button, Table, Typography, Spin } from "antd";
 import ExamRequest from "./ExamRequest";
 import moment from "moment/moment";
+import { Input, Space } from 'antd';
+const { Search } = Input;
+import Cookies from 'js-cookie';
+
 
 const { Text } = Typography;
 
@@ -50,14 +54,29 @@ const TableDashBoard = () => {
   const [onClose, setClose] = useState(false);
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
+  const [filteredData, setFilteredData] = useState([]);
+  const [exam, setExam] = useState([])
+
+  const token = Cookies.get("token")
+
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch("http://46.202.178.139:5050/api/v1/candidates");
         const result = await response.json();
+
+        const dataExam = await fetch("http://46.202.178.139:5050/api/v1/exams/get/all?pageNumber=1&pageSize=10", {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          }
+        });
+        const exemResult = await dataExam.json();
         if (result.data) {
+          setExam(exemResult.data)
           setData(result.data);
+          setFilteredData(result.data)
         } else {
           setError("No data available");
         }
@@ -79,7 +98,22 @@ const TableDashBoard = () => {
       setLoading(false);
       setClose(false);
     }, 1000);
+  }
+
+  const onSearch = (value) => {
+    const lowerValue = value.toLowerCase();
+    const filtered = data.filter(
+      (item) =>
+        item.fullName.toLowerCase().includes(lowerValue) ||
+        item.email.toLowerCase().includes(lowerValue) ||
+        item.phone.includes(lowerValue) ||
+        item.education.toLowerCase().includes(lowerValue) ||
+        item.experience.toLowerCase().includes(lowerValue)
+    );
+    setFilteredData(filtered);
   };
+
+
 
   const onSelectChange = (newSelectedRowKeys) => {
     setSelectedRowKeys(newSelectedRowKeys);
@@ -94,7 +128,6 @@ const TableDashBoard = () => {
     selectedRowKeys,
     onChange: onSelectChange,
   };
-  console.log(selectedRowKeys)
 
   const hasSelected = selectedRowKeys.length > 0;
 
@@ -119,6 +152,14 @@ const TableDashBoard = () => {
           >
             Reload
           </Button>
+
+          <div style={{ width: "25%" }}>
+            <Search
+              placeholder="input search text"
+              allowClear
+              onSearch={onSearch}
+            />
+          </div>
         </div>
 
         {loading ? (
@@ -131,13 +172,14 @@ const TableDashBoard = () => {
           <Table
             rowSelection={rowSelection}
             columns={columns}
-            dataSource={data}
+            dataSource={filteredData}
             rowKey="id"
           />
         )}
       </div>
       {onClose && (
         <ExamRequest
+          exam = {exam}
           data={selectedRows}
           onClose={onClose}
           setClose={setClose}
