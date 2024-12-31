@@ -1,24 +1,20 @@
 import React, { useState } from "react";
-import { Modal, Select, Input, Tag, Button, DatePicker } from "antd";
+import { Modal, Select, Input, Tag, Button, DatePicker, TimePicker } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat'
 import "./examRequst.scss";
 
 const { Option } = Select;
 const { TextArea } = Input;
 
-const ExamRequest = ({ data, onClose, setClose, setSelectedRows, setSelectedRowKeys, selectedRowKeys }) => {
+const ExamRequest = ({ exam, data, onClose, setClose, setSelectedRows, setSelectedRowKeys, selectedRowKeys }) => {
     const [selectedCandidates, setSelectedCandidates] = useState([]);
     const [status, setStatus] = useState(null);
     const [comment, setComment] = useState("");
+    const [candidateColors, setCandidateColors] = useState({});
 
-    const statusOptions = [
-        "New",
-        "Reviewed",
-        "Put on Hold",
-        "Attempted to Contact",
-        "Checking References",
-    ];
-    console.log(data)
+
     const handleUpdate = () => {
         console.log("Candidates:", selectedCandidates);
         console.log("Status:", status);
@@ -36,8 +32,6 @@ const ExamRequest = ({ data, onClose, setClose, setSelectedRows, setSelectedRowK
             updatedRowKeys.splice(index, 1);
         }
         setSelectedRowKeys(updatedRowKeys);
-
-        console.log(updatedRowKeys)
     };
     const handleOnclose = () => {
         setSelectedRows([])
@@ -49,15 +43,28 @@ const ExamRequest = ({ data, onClose, setClose, setSelectedRows, setSelectedRowK
         console.log(date, dateString);
     };
 
+    dayjs.extend(customParseFormat);
+    const onChangeTimes = (time, timeString) => {
+        console.log(time, timeString);
+    };
+
     const getRandomColor = () => {
         const letters = '0123456789ABCDEF';
         let color = '#';
         for (let i = 0; i < 6; i++) {
-          color += letters[Math.floor(Math.random() * 16)];
+            color += letters[Math.floor(Math.random() * 16)];
         }
         return color;
-      };
-      
+    };
+    const getColorForCandidate = (candidateId) => {
+        if (!candidateColors[candidateId]) {
+            const newColor = getRandomColor();
+            setCandidateColors((prev) => ({ ...prev, [candidateId]: newColor }));
+            return newColor;
+        }
+        return candidateColors[candidateId];
+    };
+
 
     return (
         <div className="updateStatus">
@@ -68,12 +75,12 @@ const ExamRequest = ({ data, onClose, setClose, setSelectedRows, setSelectedRowK
             <div>
                 <div style={{ marginBottom: 16 }}>
                     <p style={{ padding: "20px 0 10px 0" }}>Add Candidates</p>
-                    <div className="boxCandidate" > 
+                    <div className="boxCandidate" >
                         {data.map((candidate) => (
                             <Tag
                                 className="tag-status"
                                 key={candidate.fullName}
-                                color={getRandomColor()}
+                                color={getColorForCandidate(candidate.id)}
                                 closable
                                 onClose={() => onRemoveCandidate(candidate.id)}
                             >
@@ -83,7 +90,7 @@ const ExamRequest = ({ data, onClose, setClose, setSelectedRows, setSelectedRowK
                     </div>
                 </div>
 
-                <div style={{ marginBottom: 16}}>
+                <div style={{ marginBottom: 16 }}>
                     <label>Status</label>
                     <Select
                         style={{ width: "100%", marginTop: 8 }}
@@ -91,17 +98,27 @@ const ExamRequest = ({ data, onClose, setClose, setSelectedRows, setSelectedRowK
                         value={status}
                         onChange={setStatus}
                     >
-                        {statusOptions.map((status) => (
-                            <Option key={status} value={status}>
-                                {status}
+                        {exam.map((status) => (
+                            <Option key={status.id} value={status.id}>
+                                {status.title}
                             </Option>
                         ))}
                     </Select>
                 </div>
 
-                <div style={{paddingBottom: "20px"}}>
-                    <label>Date</label><br />
-                    <DatePicker style={{width: "100%", marginTop: "10px"}} onChange={onChange} />
+                <div style={{ paddingBottom: "20px" }}>
+
+                    <div style={{ gap: "10px", display: "flex" }}>
+                        <div style={{ width: "35%", marginTop: "10px" }} >
+                            <label>Time</label><br />
+                            <TimePicker style={{width: '100%',  marginTop: "7px"}} onChange={onChangeTimes} defaultOpenValue={dayjs('00:00:00', 'HH:mm:ss')} />
+                        </div>
+                        <div style={{ width: "65%", marginTop: "10px" }} >
+                            <label>Date</label><br />
+                            <DatePicker style={{width: '100%', marginTop: "7px"}} onChange={onChange} />
+                        </div>
+                    </div>
+
                 </div>
 
                 <div style={{ marginBottom: 16 }}>

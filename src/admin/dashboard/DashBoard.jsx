@@ -16,7 +16,6 @@ const DashboardContent = () => {
       const response = await fetch("http://46.202.178.139:5050/api/v1/candidates");
       const result = await response.json();
       setData(result.data);
-      console.log(data)
     };
     fetchData();
   }, []);
