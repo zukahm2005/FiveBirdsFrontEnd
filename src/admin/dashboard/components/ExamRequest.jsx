@@ -3,7 +3,7 @@ import { Modal, Select, Input, Tag, Button, DatePicker, TimePicker } from "antd"
 import { CloseOutlined } from "@ant-design/icons";
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat'
-import "./examRequst.scss";
+import "./ExamRequst.scss";
 
 const { Option } = Select;
 const { TextArea } = Input;
