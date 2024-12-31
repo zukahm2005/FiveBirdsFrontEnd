@@ -184,7 +184,7 @@ const CreateTest = () => {
 
   return (
     <div className="manage-questions-answers-container">
-      {loading && <div className="loading">Loading...</div>}
+      {loading}
       {/* Left Section: Create Exam */}
       <div className="left-section">
         <h2>Create Exam</h2>

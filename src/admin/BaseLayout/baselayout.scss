@@ -1,147 +1,158 @@
 .logo-container {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center; /* Căn giữa logo khi thu nhỏ */
-    gap: 10px;
-    padding: 16px;
-  
-    .img-logo img {
-      width: 80px; /* Kích thước logo lớn */
-      height: auto;
-      transition: width 0.3s ease;
-  
-      /* Căn chỉnh logo khi thu nhỏ */
-      .ant-layout-sider-collapsed & {
-        width: 40px; /* Kích thước logo nhỏ */
-        margin: auto;
-      }
-    }
-  
-    .content-logo {
-      display: flex;
-      flex-direction: column;
-      align-items: center; /* Đảm bảo text căn giữa */
-      transition: opacity 0.3s ease;
-  
-      /* Ẩn nội dung khi thu nhỏ */
-      .ant-layout-sider-collapsed & {
-        display: none;
-      }
-  
-      .top-content p {
-        font-size: 24px;
-        font-weight: bold;
-        color: #ffffff;
-      }
-  
-      .bottom-content p {
-        font-size: 12px;
-        color: #dcdcdc;
-      }
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center; /* Căn giữa logo khi thu nhỏ */
+  gap: 10px;
+  padding: 16px;
+
+  .img-logo img {
+    width: 80px; /* Kích thước logo lớn */
+    height: auto;
+    transition: width 0.3s ease;
+
+    /* Căn chỉnh logo khi thu nhỏ */
+    .ant-layout-sider-collapsed & {
+      width: 40px; /* Kích thước logo nhỏ */
+      margin: auto;
     }
   }
-  
-  .ant-layout {
-    height: 100vh; /* Đảm bảo layout full chiều cao màn hình */
-  }
-  
-  .ant-layout-sider {
-    transition: all 0.3s ease-in-out !important; /* Hiệu ứng mượt */
-    width: 300px !important; /* Chiều rộng khi mở */
-    max-width: 280px !important;
-    min-width: 80px !important; /* Chiều rộng khi thu nhỏ */
-  }
-  
-  .ant-layout-sider-collapsed {
-    width: 80px !important; /* Chiều rộng thu nhỏ */
-  }
-  
-  .ant-menu-item {
+
+  .content-logo {
     display: flex;
+    flex-direction: column;
+    align-items: center; /* Đảm bảo text căn giữa */
+    transition: opacity 0.3s ease;
+
+    /* Ẩn nội dung khi thu nhỏ */
+    .ant-layout-sider-collapsed & {
+      display: none;
+    }
+
+    .top-content p {
+      font-size: 24px;
+      font-weight: bold;
+      color: #ffffff;
+    }
+
+    .bottom-content p {
+      font-size: 12px;
+      color: #dcdcdc;
+    }
+  }
+}
+
+.ant-layout {
+  height: 100vh; /* Đảm bảo layout full chiều cao màn hình */
+  overflow: hidden; /* Ẩn tràn nếu không cần thiết */
+
+  /* Đảm bảo cuộn nội dung chính */
+  .ant-layout-content {
+    height: calc(100vh - 64px); /* Trừ chiều cao của header */
+    overflow-y: auto; /* Cho phép cuộn theo chiều dọc */
+    padding: 24px;
+    background-color: #f0f2f5; /* Nền sáng */
+  }
+}
+
+.ant-layout-sider {
+  transition: all 0.3s ease-in-out !important; /* Hiệu ứng mượt */
+  width: 300px !important; /* Chiều rộng khi mở */
+  max-width: 280px !important;
+  min-width: 80px !important; /* Chiều rộng khi thu nhỏ */
+  height: 100vh; /* Chiều cao full màn hình */
+  overflow-y: auto; /* Cho phép cuộn sidebar nếu nội dung dài */
+  background-color: #001529; /* Màu nền */
+}
+
+.ant-layout-sider-collapsed {
+  width: 80px !important; /* Chiều rộng thu nhỏ */
+}
+
+.ant-menu-item {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* Căn trái icon và text */
+  padding: 0 10px !important;
+  height: 48px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+
+  /* Màu nền khi được chọn */
+  &.ant-menu-item-selected {
+    background-color: #1890ff !important;
+    color: #ffffff !important;
+  }
+
+  &:hover {
+    background-color: rgba(24, 144, 255, 0.1);
+  }
+
+  .ant-menu-item-icon {
+    font-size: 18px;
+    display: flex;
+    justify-content: center;
     align-items: center;
-    justify-content: flex-start; /* Căn trái icon và text */
-    padding: 0 10px !important;
-    height: 48px;
-    border-radius: 8px;
+    width: 40px;
+    height: 40px;
     transition: all 0.3s ease;
-  
-    /* Màu nền khi được chọn */
-    &.ant-menu-item-selected {
-      background-color: #1890ff !important;
-      color: #ffffff !important;
+  }
+
+  .ant-menu-title-content {
+    display: inline-block;
+    margin-left: 10px;
+    transition: all 0.3s ease;
+
+    /* Ẩn text khi Sidebar thu nhỏ */
+    .ant-layout-sider-collapsed & {
+      display: none;
     }
-  
+  }
+}
+
+/* Cập nhật popup menu con */
+.ant-menu-submenu {
+  .ant-menu-submenu-title {
+    display: flex;
+    align-items: center;
+    padding: 0 24px !important;
+    height: 48px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #ffffff;
+
     &:hover {
       background-color: rgba(24, 144, 255, 0.1);
     }
-  
-    .ant-menu-item-icon {
-      font-size: 18px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 40px;
-      height: 40px;
-      transition: all 0.3s ease;
-    }
-  
-    .ant-menu-title-content {
-      display: inline-block;
-      margin-left: 10px;
-      transition: all 0.3s ease;
-  
-      /* Ẩn text khi Sidebar thu nhỏ */
-      .ant-layout-sider-collapsed & {
-        display: none;
-      }
-    }
   }
-  
-  /* Cập nhật popup menu con */
-  .ant-menu-submenu {
-    .ant-menu-submenu-title {
-      display: flex;
-      align-items: center;
-      padding: 0 24px !important;
-      height: 48px;
-      font-size: 14px;
-      font-weight: 500;
-      color: #ffffff;
-  
+
+  .ant-menu-sub {
+    padding-left: 24px !important; /* Thụt lề menu con */
+    background: rgba(0, 21, 41, 0.95) !important; /* Nền đậm cho popup */
+    border-radius: 8px !important; /* Bo góc popup */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important; /* Đổ bóng */
+    z-index: 1050; /* Hiển thị trên cùng */
+
+    .ant-menu-item {
+      padding-left: 32px !important; /* Thụt lề hợp lý */
+      font-size: 14px; /* Font chữ dễ đọc hơn */
+      color: #dcdcdc;
+
       &:hover {
-        background-color: rgba(24, 144, 255, 0.1);
+        color: #ffffff !important; /* Màu chữ khi hover */
+        background-color: rgba(24, 144, 255, 0.3) !important; /* Nền xanh khi hover */
       }
-    }
-  
-    .ant-menu-sub {
-      padding-left: 24px !important; /* Thụt lề menu con */
-      background: rgba(0, 21, 41, 0.95) !important; /* Nền đậm cho popup */
-      border-radius: 8px !important; /* Bo góc popup */
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important; /* Đổ bóng */
-      z-index: 1050; /* Hiển thị trên cùng */
-  
-      .ant-menu-item {
-        padding-left: 32px !important; /* Thụt lề hợp lý */
-        font-size: 14px; /* Font chữ dễ đọc hơn */
-        color: #dcdcdc;
-  
-        &:hover {
-          color: #ffffff !important; /* Màu chữ khi hover */
-          background-color: rgba(24, 144, 255, 0.3) !important; /* Nền xanh khi hover */
-        }
-  
-        &.ant-menu-item-selected {
-          background-color: rgba(24, 144, 255, 0.6) !important; /* Nền xanh khi được chọn */
-          color: #ffffff !important;
-        }
+
+      &.ant-menu-item-selected {
+        background-color: rgba(24, 144, 255, 0.6) !important; /* Nền xanh khi được chọn */
+        color: #ffffff !important;
       }
     }
   }
-  
-  /* Hiệu ứng hover cho icon */
-  .ant-menu-item-icon,
-  .ant-menu-submenu-title:hover .ant-menu-item-icon {
-    color: #ffffff !important;
-  }
-  
+}
+
+/* Hiệu ứng hover cho icon */
+.ant-menu-item-icon,
+.ant-menu-submenu-title:hover .ant-menu-item-icon {
+  color: #ffffff !important;
+}
