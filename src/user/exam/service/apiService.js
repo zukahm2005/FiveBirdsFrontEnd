@@ -1,7 +1,7 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 
-const BASE_URL = "http://http://46.202.178.139:5050/api/v1";
+const BASE_URL = "http://localhost:5005/api/v1";
 
 const api = axios.create({
   baseURL: BASE_URL,
@@ -62,9 +62,14 @@ export const apiService = {
     }
   },
 
-  getAllExams: async (pageNumber = 1) => {
+  getAllExams: async (pageNumber = 1, pageSize = 10) => {
     try {
-      const response = await api.get(`/exams/get/all/${pageNumber}`);
+      const response = await api.get(`/exams/get/all`, {
+        params: {
+          pageNumber,
+          pageSize,
+        }
+      });
       return response.data;
     } catch (error) {
       console.error("Error fetching exams:", error);
