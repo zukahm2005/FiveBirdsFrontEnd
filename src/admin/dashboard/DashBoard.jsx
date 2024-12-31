@@ -36,7 +36,6 @@ const DashboardContent = () => {
     borderRadius: 0,
     borderTop: "1px solid #f0f0f0",
     borderBottom: "1px solid #f0f0f0",
-    borderRight: 0,
     borderLeft: 0,
   };
 
