@@ -2,10 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Button, Table, Typography, Spin } from "antd";
 import ExamRequest from "./ExamRequest";
 import moment from "moment/moment";
-import { Input, Space } from 'antd';
+import { Input } from 'antd';
 const { Search } = Input;
-import Cookies from 'js-cookie';
-
+import { getAllCandidate, getExam } from "../../../common/api/apiDashBoard";
 
 const { Text } = Typography;
 
@@ -55,28 +54,30 @@ const TableDashBoard = () => {
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
   const [filteredData, setFilteredData] = useState([]);
-  const [exam, setExam] = useState([])
+  const [exam, setExam] = useState([]);
 
-  const token = Cookies.get("token")
+  // Pagination state
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 10,
+    total: 0,
+  });
 
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://46.202.178.139:5050/api/v1/candidates");
-        const result = await response.json();
-
-        const dataExam = await fetch("http://46.202.178.139:5050/api/v1/exams/get/all?pageNumber=1&pageSize=10", {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          }
-        });
-        const exemResult = await dataExam.json();
+        const result = await getAllCandidate(pagination.current, pagination.pageSize);
+        const exemResult = await getExam();
+        
         if (result.data) {
-          setExam(exemResult.data)
+          setExam(exemResult.data);
           setData(result.data);
-          setFilteredData(result.data)
+          setFilteredData(result.data);
+          setPagination(prev => ({
+            ...prev,
+            total: result.totalCount, 
+          }));
         } else {
           setError("No data available");
         }
@@ -88,7 +89,7 @@ const TableDashBoard = () => {
     };
     setLoading(true);
     fetchData();
-  }, []);
+  }, [pagination.current, pagination.pageSize]); 
 
   const start = () => {
     setLoading(true);
@@ -98,7 +99,7 @@ const TableDashBoard = () => {
       setLoading(false);
       setClose(false);
     }, 1000);
-  }
+  };
 
   const onSearch = (value) => {
     const lowerValue = value.toLowerCase();
@@ -113,8 +114,6 @@ const TableDashBoard = () => {
     setFilteredData(filtered);
   };
 
-
-
   const onSelectChange = (newSelectedRowKeys) => {
     setSelectedRowKeys(newSelectedRowKeys);
     const newSelectedRows = data.filter((item) =>
@@ -122,6 +121,14 @@ const TableDashBoard = () => {
     );
     setSelectedRows(newSelectedRows);
     setClose(newSelectedRowKeys.length > 0);
+  };
+
+  const handleTableChange = (pagination) => {
+    setPagination({
+      current: pagination.current,
+      pageSize: pagination.pageSize,
+      total: pagination.total,
+    });
   };
 
   const rowSelection = {
@@ -174,12 +181,18 @@ const TableDashBoard = () => {
             columns={columns}
             dataSource={filteredData}
             rowKey="id"
+            pagination={{
+              current: pagination.current,
+              pageSize: pagination.pageSize,
+              total: pagination.total,
+              onChange: handleTableChange,
+            }}
           />
         )}
       </div>
       {onClose && (
         <ExamRequest
-          exam = {exam}
+          exam={exam}
           data={selectedRows}
           onClose={onClose}
           setClose={setClose}

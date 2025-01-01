@@ -5,49 +5,56 @@ import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import "./ExamRequst.scss";
 import axios from "axios";
+import GlobalAlert from "../../../common/globalAlert/GlobalAlert";
+import { sendEmailCandidate } from "../../../common/api/apiDashBoard";
 
 const { Option } = Select;
 const { TextArea } = Input;
 
 const ExamRequest = ({ exam, data, onClose, setClose, setSelectedRows, setSelectedRowKeys, selectedRowKeys }) => {
-    const [status, setStatus] = useState(null);
+    const [examTitle, setExams] = useState('');
     const [comment, setComment] = useState("");
     const [candidateColors, setCandidateColors] = useState({});
     const [selectedTime, setSelectedTime] = useState(null);
     const [selectedDate, setSelectedDate] = useState(null);
-    dayjs.extend(customParseFormat);
 
+    const [alertType, setAlertType] = useState(null);
+    const [alertDescription, setAlertDescription] = useState(null);
+    const [visible, setVisible] = useState(false);
+    const [loading, setLoading] = useState(false)
+    dayjs.extend(customParseFormat);
 
     const handleUpdate = async () => {
         try {
             const requests = data.map((item) =>
-                axios.post(`http://localhost:5005/api/v1/candidates/send/email/${item.id}`, {
-                   
-                    comment,
-
-                })
+                sendEmailCandidate(examTitle, comment, selectedTime, selectedDate, item.id)
             );
             await Promise.all(requests);
+            
+            setAlertDescription("All emails sent successfully.");
+            setAlertType("success");
 
-            console.log("All emails sent successfully.");
+            setExams('')
+            setComment('')
+            setSelectedTime(null)
+            setSelectedDate(null)
+            setSelectedRows([]);
+            setSelectedRowKeys([]);
+            setVisible(true);
+            setLoading(false)
         } catch (error) {
-            console.error("Error sending emails:", error);
+            setAlertDescription("Error sending emails. Please try again.");
+            setAlertType("error");
+            setVisible(true);
+            setLoading(false)
         }
     };
-
-
 
     const onRemoveCandidate = (candidateId) => {
-        const updatedData = data.filter(candidate => candidate.id !== candidateId);
-        setSelectedRows(updatedData);
-
-        const updatedRowKeys = [...selectedRowKeys];
-        const index = updatedRowKeys.indexOf(candidateId);
-        if (index > -1) {
-            updatedRowKeys.splice(index, 1);
-        }
-        setSelectedRowKeys(updatedRowKeys);
+        setSelectedRows(prevData => prevData.filter(candidate => candidate.id !== candidateId));
+        setSelectedRowKeys(prevKeys => prevKeys.filter(id => id !== candidateId));
     };
+
 
     const handleOnclose = () => {
         setSelectedRows([]);
@@ -75,25 +82,30 @@ const ExamRequest = ({ exam, data, onClose, setClose, setSelectedRows, setSelect
 
     return (
         <div className="updateStatus">
+            <GlobalAlert setVisible={setVisible} visible={visible} type={alertType} description={alertDescription} />
             <div style={{ padding: "0 10px 20px 0px", borderBlockEnd: "2px solid #f0f0f0", display: "flex", justifyContent: "space-between" }}>
-                <h2>Update Status</h2>
+                <h2>Send Exam Schedule</h2>
                 <CloseOutlined onClick={handleOnclose} />
             </div>
             <div>
                 <div style={{ marginBottom: 16 }}>
                     <p style={{ padding: "20px 0 10px 0" }}>Add Candidates</p>
                     <div className="boxCandidate">
-                        {data.map((candidate) => (
-                            <Tag
-                                className="tag-status"
-                                key={candidate.fullName}
-                                color={getColorForCandidate(candidate.id)}
-                                closable
-                                onClose={() => { onRemoveCandidate(candidate.id) }}
-                            >
-                                {candidate.fullName}
-                            </Tag>
-                        ))}
+                        {data.length > 0 ? (
+                            data.map((candidate) => (
+                                <Tag
+                                    className="tag-status"
+                                    key={`${candidate.id}-${candidate.fullName}`}
+                                    style={{ border: `2px solid ${getColorForCandidate(candidate.id)}` }}
+                                    closable
+                                    onClose={() => { onRemoveCandidate(candidate.id); }}
+                                >
+                                    {candidate.fullName}
+                                </Tag>
+                            ))
+                        ) : (
+                            <div style={{ color: "gray", opacity: "0.7" }}>No candidate</div>
+                        )}
                     </div>
                 </div>
 
@@ -102,11 +114,11 @@ const ExamRequest = ({ exam, data, onClose, setClose, setSelectedRows, setSelect
                     <Select
                         style={{ width: "100%", marginTop: 8 }}
                         placeholder="Select status"
-                        value={status}
-                        onChange={setStatus}
+                        value={examTitle || undefined}
+                        onChange={setExams}
                     >
                         {exam.map((status) => (
-                            <Option key={status.id} value={status.id}>
+                            <Option key={status.id} value={status.title}>
                                 {status.id} {status.title}
                             </Option>
                         ))}
@@ -148,8 +160,8 @@ const ExamRequest = ({ exam, data, onClose, setClose, setSelectedRows, setSelect
                     <Button onClick={handleOnclose} style={{ marginRight: 8 }}>
                         Cancel
                     </Button>
-                    <Button type="primary" onClick={handleUpdate}>
-                        Update Status
+                    <Button type="primary" onClick={() => { setLoading(true); handleUpdate(); }} loading={loading} >
+                        Send
                     </Button>
                 </div>
             </div>

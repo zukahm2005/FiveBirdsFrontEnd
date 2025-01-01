@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Card, Row, Col, Avatar, Space, Typography } from "antd";
+import { Card, Row, Col, Avatar, Space, Typography, Alert } from "antd";
 import { MoreOutlined, ArrowUpOutlined, PrinterOutlined, ExportOutlined, DownloadOutlined } from "@ant-design/icons";
 import TableDashBoard from "./components/TableDashBoard";
-import ExamRequest from "./components/ExamRequest";
+import {getCandidate} from "./../../common/api/apiDashBoard";
 import "./dashboard.scss";
 
 const DashboardContent = () => {
@@ -11,10 +11,11 @@ const DashboardContent = () => {
 
 
 
+
+
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch("http://46.202.178.139:5050/api/v1/candidates");
-      const result = await response.json();
+        const result =  await getCandidate()
       setData(result.data);
     };
     fetchData();
@@ -121,7 +122,6 @@ const DashboardContent = () => {
 
       <div style={{ display: "flex", justifyContent: "space-between", gap: "20px" }}>
         <TableDashBoard />
-        {/* <ExamRequest /> */}
       </div>
 
 
