@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Row, Col } from "antd";
+import React, { useState } from "react";
+import { Row, Col, Button } from "antd";
 import ExamCard from "./components/ExamCard";
 import QuestionCard from "./components/QuestionCard";
 import Timer from "./components/Timer";
@@ -10,20 +10,23 @@ const ExamPage = () => {
   const [currentExam, setCurrentExam] = useState(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
+  const [isStarted, setIsStarted] = useState(false);
 
-  useEffect(() => {
-    const fetchExams = async () => {
-      try {
-        const response = await apiService.getAllExams(1);
-        if (response.errorCode === 200) {
-          setExams(response.data);
-        }
-      } catch (error) {
-        console.error("Error fetching exams:", error);
+  const fetchExams = async () => {
+    try {
+      const response = await apiService.getAllExams(1);
+      if (response.errorCode === 200) {
+        setExams(response.data);
       }
-    };
+    } catch (error) {
+      console.error("Error fetching exams:", error);
+    }
+  };
+
+  const handleStart = () => {
+    setIsStarted(true);
     fetchExams();
-  }, []);
+  };
 
   const handleStartExam = (exam) => {
     setCurrentExam(exam);
@@ -49,36 +52,50 @@ const ExamPage = () => {
     setCurrentExam(null);
   };
 
+  if (!isStarted) {
+    return (
+        <div className="exam-page">
+          <Row justify="center" align="middle" style={{ minHeight: "100vh" }}>
+            <Col xs={24} sm={18} md={12} lg={10}>
+              <Button type="primary" onClick={handleStart}>
+                Bắt đầu làm bài
+              </Button>
+            </Col>
+          </Row>
+        </div>
+    );
+  }
+
   if (!currentExam) {
     return (
-      <div className="exam-page">
-        <Row justify="center" align="middle" style={{ minHeight: "100vh" }}>
-          <Col xs={24} sm={18} md={12} lg={10}>
-            {exams.map((exam) => (
-              <ExamCard key={exam.id} exam={exam} onStartExam={handleStartExam} />
-            ))}
-          </Col>
-        </Row>
-      </div>
+        <div className="exam-page">
+          <Row justify="center" align="middle" style={{ minHeight: "100vh" }}>
+            <Col xs={24} sm={18} md={12} lg={10}>
+              {exams.map((exam) => (
+                  <ExamCard key={exam.id} exam={exam} onStartExam={handleStartExam} />
+              ))}
+            </Col>
+          </Row>
+        </div>
     );
   }
 
   const currentQuestion = currentExam.question[currentQuestionIndex];
 
   return (
-    <div className="exam-page">
-      <Row justify="center" align="middle" style={{ minHeight: "100vh" }}>
-        <Col xs={24} sm={18} md={12} lg={10}>
-          <Timer duration={parseInt(currentExam.duration) * 60} onTimeout={handleTimeout} />
-          <QuestionCard
-            question={currentQuestion}
-            selectedAnswer={selectedAnswer}
-            onAnswerSelect={handleAnswerSelect}
-            onNext={handleNextQuestion}
-          />
-        </Col>
-      </Row>
-    </div>
+      <div className="exam-page">
+        <Row justify="center" align="middle" style={{ minHeight: "100vh" }}>
+          <Col xs={24} sm={18} md={12} lg={10}>
+            <Timer duration={parseInt(currentExam.duration) * 60} onTimeout={handleTimeout} />
+            <QuestionCard
+                question={currentQuestion}
+                selectedAnswer={selectedAnswer}
+                onAnswerSelect={handleAnswerSelect}
+                onNext={handleNextQuestion}
+            />
+          </Col>
+        </Row>
+      </div>
   );
 };
 
