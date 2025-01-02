@@ -12,8 +12,8 @@ const { Option } = Select;
 const { TextArea } = Input;
 
 const ExamRequest = ({ exam, data, onClose, setClose, setSelectedRows, setSelectedRowKeys, selectedRowKeys }) => {
-    const [examTitle, setExams] = useState('');
-    const [comment, setComment] = useState("");
+    const [examTitle, setExams] = useState(null);
+    const [comment, setComment] = useState(null);
     const [candidateColors, setCandidateColors] = useState({});
     const [selectedTime, setSelectedTime] = useState(null);
     const [selectedDate, setSelectedDate] = useState(null);
@@ -25,7 +25,10 @@ const ExamRequest = ({ exam, data, onClose, setClose, setSelectedRows, setSelect
     dayjs.extend(customParseFormat);
 
     const handleUpdate = async () => {
-        try {
+        try { 
+            if (data.length === 0) {
+                throw new Error("No data to process."); 
+            }
             const requests = data.map((item) =>
                 sendEmailCandidate(examTitle, comment, selectedTime, selectedDate, item.id)
             );
