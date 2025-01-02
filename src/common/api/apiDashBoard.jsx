@@ -27,7 +27,7 @@ const getAllCandidate = async (pageNumber, pageSize) => {
     return await response.json();
 }
 const getExam = async () => {
-    const dataExam = await fetch("http://localhost:5005/api/v1/exams/get", {
+    const dataExam = await fetch("http://46.202.178.139:5050/api/v1/exams/get", {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -38,7 +38,7 @@ const getExam = async () => {
 }
 
 const sendEmailCandidate = async (examTitle, comment, selectedTime, selectedDate, itemId) => {
-    return await axios.post(`http://localhost:5005/api/v1/candidates/send/email/${itemId}`, { examTitle, comment,  selectedTime, selectedDate },
+    return await axios.post(`http://46.202.178.139:5050/api/v1/candidates/send/email/${itemId}`, { examTitle, comment,  selectedTime, selectedDate },
     {
         method: 'GET',
         headers: {
