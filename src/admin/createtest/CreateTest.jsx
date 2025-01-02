@@ -38,7 +38,7 @@ const CreateTest = () => {
       try {
         const token = Cookies.get("token");
         const response = await axios.get(
-          "http://localhost:5005/api/v1/exams/get/all?pageNumber=0&pageSize=1000",
+          "http://46.202.178.139:5050/api/v1/exams/get/all?pageNumber=0&pageSize=1000",
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -68,7 +68,7 @@ const CreateTest = () => {
     try {
       const token = Cookies.get("token");
       const response = await axios.post(
-        "http://localhost:5005/api/v1/exams/add",
+        "http://46.202.178.139:5050/api/v1/exams/add",
         {
           title: examTitle,
           description: examDescription,
@@ -129,7 +129,7 @@ const CreateTest = () => {
       for (const question of questions) {
         // Tạo câu hỏi
         const questionResponse = await axios.post(
-          "http://localhost:5005/api/v1/questions/add",
+          "http://46.202.178.139:5050/api/v1/questions/add",
           {
             examId: selectedExam,
             questionExam: question.question,
@@ -144,7 +144,7 @@ const CreateTest = () => {
 
         // Thêm câu trả lời liên kết với câu hỏi
         await axios.post(
-          "http://localhost:5005/api/v1/answers/add",
+          "http://46.202.178.139:5050/api/v1/answers/add",
           {
             questionId: questionId,
             answer1: question.answers.answer1,
