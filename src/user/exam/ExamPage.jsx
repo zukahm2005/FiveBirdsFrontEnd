@@ -14,7 +14,7 @@ const ExamPage = () => {
 
   // Hàm đăng xuất
   const handleLogout = () => {
-    Cookies.remove("authToken"); // Xóa token trong cookie
+    Cookies.remove("token"); // Xóa token trong cookie
     alert("Bạn đã hoàn thành bài thi và sẽ được đăng xuất."); // Thông báo hoàn thành
     navigate("/login"); // Điều hướng về trang đăng nhập
   };
