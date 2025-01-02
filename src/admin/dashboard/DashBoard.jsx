@@ -8,11 +8,7 @@ import "./dashboard.scss";
 const DashboardContent = () => {
   const { Text, Title } = Typography;
   const [data, setData] = useState([]);
-
-
-
-
-
+  
   useEffect(() => {
     const fetchData = async () => {
         const result =  await getCandidate()
