@@ -2,14 +2,21 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import './ListManagerCandidate.scss';
+import Cookies from 'js-cookie';
 
 export default function ListManagerCandidate() {
   const [candidates, setCandidates] = useState([]);
+  const token = Cookies.get("token");
+
 
   useEffect(() => {
     // Fetch the list of candidates
     axios
-      .get('http://46.202.178.139:5050/api/v1/candidates')
+      .get('http://46.202.178.139:5050/api/v1/candidates',{
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
       .then((response) => {
         setCandidates(response.data.data);
       })
