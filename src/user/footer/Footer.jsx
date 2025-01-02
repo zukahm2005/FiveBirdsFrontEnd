@@ -1,16 +1,16 @@
 import { UploadOutlined } from "@ant-design/icons";
-import { Button, Form, Input, Upload } from "antd";
-import React, { useState } from "react";
+import { Button, DatePicker, Form, Input, Upload } from "antd";
 import axios from "axios";
-import Logo from "../components/logo/Logo";
-import GlobalAlert from "../../common/globalAlert/GlobalAlert";
-import { BsFillClockFill } from "react-icons/bs";
+import React, { useState } from "react";
 import { BiLogoFacebook } from "react-icons/bi";
+import { BsFillClockFill } from "react-icons/bs";
 import { FaInstagram, FaPhone } from "react-icons/fa";
 import { IoLogoTwitter } from "react-icons/io";
 import { LiaLinkedinIn } from "react-icons/lia";
 import { MdEmail } from "react-icons/md";
 import { RiMapPinFill } from "react-icons/ri";
+import GlobalAlert from "../../common/globalAlert/GlobalAlert";
+import Logo from "../components/logo/Logo";
 import "./footer.scss";
 
 
@@ -112,23 +112,36 @@ export default function Footer() {
               label="Full Name"
               rules={[{ required: true, message: "Please input your full name!" }]}
             >
-              <Input placeholder="Full Name" />
+              <Input placeholder="Enter your full name" />
+            </Form.Item>
+            <Form.Item label="Date of Birth & Phone Number">
+              <div className="flex-container">
+                <Form.Item
+                  name="dateOfBirth"
+                  rules={[{ required: true, message: "Please input your date of birth!" }]}
+                >
+                  <DatePicker className="custom-date-picker" placeholder="Enter your date of birth" format="DD/MM/YYYY" />
+                </Form.Item>
+
+                <Form.Item
+                  name="phoneNumber"
+                  className="phone-input"
+                  rules={[{ required: true, message: "Please input your phone number!" }]}
+                >
+                  <Input placeholder="Enter your phone number" />
+                </Form.Item>
+              </div>
             </Form.Item>
 
             <Form.Item
               name="email"
               label="Email"
-              rules={[{ required: true, message: "Please input your email!" }, { type: "email", message: "The input is not valid E-mail!" }]}
+              rules={[
+                { required: true, message: "Please input your email!" },
+                { type: "email", message: "The input is not valid E-mail!" },
+              ]}
             >
-              <Input placeholder="Email" />
-            </Form.Item>
-
-            <Form.Item
-              name="phoneNumber"
-              label="Phone Number"
-              rules={[{ required: true, message: "Please input your phone number!" }]}
-            >
-              <Input placeholder="Phone Number" />
+              <Input placeholder="Enter your email" />
             </Form.Item>
 
             <Form.Item
@@ -136,7 +149,7 @@ export default function Footer() {
               label="Education"
               rules={[{ required: true, message: "Please input your education!" }]}
             >
-              <Input placeholder="Education" />
+              <Input placeholder="Enter your education" />
             </Form.Item>
 
             <Form.Item
@@ -144,12 +157,13 @@ export default function Footer() {
               label="Experience"
               rules={[{ required: true, message: "Please input your experience!" }]}
             >
-              <Input placeholder="Experience" />
+              <Input placeholder="Enter your experience" />
             </Form.Item>
 
             <Form.Item
               name="cv"
               label="CV File"
+              className="upload-file-input"
               rules={[{ required: true, message: "Please upload your CV!" }]}
             >
               <Upload
@@ -157,17 +171,20 @@ export default function Footer() {
                 onChange={handleFileChange}
                 maxCount={1}
               >
-                <Button icon={<UploadOutlined />}>Upload CV</Button>
+                <Button icon={<UploadOutlined />}>
+                  <p>Upload CV</p>
+                </Button>
               </Upload>
             </Form.Item>
 
             <Form.Item>
               <Button type="primary" htmlType="submit" className="btn-send" loading={loading}>
-                Send
+                <p>Send</p>
               </Button>
             </Form.Item>
           </Form>
         </div>
+
         <div className="right-content">
           {iconsF2.map((iconF2) => (
             <div key={iconF2.id} >

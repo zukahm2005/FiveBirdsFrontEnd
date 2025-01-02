@@ -41,20 +41,7 @@ const HeaderComponent = () => {
           <Logo />
         </div>
         <div className="header-nav display-flex">
-          {menuItems.map((item, index) => (
-            <nav key={index}>
-              <Link to={item.path} className="flex-row  nav-router">
-                <div>
-                  <p>{item.name}</p>
-                </div>
-                <div>
-                  <p className="nav-arrow">
-                    <IoIosArrowForward />
-                  </p>
-                </div>
-              </Link>
-            </nav>
-          ))}
+
         </div>
         <div className="header-component">
           <Component />
