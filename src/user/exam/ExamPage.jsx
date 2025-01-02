@@ -1,35 +1,26 @@
 import React, { useState } from "react";
 import { Row, Col, Button } from "antd";
-import ExamCard from "./components/ExamCard";
 import QuestionCard from "./components/QuestionCard";
 import Timer from "./components/Timer";
-import { apiService } from "./service/apiService";
+import questions from "./questions.json";
+import { useNavigate } from "react-router-dom"; // Điều hướng trang
+import Cookies from "js-cookie"; // Thư viện để xử lý cookie
 
 const ExamPage = () => {
-  const [exams, setExams] = useState([]);
-  const [currentExam, setCurrentExam] = useState(null);
+  const [isStarted, setIsStarted] = useState(false);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
-  const [isStarted, setIsStarted] = useState(false);
+  const navigate = useNavigate(); // Hook để điều hướng
 
-  const fetchExams = async () => {
-    try {
-      const response = await apiService.getAllExams(1);
-      if (response.errorCode === 200) {
-        setExams(response.data);
-      }
-    } catch (error) {
-      console.error("Error fetching exams:", error);
-    }
+  // Hàm đăng xuất
+  const handleLogout = () => {
+    Cookies.remove("authToken"); // Xóa token trong cookie
+    alert("Bạn đã hoàn thành bài thi và sẽ được đăng xuất."); // Thông báo hoàn thành
+    navigate("/login"); // Điều hướng về trang đăng nhập
   };
 
   const handleStart = () => {
     setIsStarted(true);
-    fetchExams();
-  };
-
-  const handleStartExam = (exam) => {
-    setCurrentExam(exam);
     setCurrentQuestionIndex(0);
   };
 
@@ -38,18 +29,17 @@ const ExamPage = () => {
   };
 
   const handleNextQuestion = () => {
-    if (currentQuestionIndex < currentExam.question.length - 1) {
+    if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
       setSelectedAnswer(null);
     } else {
-      alert("Bạn đã hoàn thành bài thi!");
-      setCurrentExam(null);
+      handleLogout(); // Gọi hàm đăng xuất sau khi hoàn thành bài thi
     }
   };
 
   const handleTimeout = () => {
     alert("Hết thời gian làm bài!");
-    setCurrentExam(null);
+    handleLogout(); // Đăng xuất khi hết giờ
   };
 
   if (!isStarted) {
@@ -66,27 +56,13 @@ const ExamPage = () => {
     );
   }
 
-  if (!currentExam) {
-    return (
-        <div className="exam-page">
-          <Row justify="center" align="middle" style={{ minHeight: "100vh" }}>
-            <Col xs={24} sm={18} md={12} lg={10}>
-              {exams.map((exam) => (
-                  <ExamCard key={exam.id} exam={exam} onStartExam={handleStartExam} />
-              ))}
-            </Col>
-          </Row>
-        </div>
-    );
-  }
-
-  const currentQuestion = currentExam.question[currentQuestionIndex];
+  const currentQuestion = questions[currentQuestionIndex];
 
   return (
       <div className="exam-page">
         <Row justify="center" align="middle" style={{ minHeight: "100vh" }}>
           <Col xs={24} sm={18} md={12} lg={10}>
-            <Timer duration={parseInt(currentExam.duration) * 60} onTimeout={handleTimeout} />
+            <Timer duration={30 * 60} onTimeout={handleTimeout} />
             <QuestionCard
                 question={currentQuestion}
                 selectedAnswer={selectedAnswer}

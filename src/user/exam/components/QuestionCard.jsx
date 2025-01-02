@@ -1,40 +1,30 @@
 import React from "react";
-import { Button, Space, Typography } from "antd";
-
-const { Title } = Typography;
+import { Card, Radio, Button } from "antd";
 
 const QuestionCard = ({ question, selectedAnswer, onAnswerSelect, onNext }) => {
-  return (
-    <div>
-      <Title level={4}>{question.questionExam}</Title>
-      <Space direction="vertical" style={{ width: "100%" }}>
-        {[
-          question.answers[0]?.answer1,
-          question.answers[0]?.answer2,
-          question.answers[0]?.answer3,
-          question.answers[0]?.answer4,
-        ].map((answer, index) => (
-          <Button
-            key={index}
-            type={selectedAnswer === index ? "primary" : "default"}
-            block
-            onClick={() => onAnswerSelect(index)}
-          >
-            {answer}
-          </Button>
-        ))}
-      </Space>
-      <Button
-        type="primary"
-        block
-        style={{ marginTop: "20px" }}
-        onClick={onNext}
-        disabled={selectedAnswer === null}
-      >
-        Câu tiếp theo
-      </Button>
-    </div>
-  );
+    return (
+        <Card title={`Question ${question.id}`} style={{ marginBottom: "20px" }}>
+            <p>{question.content}</p>
+            <Radio.Group
+                onChange={(e) => onAnswerSelect(e.target.value)}
+                value={selectedAnswer}
+            >
+                {question.options.map((option, index) => (
+                    <Radio key={index} value={index}>
+                        {option}
+                    </Radio>
+                ))}
+            </Radio.Group>
+            <Button
+                type="primary"
+                onClick={onNext}
+                disabled={selectedAnswer === null}
+                style={{ marginTop: "20px" }}
+            >
+                Next
+            </Button>
+        </Card>
+    );
 };
 
 export default QuestionCard;

@@ -1,0 +1,127 @@
+[
+  {
+    "id": 1,
+    "content": "What is the capital of France?",
+    "options": ["Berlin", "Madrid", "Paris", "Rome"],
+    "correctAnswer": 2
+  },
+  {
+    "id": 2,
+    "content": "Which planet is known as the Red Planet?",
+    "options": ["Earth", "Mars", "Jupiter", "Venus"],
+    "correctAnswer": 1
+  },
+  {
+    "id": 3,
+    "content": "Who wrote 'Romeo and Juliet'?",
+    "options": ["Charles Dickens", "William Shakespeare", "Mark Twain", "J.K. Rowling"],
+    "correctAnswer": 1
+  },
+  {
+    "id": 4,
+    "content": "What is the largest ocean on Earth?",
+    "options": ["Atlantic Ocean", "Indian Ocean", "Arctic Ocean", "Pacific Ocean"],
+    "correctAnswer": 3
+  },
+  {
+    "id": 5,
+    "content": "What is the square root of 64?",
+    "options": ["6", "7", "8", "9"],
+    "correctAnswer": 2
+  },
+  {
+    "id": 6,
+    "content": "Who painted the Mona Lisa?",
+    "options": ["Vincent van Gogh", "Leonardo da Vinci", "Pablo Picasso", "Claude Monet"],
+    "correctAnswer": 1
+  },
+  {
+    "id": 7,
+    "content": "What is the smallest prime number?",
+    "options": ["0", "1", "2", "3"],
+    "correctAnswer": 2
+  },
+  {
+    "id": 8,
+    "content": "What is the chemical symbol for water?",
+    "options": ["H2O", "CO2", "O2", "H2"],
+    "correctAnswer": 0
+  },
+  {
+    "id": 9,
+    "content": "Which continent is known as the 'Dark Continent'?",
+    "options": ["Asia", "Africa", "Europe", "South America"],
+    "correctAnswer": 1
+  },
+  {
+    "id": 10,
+    "content": "How many continents are there?",
+    "options": ["5", "6", "7", "8"],
+    "correctAnswer": 2
+  },
+  {
+    "id": 11,
+    "content": "What is the capital of Japan?",
+    "options": ["Seoul", "Tokyo", "Beijing", "Bangkok"],
+    "correctAnswer": 1
+  },
+  {
+    "id": 12,
+    "content": "Which organ in the human body is responsible for pumping blood?",
+    "options": ["Lungs", "Heart", "Kidney", "Liver"],
+    "correctAnswer": 1
+  },
+  {
+    "id": 13,
+    "content": "Who discovered gravity?",
+    "options": ["Albert Einstein", "Isaac Newton", "Galileo Galilei", "Nikola Tesla"],
+    "correctAnswer": 1
+  },
+  {
+    "id": 14,
+    "content": "Which is the longest river in the world?",
+    "options": ["Amazon River", "Nile River", "Yangtze River", "Mississippi River"],
+    "correctAnswer": 1
+  },
+  {
+    "id": 15,
+    "content": "What is 15 + 25?",
+    "options": ["30", "35", "40", "50"],
+    "correctAnswer": 2
+  },
+  {
+    "id": 16,
+    "content": "Which country is famous for the Eiffel Tower?",
+    "options": ["Italy", "Germany", "France", "Spain"],
+    "correctAnswer": 2
+  },
+  {
+    "id": 17,
+    "content": "What does DNA stand for?",
+    "options": [
+      "Deoxyribonucleic Acid",
+      "Dinucleic Acid",
+      "Ribonucleic Acid",
+      "Deoxyribonucleic Atom"
+    ],
+    "correctAnswer": 0
+  },
+  {
+    "id": 18,
+    "content": "How many days are there in a leap year?",
+    "options": ["364", "365", "366", "367"],
+    "correctAnswer": 2
+  },
+  {
+    "id": 19,
+    "content": "What is the currency of the United States?",
+    "options": ["Euro", "Dollar", "Yen", "Pound"],
+    "correctAnswer": 1
+  },
+  {
+    "id": 20,
+    "content": "Which gas do plants absorb from the atmosphere?",
+    "options": ["Oxygen", "Carbon Dioxide", "Nitrogen", "Hydrogen"],
+    "correctAnswer": 1
+  }
+]

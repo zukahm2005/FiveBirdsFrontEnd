@@ -18,13 +18,15 @@ const Timer = ({ duration, onTimeout }) => {
     return () => clearInterval(timer);
   }, [onTimeout]);
 
-  const formatTime = (time) => {
-    const minutes = Math.floor(time / 60);
-    const seconds = time % 60;
-    return `${minutes}:${seconds < 10 ? `0${seconds}` : seconds}`;
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${minutes.toString().padStart(2, "0")}:${secs
+        .toString()
+        .padStart(2, "0")}`;
   };
 
-  return <div>Thời gian còn lại: {formatTime(timeLeft)}</div>;
+  return <div>Time Left: {formatTime(timeLeft)}</div>;
 };
 
 export default Timer;
