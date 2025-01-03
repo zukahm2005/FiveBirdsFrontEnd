@@ -116,7 +116,7 @@ const ExamRequest = ({ exam, data, onClose, setClose, setSelectedRows, setSelect
                     <label>Exam</label>
                     <Select
                         style={{ width: "100%", marginTop: 8 }}
-                        placeholder="Select status"
+                        placeholder="Select Exam"
                         value={examTitle || undefined}
                         onChange={setExams}
                     >
@@ -130,7 +130,7 @@ const ExamRequest = ({ exam, data, onClose, setClose, setSelectedRows, setSelect
 
                 <div style={{ paddingBottom: "20px" }}>
                     <div style={{ gap: "10px", display: "flex" }}>
-                        <div style={{ width: "35%", marginTop: "10px" }} >
+                        <div style={{ width: "50%", marginTop: "10px" }} >
                             <label>Time</label><br />
                             <TimePicker
                                 style={{ width: '100%', marginTop: "7px" }}
@@ -138,7 +138,7 @@ const ExamRequest = ({ exam, data, onClose, setClose, setSelectedRows, setSelect
                                 defaultOpenValue={dayjs('00:00:00', 'HH:mm:ss')}
                             />
                         </div>
-                        <div style={{ width: "65%", marginTop: "10px" }} >
+                        <div style={{ width: "50%", marginTop: "10px" }} >
                             <label>Date</label><br />
                             <DatePicker
                                 style={{ width: '100%', marginTop: "7px" }}
@@ -149,10 +149,10 @@ const ExamRequest = ({ exam, data, onClose, setClose, setSelectedRows, setSelect
                 </div>
 
                 <div style={{ marginBottom: 16 }}>
-                    <label>Comment</label>
+                    <label>Message</label>
                     <TextArea
-                        rows={10}
-                        placeholder="Enter a comment"
+                        rows={5}
+                        placeholder="Enter a message"
                         value={comment}
                         onChange={(e) => setComment(e.target.value)}
                         style={{ marginTop: 8 }}
