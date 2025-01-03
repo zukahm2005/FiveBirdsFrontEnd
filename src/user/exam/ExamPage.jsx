@@ -2,30 +2,69 @@ import React, { useState } from "react";
 import { Row, Col, Button } from "antd";
 import QuestionCard from "./components/QuestionCard";
 import Timer from "./components/Timer";
-import questions from "./questions.json";
-import { useNavigate } from "react-router-dom"; // Điều hướng trang
-import Cookies from "js-cookie"; // Thư viện để xử lý cookie
+import { useNavigate } from "react-router-dom";
+import { apiService } from "./service/apiService";
 
 const ExamPage = () => {
   const [isStarted, setIsStarted] = useState(false);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [questions, setQuestions] = useState([]);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
-  const navigate = useNavigate(); // Hook để điều hướng
+  const [duration, setDuration] = useState(30); // Giá trị mặc định là 30 phút
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-  // Hàm đăng xuất
   const handleLogout = () => {
-    Cookies.remove("token"); // Xóa token trong cookie
-    alert("Bạn đã hoàn thành bài thi và sẽ được đăng xuất."); // Thông báo hoàn thành
-    navigate("/login"); // Điều hướng về trang đăng nhập
+    alert("Bạn đã hoàn thành bài thi.");
+    navigate("/login");
   };
 
-  const handleStart = () => {
-    setIsStarted(true);
-    setCurrentQuestionIndex(0);
+  const handleStart = async () => {
+    try {
+      setLoading(true);
+
+      const roleData = await apiService.checkRole();
+      const userId = roleData.userId;
+
+      if (!userId) {
+        alert("Không tìm thấy userId. Vui lòng thử lại.");
+        setLoading(false);
+        return;
+      }
+
+      const userExams = await apiService.getUserExams(userId);
+      const examId = userExams?.data[0]?.exam?.examId;
+
+      if (!examId) {
+        alert("Không tìm thấy bài thi nào.");
+        setLoading(false);
+        return;
+      }
+
+      const examDetails = await apiService.getExamDetails(examId);
+      const questionList = examDetails?.data?.question || [];
+      const examDuration = parseInt(examDetails?.data?.duration, 10);
+
+      if (questionList.length === 0) {
+        alert("Không tìm thấy câu hỏi nào trong bài thi.");
+        setLoading(false);
+        return;
+      }
+
+      setDuration(examDuration || 30);
+      setQuestions(questionList);
+      setIsStarted(true);
+      setCurrentQuestionIndex(0);
+      setLoading(false);
+    } catch (error) {
+      console.error("Lỗi khi bắt đầu bài kiểm tra:", error);
+      alert("Đã xảy ra lỗi khi bắt đầu bài kiểm tra. Vui lòng thử lại.");
+      setLoading(false);
+    }
   };
 
-  const handleAnswerSelect = (index) => {
-    setSelectedAnswer(index);
+  const handleAnswerSelect = (value) => {
+    setSelectedAnswer(value);
   };
 
   const handleNextQuestion = () => {
@@ -33,13 +72,14 @@ const ExamPage = () => {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
       setSelectedAnswer(null);
     } else {
-      handleLogout(); // Gọi hàm đăng xuất sau khi hoàn thành bài thi
+      alert("Bạn đã hoàn thành bài kiểm tra!");
+      handleLogout();
     }
   };
 
   const handleTimeout = () => {
     alert("Hết thời gian làm bài!");
-    handleLogout(); // Đăng xuất khi hết giờ
+    handleLogout();
   };
 
   if (!isStarted) {
@@ -47,7 +87,7 @@ const ExamPage = () => {
         <div className="exam-page">
           <Row justify="center" align="middle" style={{ minHeight: "100vh" }}>
             <Col xs={24} sm={18} md={12} lg={10}>
-              <Button type="primary" onClick={handleStart}>
+              <Button type="primary" onClick={handleStart} loading={loading}>
                 Bắt đầu làm bài
               </Button>
             </Col>
@@ -60,14 +100,16 @@ const ExamPage = () => {
 
   return (
       <div className="exam-page">
-        <Row justify="center" align="middle" style={{ minHeight: "100vh" }}>
+        <Row justify="center" align="middle" style={{minHeight: "100vh"}}>
           <Col xs={24} sm={18} md={12} lg={10}>
-            <Timer duration={30 * 60} onTimeout={handleTimeout} />
+            <Timer durationMinutes={duration} onTimeout={handleTimeout}/>
             <QuestionCard
                 question={currentQuestion}
+                questionNumber={currentQuestionIndex + 1} // Thêm thứ tự câu hỏi
+                totalQuestions={questions.length} // Tổng số câu hỏi
+                onNext={handleNextQuestion}
                 selectedAnswer={selectedAnswer}
                 onAnswerSelect={handleAnswerSelect}
-                onNext={handleNextQuestion}
             />
           </Col>
         </Row>

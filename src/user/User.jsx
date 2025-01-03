@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Routes } from "react-router-dom";
+import {Route, Routes, useLocation} from "react-router-dom";
 import Footer from "./footer/Footer";
 
 import HeaderComponent from "./header/HeaderComponent";
@@ -24,17 +24,21 @@ const routes = [
 ];
 
 const User = () => {
+    const localtion = useLocation();
+
+    const noHeaderFooter = ["/login", "/exam"];
+
+    const showHeaderFooter = !noHeaderFooter.includes(localtion.pathname);
   return (
-    <div>
-      <HeaderComponent />
-      <Routes>
-        {routes.map((route, index) => (
-          <Route key={index} path={route.path} element={route.element} />
-        ))}
-        
-      </Routes>
-      <Footer />
-    </div>
+      <div>
+          {showHeaderFooter && <HeaderComponent/>}
+          <Routes>
+              {routes.map((route, index) => (
+                  <Route key={index} path={route.path} element={route.element}/>
+              ))}
+          </Routes>
+          {showHeaderFooter && <Footer/>}
+      </div>
   );
 };
 

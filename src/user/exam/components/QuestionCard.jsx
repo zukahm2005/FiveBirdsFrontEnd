@@ -1,17 +1,28 @@
 import React from "react";
 import { Card, Radio, Button } from "antd";
 
-const QuestionCard = ({ question, selectedAnswer, onAnswerSelect, onNext }) => {
+const QuestionCard = ({ question, questionNumber, totalQuestions, onNext, selectedAnswer, onAnswerSelect }) => {
+    if (!question) {
+        return <div>Loading question...</div>;
+    }
+
+    const answers = [
+        question.answers[0]?.answer1,
+        question.answers[0]?.answer2,
+        question.answers[0]?.answer3,
+        question.answers[0]?.answer4,
+    ];
+
     return (
-        <Card title={`Question ${question.id}`} style={{ marginBottom: "20px" }}>
-            <p>{question.content}</p>
+        <Card title={`Question ${questionNumber} of ${totalQuestions}`} style={{ marginBottom: "20px" }}>
+            <p>{question.questionExam}</p>
             <Radio.Group
                 onChange={(e) => onAnswerSelect(e.target.value)}
                 value={selectedAnswer}
             >
-                {question.options.map((option, index) => (
-                    <Radio key={index} value={index}>
-                        {option}
+                {answers.map((answer, index) => (
+                    <Radio key={index} value={index + 1}>
+                        {answer}
                     </Radio>
                 ))}
             </Radio.Group>
