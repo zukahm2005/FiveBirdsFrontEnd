@@ -32,13 +32,15 @@ export default function Footer() {
     formData.append("fullname", values.fullName);
     formData.append("email", values.email);
     formData.append("phone", values.phoneNumber);
+    formData.append("dateOfBirth", values.dateOfBirth.format("DD/MM/YYYY"));
     formData.append("education", values.education);
     formData.append("experience", values.experience);
+    formData.append("applyLocation", values.applyLocation);
 
     if (fileList.length > 0) {
       formData.append("CvFile", fileList[0].originFileObj);
     }
-
+    
     try {
       const response = await axios.post(
         "http://46.202.178.139:5050/api/v1/candidates",
@@ -156,6 +158,14 @@ export default function Footer() {
               name="experience"
               label="Experience"
               rules={[{ required: true, message: "Please input your experience!" }]}
+            >
+              <Input placeholder="Enter your experience" />
+            </Form.Item>
+
+            <Form.Item
+              name="applyLocation"
+              label="Apply Location"
+              rules={[{ required: true, message: "Please input your ApplyLocation!" }]}
             >
               <Input placeholder="Enter your experience" />
             </Form.Item>
