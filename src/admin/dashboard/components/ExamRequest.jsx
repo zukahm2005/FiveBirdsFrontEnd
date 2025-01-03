@@ -151,7 +151,7 @@ const ExamRequest = ({ exam, data, onClose, setClose, setSelectedRows, setSelect
                 <div style={{ marginBottom: 16 }}>
                     <label>Message</label>
                     <TextArea
-                        rows={5}
+                        rows={7}
                         placeholder="Enter a message"
                         value={comment}
                         onChange={(e) => setComment(e.target.value)}
