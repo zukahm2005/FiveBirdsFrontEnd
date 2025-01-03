@@ -32,7 +32,7 @@ export default function Footer() {
     formData.append("fullname", values.fullName);
     formData.append("email", values.email);
     formData.append("phone", values.phoneNumber);
-    formData.append("dateOfBirth", values.dateOfBirth.format("DD/MM/YYYY"));
+    formData.append("birthday", values.dateOfBirth.format("DD/MM/YYYY"));
     formData.append("education", values.education);
     formData.append("experience", values.experience);
     formData.append("applyLocation", values.applyLocation);
