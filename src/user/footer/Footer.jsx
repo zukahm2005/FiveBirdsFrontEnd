@@ -40,7 +40,7 @@ export default function Footer() {
     if (fileList.length > 0) {
       formData.append("CvFile", fileList[0].originFileObj);
     }
-    
+
     try {
       const response = await axios.post(
         "http://46.202.178.139:5050/api/v1/candidates",
@@ -114,7 +114,7 @@ export default function Footer() {
               label="Full Name"
               rules={[{ required: true, message: "Please input your full name!" }]}
             >
-              <Input placeholder="Enter your full name" />
+              <Input placeholder="Enter your full name..." />
             </Form.Item>
             <Form.Item label="Date of Birth & Phone Number">
               <div className="flex-container">
@@ -122,7 +122,7 @@ export default function Footer() {
                   name="dateOfBirth"
                   rules={[{ required: true, message: "Please input your date of birth!" }]}
                 >
-                  <DatePicker className="custom-date-picker" placeholder="Enter your date of birth" format="DD/MM/YYYY" />
+                  <DatePicker className="custom-date-picker" placeholder="Date of birth..." format="DD/MM/YYYY" />
                 </Form.Item>
 
                 <Form.Item
@@ -130,7 +130,7 @@ export default function Footer() {
                   className="phone-input"
                   rules={[{ required: true, message: "Please input your phone number!" }]}
                 >
-                  <Input placeholder="Enter your phone number" />
+                  <Input placeholder="Enter your phone number..." />
                 </Form.Item>
               </div>
             </Form.Item>
@@ -143,7 +143,7 @@ export default function Footer() {
                 { type: "email", message: "The input is not valid E-mail!" },
               ]}
             >
-              <Input placeholder="Enter your email" />
+              <Input placeholder="Enter your email..." />
             </Form.Item>
 
             <Form.Item
@@ -151,7 +151,7 @@ export default function Footer() {
               label="Education"
               rules={[{ required: true, message: "Please input your education!" }]}
             >
-              <Input placeholder="Enter your education" />
+              <Input placeholder="Enter your education..." />
             </Form.Item>
 
             <Form.Item
@@ -159,7 +159,7 @@ export default function Footer() {
               label="Experience"
               rules={[{ required: true, message: "Please input your experience!" }]}
             >
-              <Input placeholder="Enter your experience" />
+              <Input placeholder="Enter your experience..." />
             </Form.Item>
 
             <Form.Item
@@ -167,7 +167,7 @@ export default function Footer() {
               label="Apply Location"
               rules={[{ required: true, message: "Please input your ApplyLocation!" }]}
             >
-              <Input placeholder="Enter your experience" />
+              <Input placeholder="Enter your ApplyLocation..." />
             </Form.Item>
 
             <Form.Item
@@ -194,6 +194,7 @@ export default function Footer() {
             </Form.Item>
           </Form>
         </div>
+
 
         <div className="right-content">
           {iconsF2.map((iconF2) => (
