@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
+import React, { useEffect, useState } from "react";
 import { AiOutlineDown } from "react-icons/ai";
 import { GoPlus } from "react-icons/go";
+import GlobalAlert from "../../common/globalAlert/GlobalAlert";
 import "./createtest.scss";
 
 const CreateTest = () => {
   const [exams, setExams] = useState([]);
   const [selectedExam, setSelectedExam] = useState("");
 
-  // States cho Exam
+  // States for Exam
   const [showTitleInput, setShowTitleInput] = useState(false);
   const [examTitle, setExamTitle] = useState("");
   const [showDescriptionInput, setShowDescriptionInput] = useState(false);
@@ -17,21 +18,24 @@ const CreateTest = () => {
   const [showDurationInput, setShowDurationInput] = useState(false);
   const [examDuration, setExamDuration] = useState("");
 
-  // States cho danh sách câu hỏi
+  // States for questions
   const [questions, setQuestions] = useState([
     {
       question: "",
       point: "",
       answers: { answer1: "", answer2: "", answer3: "", answer4: "" },
       correctAnswer: "",
-      showDetails: true, // State để kiểm soát hiển thị câu hỏi
+      showDetails: true,
     },
   ]);
 
-  const [message, setMessage] = useState("");
+  const [alertVisible, setAlertVisible] = useState(false);
+  const [alertType, setAlertType] = useState("");
+  const [alertDescription, setAlertDescription] = useState("");
+
   const [loading, setLoading] = useState(false);
 
-  // Fetch exams từ API
+  // Fetch exams from API
   useEffect(() => {
     const fetchExams = async () => {
       setLoading(true);
@@ -46,9 +50,14 @@ const CreateTest = () => {
           }
         );
         setExams(response.data.data || []);
+        setAlertType("success");
+        setAlertDescription("Exams fetched successfully!");
+        setAlertVisible(true);
       } catch (error) {
         console.error("Error fetching exams:", error);
-        setExams([]);
+        setAlertType("error");
+        setAlertDescription("Failed to fetch exams.");
+        setAlertVisible(true);
       } finally {
         setLoading(false);
       }
@@ -56,11 +65,13 @@ const CreateTest = () => {
     fetchExams();
   }, []);
 
-  // Submit Exam
+  // Handle creating an exam
   const handleCreateExam = async (e) => {
     e.preventDefault();
     if (!examTitle || !examDescription || !examDuration) {
-      setMessage("Please fill all fields for the exam.");
+      setAlertType("warning");
+      setAlertDescription("Please fill all fields for the exam.");
+      setAlertVisible(true);
       return;
     }
 
@@ -80,20 +91,24 @@ const CreateTest = () => {
           },
         }
       );
-      setMessage("Exam created successfully!");
+      setAlertType("success");
+      setAlertDescription("Exam created successfully!");
+      setAlertVisible(true);
       setExams([...exams, response.data]);
       setExamTitle("");
       setExamDescription("");
       setExamDuration("");
     } catch (error) {
       console.error("Error creating exam:", error);
-      setMessage("Failed to create exam.");
+      setAlertType("error");
+      setAlertDescription("Failed to create exam.");
+      setAlertVisible(true);
     } finally {
       setLoading(false);
     }
   };
 
-  // Thêm một câu hỏi mới
+  // Add a new question
   const handleAddQuestion = () => {
     setQuestions([
       ...questions,
@@ -107,27 +122,34 @@ const CreateTest = () => {
     ]);
   };
 
-  // Xử lý thay đổi câu hỏi
+  // Handle question input change
   const handleQuestionChange = (index, field, value) => {
     const updatedQuestions = [...questions];
     updatedQuestions[index][field] = value;
     setQuestions(updatedQuestions);
   };
 
-  // Xử lý thay đổi câu trả lời
+  // Handle answer input change
   const handleAnswerChange = (qIndex, aIndex, value) => {
     const updatedQuestions = [...questions];
     updatedQuestions[qIndex].answers[`answer${aIndex}`] = value;
     setQuestions(updatedQuestions);
   };
 
-  // Gửi toàn bộ câu hỏi và câu trả lời
+  // Submit all questions and answers
   const handleCreateAll = async () => {
+    if (!selectedExam) {
+      setAlertType("warning");
+      setAlertDescription("Please select an exam.");
+      setAlertVisible(true);
+      return;
+    }
+
     setLoading(true);
     const token = Cookies.get("token");
     try {
       for (const question of questions) {
-        // Tạo câu hỏi
+        // Create question
         const questionResponse = await axios.post(
           "http://46.202.178.139:5050/api/v1/questions/add",
           {
@@ -142,7 +164,7 @@ const CreateTest = () => {
 
         const questionId = questionResponse.data?.data?.id;
 
-        // Thêm câu trả lời liên kết với câu hỏi
+        // Add answers linked to the question
         await axios.post(
           "http://46.202.178.139:5050/api/v1/answers/add",
           {
@@ -158,7 +180,9 @@ const CreateTest = () => {
           }
         );
       }
-      setMessage("All questions and answers created successfully!");
+      setAlertType("success");
+      setAlertDescription("All questions and answers created successfully!");
+      setAlertVisible(true);
       setQuestions([
         {
           question: "",
@@ -170,7 +194,9 @@ const CreateTest = () => {
       ]);
     } catch (error) {
       console.error("Error creating questions or answers:", error);
-      setMessage("Failed to create questions and answers.");
+      setAlertType("error");
+      setAlertDescription("Failed to create questions and answers.");
+      setAlertVisible(true);
     } finally {
       setLoading(false);
     }
@@ -184,7 +210,13 @@ const CreateTest = () => {
 
   return (
     <div className="manage-questions-answers-container">
-      {loading}
+      <GlobalAlert
+        setVisible={setAlertVisible}
+        visible={alertVisible}
+        type={alertType}
+        description={alertDescription}
+      />
+
       {/* Left Section: Create Exam */}
       <div className="left-section">
         <h2>Create Exam</h2>
@@ -274,7 +306,7 @@ const CreateTest = () => {
           </select>
         </div>
 
-        {/* Danh sách câu hỏi */}
+        {/* Questions List */}
         <div className="question-list">
           {questions.map((q, qIndex) => (
             <div key={qIndex} className="question-group">
@@ -334,7 +366,7 @@ const CreateTest = () => {
           ))}
         </div>
 
-        {/* Nút bấm */}
+        {/* Buttons */}
         <div className="button-group">
           <button className="icon-button-left" onClick={handleAddQuestion}>
             <GoPlus /> Add Question
