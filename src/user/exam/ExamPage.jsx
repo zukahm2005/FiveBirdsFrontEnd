@@ -1,23 +1,21 @@
 import React, { useState } from "react";
-import { Row, Col, Button } from "antd";
+import { Button } from "antd";
 import QuestionCard from "./components/QuestionCard";
 import Timer from "./components/Timer";
-import { useNavigate } from "react-router-dom";
 import { apiService } from "./service/apiService";
+import "./ExamPage.css";
+import ExamCard from "./components/ExamCard.jsx";
 
 const ExamPage = () => {
   const [isStarted, setIsStarted] = useState(false);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [questions, setQuestions] = useState([]);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
-  const [duration, setDuration] = useState(30); // Giá trị mặc định là 30 phút
+  const [duration, setDuration] = useState(30);
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+  const [currentPage, setCurrentPage] = useState(0); // Quản lý trang hiện tại
 
-  const handleLogout = () => {
-    alert("Bạn đã hoàn thành bài thi.");
-    navigate("/login");
-  };
+  const questionsPerPage = 10; // Số lượng câu hỏi mỗi trang
 
   const handleStart = async () => {
     try {
@@ -26,30 +24,12 @@ const ExamPage = () => {
       const roleData = await apiService.checkRole();
       const userId = roleData.userId;
 
-      if (!userId) {
-        alert("Không tìm thấy userId. Vui lòng thử lại.");
-        setLoading(false);
-        return;
-      }
-
       const userExams = await apiService.getUserExams(userId);
       const examId = userExams?.data[0]?.exam?.examId;
-
-      if (!examId) {
-        alert("Không tìm thấy bài thi nào.");
-        setLoading(false);
-        return;
-      }
 
       const examDetails = await apiService.getExamDetails(examId);
       const questionList = examDetails?.data?.question || [];
       const examDuration = parseInt(examDetails?.data?.duration, 10);
-
-      if (questionList.length === 0) {
-        alert("Không tìm thấy câu hỏi nào trong bài thi.");
-        setLoading(false);
-        return;
-      }
 
       setDuration(examDuration || 30);
       setQuestions(questionList);
@@ -57,41 +37,38 @@ const ExamPage = () => {
       setCurrentQuestionIndex(0);
       setLoading(false);
     } catch (error) {
-      console.error("Lỗi khi bắt đầu bài kiểm tra:", error);
-      alert("Đã xảy ra lỗi khi bắt đầu bài kiểm tra. Vui lòng thử lại.");
+      console.error("Error starting the exam:", error);
       setLoading(false);
     }
   };
 
-  const handleAnswerSelect = (value) => {
-    setSelectedAnswer(value);
+  const handleQuestionClick = (index) => {
+    setCurrentQuestionIndex(index);
+    setSelectedAnswer(null);
   };
 
-  const handleNextQuestion = () => {
-    if (currentQuestionIndex < questions.length - 1) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
-      setSelectedAnswer(null);
-    } else {
-      alert("Bạn đã hoàn thành bài kiểm tra!");
-      handleLogout();
-    }
+  const handlePrevPage = () => {
+    setCurrentPage((prev) => Math.max(prev - 1, 0));
   };
 
-  const handleTimeout = () => {
-    alert("Hết thời gian làm bài!");
-    handleLogout();
+  const handleNextPage = () => {
+    setCurrentPage((prev) => Math.min(prev + 1, Math.floor(questions.length / questionsPerPage)));
   };
+
+  const visibleQuestions = questions.slice(
+      currentPage * questionsPerPage,
+      (currentPage + 1) * questionsPerPage
+  );
 
   if (!isStarted) {
+    const examInfo = {
+      title: "TH-7091-Sem 3-Developing Microsoft Azure Solutions",
+      description: "16 problems | 40 minutes",
+    };
+
     return (
         <div className="exam-page">
-          <Row justify="center" align="middle" style={{ minHeight: "100vh" }}>
-            <Col xs={24} sm={18} md={12} lg={10}>
-              <Button type="primary" onClick={handleStart} loading={loading}>
-                Bắt đầu làm bài
-              </Button>
-            </Col>
-          </Row>
+          <ExamCard exam={examInfo} onStartExam={handleStart} loading={loading} />
         </div>
     );
   }
@@ -100,19 +77,43 @@ const ExamPage = () => {
 
   return (
       <div className="exam-page">
-        <Row justify="center" align="middle" style={{minHeight: "100vh"}}>
-          <Col xs={24} sm={18} md={12} lg={10}>
-            <Timer durationMinutes={duration} onTimeout={handleTimeout}/>
-            <QuestionCard
-                question={currentQuestion}
-                questionNumber={currentQuestionIndex + 1} // Thêm thứ tự câu hỏi
-                totalQuestions={questions.length} // Tổng số câu hỏi
-                onNext={handleNextQuestion}
-                selectedAnswer={selectedAnswer}
-                onAnswerSelect={handleAnswerSelect}
-            />
-          </Col>
-        </Row>
+        <div className="header">
+          <Timer durationMinutes={duration} onTimeout={() => alert("Time's up!")} />
+        </div>
+
+        <div className="question-navigation">
+          <Button className="prev-next-btn" onClick={handlePrevPage} disabled={currentPage === 0}>
+            Prev
+          </Button>
+          {visibleQuestions.map((_, index) => {
+            const questionIndex = currentPage * questionsPerPage + index;
+            return (
+                <Button
+                    key={questionIndex}
+                    type={questionIndex === currentQuestionIndex ? "primary" : "default"}
+                    onClick={() => handleQuestionClick(questionIndex)}
+                >
+                  {questionIndex + 1}
+                </Button>
+            );
+          })}
+          <Button
+              className="prev-next-btn"
+              onClick={handleNextPage}
+              disabled={(currentPage + 1) * questionsPerPage >= questions.length}
+          >
+            Next
+          </Button>
+        </div>
+
+        <QuestionCard
+            question={currentQuestion}
+            questionNumber={currentQuestionIndex + 1}
+            totalQuestions={questions.length}
+            onNext={() => setCurrentQuestionIndex((prev) => Math.min(prev + 1, questions.length - 1))}
+            selectedAnswer={selectedAnswer}
+            onAnswerSelect={setSelectedAnswer}
+        />
       </div>
   );
 };

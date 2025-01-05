@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import "./Timer.css";
 
 const Timer = ({ durationMinutes, onTimeout }) => {
   const [timeLeft, setTimeLeft] = useState(durationMinutes * 60);
@@ -21,12 +22,16 @@ const Timer = ({ durationMinutes, onTimeout }) => {
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${minutes.toString().padStart(2, "0")}:${secs
-        .toString()
-        .padStart(2, "0")}`;
+    return `${minutes}M ${secs}s`;
   };
 
-  return <div>Time Left: {formatTime(timeLeft)}</div>;
+  return (
+      <div className="timer-container">
+        <span className="timer-icon">⏱️</span>
+        <span className="time-left">{formatTime(timeLeft)}</span>
+        <span className="session-text">TIME LEFT IN THIS ASSIGNMENT SESSION</span>
+      </div>
+  );
 };
 
 export default Timer;

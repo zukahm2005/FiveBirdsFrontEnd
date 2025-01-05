@@ -1,7 +1,20 @@
 import React from "react";
-import { Card, Radio, Button } from "antd";
+import { Card, Radio, Typography, Button } from "antd";
+import "./QuestionCard.css";
 
-const QuestionCard = ({ question, questionNumber, totalQuestions, onNext, selectedAnswer, onAnswerSelect }) => {
+const { Title, Paragraph } = Typography;
+
+const QuestionCard = ({
+                          question,
+                          questionNumber,
+                          totalQuestions,
+                          onPrevious,
+                          onNext,
+                          onFinish,
+                          selectedAnswer,
+                          onAnswerSelect,
+                          isLastQuestion,
+                      }) => {
     if (!question) {
         return <div>Loading question...</div>;
     }
@@ -14,26 +27,44 @@ const QuestionCard = ({ question, questionNumber, totalQuestions, onNext, select
     ];
 
     return (
-        <Card title={`Question ${questionNumber} of ${totalQuestions}`} style={{ marginBottom: "20px" }}>
-            <p>{question.questionExam}</p>
-            <Radio.Group
-                onChange={(e) => onAnswerSelect(e.target.value)}
-                value={selectedAnswer}
-            >
-                {answers.map((answer, index) => (
-                    <Radio key={index} value={index + 1}>
-                        {answer}
-                    </Radio>
-                ))}
-            </Radio.Group>
-            <Button
-                type="primary"
-                onClick={onNext}
-                disabled={selectedAnswer === null}
-                style={{ marginTop: "20px" }}
-            >
-                Next
-            </Button>
+        <Card className="question-card">
+            <div className="question-content">
+                {/* Câu hỏi */}
+                <div className="question-left">
+                    <Title level={4}>Question {questionNumber} of {totalQuestions}</Title>
+                    <Paragraph>{question.questionExam}</Paragraph>
+                </div>
+
+                {/* Đáp án */}
+                <div className="question-right">
+                    <Radio.Group
+                        onChange={(e) => onAnswerSelect(e.target.value)}
+                        value={selectedAnswer}
+                    >
+                        {answers.map((answer, index) => (
+                            <Radio key={index} value={index + 1} className="answer-option">
+                                {answer}
+                            </Radio>
+                        ))}
+                    </Radio.Group>
+                </div>
+            </div>
+
+            {/* Footer */}
+            <div className="question-footer">
+                <Button onClick={onPrevious} disabled={questionNumber === 1}>
+                    Previous
+                </Button>
+                {!isLastQuestion ? (
+                    <Button type="primary" onClick={onNext} disabled={!selectedAnswer}>
+                        Next
+                    </Button>
+                ) : (
+                    <Button type="primary" danger onClick={onFinish} disabled={!selectedAnswer}>
+                        Finish and Submit Assignment
+                    </Button>
+                )}
+            </div>
         </Card>
     );
 };

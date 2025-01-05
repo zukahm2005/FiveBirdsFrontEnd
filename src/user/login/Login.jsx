@@ -36,10 +36,10 @@ const Login = () => {
     // const  response = await fetch("http://localhost:5005/api/v1/users/checkrole", {
     const response = await fetch("http://46.202.178.139:5050/api/v1/users/checkrole", {
       method: "GET",
-      credentials: "include", // Đảm bảo cookie được gửi
+      credentials: "include",
     });
 
-    return response.json(); // Trả về dữ liệu JSON
+    return response.json();
   };
 
   const handleSubmit = async (e) => {
@@ -67,23 +67,20 @@ const Login = () => {
     setLoading(true);
 
     try {
-      // Gọi API login
       const loginData = await handleLogin();
 
       if (loginData.errorCode === 200 && loginData.data) {
         const token = loginData.data;
 
-        // Lưu token vào cookie
         Cookies.set("token", token, { expires: 7, secure: false, path: "/" });
 
-        // Gọi API checkrole
         const roleData = await checkRole(token);
 
         if (roleData.role === "ROLE_CANDIDATE") {
-          navigate("/exam"); // Chuyển hướng đến trang ứng viên
+          navigate("/exam");
         } else {
           alert("Access Denied: Only candidates are allowed!");
-          Cookies.remove("token"); // Xóa token nếu không phải ứng viên
+          Cookies.remove("token");
         }
       } else {
         alert("Login failed: Invalid credentials!");
