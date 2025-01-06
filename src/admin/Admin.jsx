@@ -1,12 +1,14 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 import BaseLayout from "./BaseLayout/BaseLayout";
-import CreateTest from "./createtest/CreateTest";
+import CreateTest from "./exam/createtest/CreateTest";
+import LishExam from "./exam/listexam/LishExam";
 import DashBoard from "./dashboard/DashBoard";
 import InfoAdmin from "./infoAdmin/infoAdmin";
 import ListManagerCandidate from "./listcandidate/ListManagerCandidate";
 import LoginAdmin from "./loginAdmin/LoginAdmin";
 import ProtectedRoute from "./protectedroute/ProtectedRoute";
+import DetailExam from "./exam/detailexam/DetailExam";
 const routes = [
   { path: "/login", element: <LoginAdmin /> },
   {
@@ -18,10 +20,11 @@ const routes = [
     ),
     children: [
       { path: "", element: <DashBoard /> },
-      { path: "test/all-tests", element: <h2>All Tests Page</h2> },
+      { path: "test/all-tests", element:<LishExam/>  },
       { path: "test/create-test", element: <CreateTest/>},
       { path: "administration", element: <InfoAdmin/> },
       { path: "manager-candidate", element: <ListManagerCandidate/>},
+      { path: "detail-exam/:id", element: <DetailExam/> },
     ],
   },
 ];
