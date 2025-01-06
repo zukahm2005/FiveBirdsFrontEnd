@@ -13,9 +13,33 @@ const ExamPage = () => {
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [duration, setDuration] = useState(30);
   const [loading, setLoading] = useState(false);
-  const [currentPage, setCurrentPage] = useState(0); // Quản lý trang hiện tại
 
-  const questionsPerPage = 10; // Số lượng câu hỏi mỗi trang
+  const sections = [
+    { name: "Kiến thức chung", count: 6 },
+    { name: "Toán học", count: 6 },
+    { name: "Công nghệ máy tính", count: 8 },
+  ];
+
+  const getCurrentSection = () => {
+    let totalCount = 0;
+    for (let i = 0; i < sections.length; i++) {
+      totalCount += sections[i].count;
+      if (currentQuestionIndex < totalCount) {
+        return { ...sections[i], sectionIndex: i };
+      }
+    }
+    return null;
+  };
+
+  const getQuestionsForCurrentSection = () => {
+    const section = getCurrentSection();
+    if (!section) return [];
+    const sectionStartIndex = sections
+        .slice(0, section.sectionIndex)
+        .reduce((sum, s) => sum + s.count, 0);
+    const sectionEndIndex = sectionStartIndex + section.count;
+    return questions.slice(sectionStartIndex, sectionEndIndex);
+  };
 
   const handleStart = async () => {
     try {
@@ -42,28 +66,22 @@ const ExamPage = () => {
     }
   };
 
-  const handleQuestionClick = (index) => {
-    setCurrentQuestionIndex(index);
+  const handleQuestionClick = (sectionRelativeIndex) => {
+    const section = getCurrentSection();
+    if (!section) return;
+    const sectionStartIndex = sections
+        .slice(0, section.sectionIndex)
+        .reduce((sum, s) => sum + s.count, 0);
+    setCurrentQuestionIndex(sectionStartIndex + sectionRelativeIndex);
     setSelectedAnswer(null);
   };
 
-  const handlePrevPage = () => {
-    setCurrentPage((prev) => Math.max(prev - 1, 0));
-  };
-
-  const handleNextPage = () => {
-    setCurrentPage((prev) => Math.min(prev + 1, Math.floor(questions.length / questionsPerPage)));
-  };
-
-  const visibleQuestions = questions.slice(
-      currentPage * questionsPerPage,
-      (currentPage + 1) * questionsPerPage
-  );
+  const visibleQuestions = getQuestionsForCurrentSection();
 
   if (!isStarted) {
     const examInfo = {
       title: "TH-7091-Sem 3-Developing Microsoft Azure Solutions",
-      description: "16 problems | 40 minutes",
+      description: "20 problems | 40 minutes",
     };
 
     return (
@@ -78,39 +96,64 @@ const ExamPage = () => {
   return (
       <div className="exam-page">
         <div className="header">
-          <Timer durationMinutes={duration} onTimeout={() => alert("Time's up!")} />
+          <Timer
+              durationMinutes={duration}
+              onTimeout={() => alert("Time's up!")}
+              sectionTitle={getCurrentSection().name}
+          />
         </div>
 
         <div className="question-navigation">
-          <Button className="prev-next-btn" onClick={handlePrevPage} disabled={currentPage === 0}>
+          <Button
+              className="prev-next-btn"
+              onClick={() => setCurrentQuestionIndex((prev) => Math.max(prev - 1, 0))}
+              disabled={currentQuestionIndex === 0}
+          >
             Prev
           </Button>
+
           {visibleQuestions.map((_, index) => {
-            const questionIndex = currentPage * questionsPerPage + index;
+            const globalQuestionIndex =
+                sections.slice(0, getCurrentSection().sectionIndex).reduce((sum, s) => sum + s.count, 0) + index;
+
             return (
                 <Button
-                    key={questionIndex}
-                    type={questionIndex === currentQuestionIndex ? "primary" : "default"}
-                    onClick={() => handleQuestionClick(questionIndex)}
+                    key={globalQuestionIndex}
+                    type={
+                      currentQuestionIndex === globalQuestionIndex
+                          ? "primary"
+                          : "default"
+                    }
+                    onClick={() => handleQuestionClick(index)}
                 >
-                  {questionIndex + 1}
+                  {globalQuestionIndex + 1}
                 </Button>
             );
           })}
+
           <Button
               className="prev-next-btn"
-              onClick={handleNextPage}
-              disabled={(currentPage + 1) * questionsPerPage >= questions.length}
+              onClick={() =>
+                  setCurrentQuestionIndex((prev) =>
+                      Math.min(prev + 1, questions.length - 1)
+                  )
+              }
+              disabled={currentQuestionIndex === questions.length - 1}
           >
             Next
           </Button>
         </div>
 
+
         <QuestionCard
             question={currentQuestion}
             questionNumber={currentQuestionIndex + 1}
             totalQuestions={questions.length}
-            onNext={() => setCurrentQuestionIndex((prev) => Math.min(prev + 1, questions.length - 1))}
+            onNext={() =>
+                setCurrentQuestionIndex((prev) =>
+                    Math.min(prev + 1, questions.length - 1)
+                )
+            }
             selectedAnswer={selectedAnswer}
             onAnswerSelect={setSelectedAnswer}
         />
