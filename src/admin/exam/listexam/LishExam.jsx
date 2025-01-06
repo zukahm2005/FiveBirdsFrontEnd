@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Space, message, Popconfirm } from 'antd';
+import { Table, Button, Space, Popconfirm } from 'antd';
 import axios from 'axios';
-import { MdDelete  } from "react-icons/md";
+import { MdDelete } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
-
 import { GrView } from "react-icons/gr";
 import Cookies from 'js-cookie';
+import GlobalAlert from "../../../common/globalAlert/GlobalAlert";
 import './listexam.scss';
 
 const LishExam = () => {
@@ -17,6 +17,11 @@ const LishExam = () => {
     pageSize: 10, // Số phần tử mỗi trang
     total: 0, // Tổng số phần tử
   });
+
+  // State cho GlobalAlert
+  const [alertVisible, setAlertVisible] = useState(false);
+  const [alertType, setAlertType] = useState('');
+  const [alertDescription, setAlertDescription] = useState('');
 
   const fetchData = async () => {
     setLoading(true);
@@ -45,7 +50,9 @@ const LishExam = () => {
       // Lấy dữ liệu trang đầu tiên
       setData(data.slice(0, pagination.pageSize));
     } catch (error) {
-      message.error('Không thể tải dữ liệu!');
+      setAlertType('error');
+      setAlertDescription('Không thể tải dữ liệu!');
+      setAlertVisible(true);
       console.error(error);
     } finally {
       setLoading(false);
@@ -77,7 +84,7 @@ const LishExam = () => {
   const handleViewDetail = (record) => {
     // Điều hướng sang trang chi tiết với ID bài kiểm tra
     navigate(`/admin/detail-exam/${record.id}`); // Đường dẫn đúng
-};
+  };
 
   const handleDelete = async (id) => {
     try {
@@ -87,10 +94,16 @@ const LishExam = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      message.success('Xóa thành công!');
+
+      setAlertType('success');
+      setAlertDescription('Xóa thành công!');
+      setAlertVisible(true);
+
       fetchData(); // Tải lại dữ liệu sau khi xóa
     } catch (error) {
-      message.error('Xóa không thành công!');
+      setAlertType('error');
+      setAlertDescription('Xóa không thành công!');
+      setAlertVisible(true);
       console.error(error);
     }
   };
@@ -139,10 +152,16 @@ const LishExam = () => {
       ),
     },
   ];
-  
 
   return (
     <div className="list-exam">
+      <GlobalAlert
+        setVisible={setAlertVisible}
+        visible={alertVisible}
+        type={alertType}
+        description={alertDescription}
+      />
+
       <h1>Exam List</h1>
       <div className="exam-container">
         <Table
