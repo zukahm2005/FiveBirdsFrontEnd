@@ -6,13 +6,13 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 import "./ExamRequst.scss";
 import axios from "axios";
 import GlobalAlert from "../../../common/globalAlert/GlobalAlert";
-import { sendEmailCandidate } from "../../../common/api/apiDashBoard";
-
+import { sendEmailCandidate, addUserExam, getCandidateById } from "../../../common/api/apiDashBoard";
 const { Option } = Select;
 const { TextArea } = Input;
 
 const ExamRequest = ({ exam, data, onClose, setClose, setSelectedRows, setSelectedRowKeys, selectedRowKeys }) => {
     const [examTitle, setExams] = useState(null);
+    const [examId, setExamId] = useState(null);
     const [comment, setComment] = useState(null);
     const [candidateColors, setCandidateColors] = useState({});
     const [selectedTime, setSelectedTime] = useState(null);
@@ -24,23 +24,31 @@ const ExamRequest = ({ exam, data, onClose, setClose, setSelectedRows, setSelect
     const [loading, setLoading] = useState(false)
     dayjs.extend(customParseFormat);
 
+
+
     const handleUpdate = async () => {
-        try { 
+        try {
             if (data.length === 0) {
-                throw new Error("No data to process."); 
+                throw new Error("No data to process.");
             }
-            const requests = data.map((item) =>
-                sendEmailCandidate(examTitle, comment, selectedTime, selectedDate, item.id)
-            );
-            await Promise.all(requests);
-            
+
+            const user = data.map(async (item) => {
+               const dataUser =  await getCandidateById(item.id)
+               const idUser = dataUser.data.data.user.userId
+               addUserExam(idUser, examId, selectedTime, selectedDate)
+            })
+
+            const requests = data.map(async (item) => {
+                await sendEmailCandidate(examTitle, comment, selectedTime, selectedDate, item.id);
+            });
+
+            await Promise.all(requests, user);
+
             setAlertDescription("All emails sent successfully.");
             setAlertType("success");
 
             setExams('')
             setComment('')
-            setSelectedTime(null)
-            setSelectedDate(null)
             setSelectedRows([]);
             setSelectedRowKeys([]);
             setVisible(true);
@@ -117,15 +125,20 @@ const ExamRequest = ({ exam, data, onClose, setClose, setSelectedRows, setSelect
                     <Select
                         style={{ width: "100%", marginTop: 8 }}
                         placeholder="Select Exam"
-                        value={examTitle || undefined}
-                        onChange={setExams}
+                        value={examId || undefined}
+                        onChange={(id) => {
+                            setExamId(id);
+                            const selectedExam = exam.find((e) => e.id === id);
+                            setExams(selectedExam?.title || "");
+                        }}
                     >
                         {exam.map((status) => (
-                            <Option key={status.id} value={status.title}>
+                            <Option key={status.id} value={status.id}>
                                 {status.id} {status.title}
                             </Option>
                         ))}
                     </Select>
+
                 </div>
 
                 <div style={{ paddingBottom: "20px" }}>
