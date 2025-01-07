@@ -21,7 +21,7 @@ const CreateTest = () => {
   // States for questions
   const [questions, setQuestions] = useState([
     {
-      question: "",
+      questionExam: "",
       point: "",
       answers: { answer1: "", answer2: "", answer3: "", answer4: "" },
       correctAnswer: "",
@@ -32,33 +32,34 @@ const CreateTest = () => {
   const [alertVisible, setAlertVisible] = useState(false);
   const [alertType, setAlertType] = useState("");
   const [alertDescription, setAlertDescription] = useState("");
+  const [expandedQuestions, setExpandedQuestions] = useState({});
 
   const [loading, setLoading] = useState(false);
 
+  const fetchExams = async () => {
+    setLoading(true);
+    try {
+      const token = Cookies.get("token");
+      const response = await axios.get(
+        "http://46.202.178.139:5050/api/v1/exams/get/all?pageNumber=0&pageSize=1000",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setExams(response.data.data || []);
+    } catch (error) {
+      console.error("Error fetching exams:", error);
+      setAlertType("error");
+      setAlertDescription("Failed to fetch exams.");
+      setAlertVisible(true);
+    } finally {
+      setLoading(false);
+    }
+  };
   // Fetch exams from API
   useEffect(() => {
-    const fetchExams = async () => {
-      setLoading(true);
-      try {
-        const token = Cookies.get("token");
-        const response = await axios.get(
-          "http://46.202.178.139:5050/api/v1/exams/get/all?pageNumber=0&pageSize=1000",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        setExams(response.data.data || []);
-      } catch (error) {
-        console.error("Error fetching exams:", error);
-        setAlertType("error");
-        setAlertDescription("Failed to fetch exams.");
-        setAlertVisible(true);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchExams();
   }, []);
 
@@ -75,7 +76,7 @@ const CreateTest = () => {
     setLoading(true);
     try {
       const token = Cookies.get("token");
-      const response = await axios.post(
+      await axios.post(
         "http://46.202.178.139:5050/api/v1/exams/add",
         {
           title: examTitle,
@@ -88,10 +89,16 @@ const CreateTest = () => {
           },
         }
       );
+
+      // Hiển thị thông báo thành công
       setAlertType("success");
       setAlertDescription("Exam created successfully!");
       setAlertVisible(true);
-      setExams([...exams, response.data]);
+
+      // Gọi lại API để lấy danh sách mới nhất
+      await fetchExams();
+
+      // Reset form
       setExamTitle("");
       setExamDescription("");
       setExamDuration("");
@@ -104,36 +111,115 @@ const CreateTest = () => {
       setLoading(false);
     }
   };
+  const fetchExamDetailsById = async (id) => {
+    setLoading(true);
+    try {
+      const token = Cookies.get("token");
+      const response = await axios.get(
+        `http://46.202.178.139:5050/api/v1/exams/get/${id}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+  
+      const examData = response.data;
+      console.log("Fetched exam details:", examData);
+  
+      // Cập nhật câu hỏi chỉ khi cần thiết
+      if (examData.questions) {
+        setQuestions(
+          examData.questions.map((q) => ({
+            ...q,
+            isNew: false, // Đánh dấu rằng đây không phải câu hỏi mới
+          }))
+        );
+      } else {
+        setQuestions([]);
+      }
+    } catch (error) {
+      console.error("Error fetching exam details:", error);
+      setAlertType("error");
+      setAlertDescription("Failed to fetch exam details.");
+      setAlertVisible(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  const handleSelectExam = async (examId) => {
+    setSelectedExam(examId);
+    setLoading(true);
 
-  // Add a new question
+    try {
+      const token = Cookies.get("token");
+      const response = await axios.get(
+        `http://46.202.178.139:5050/api/v1/exams/get/${examId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      // Cập nhật danh sách câu hỏi từ API
+      setQuestions(response.data.data.question || []);
+    } catch (error) {
+      console.error("Error fetching exam details:", error);
+      setAlertType("error");
+      setAlertDescription("Failed to fetch exam details.");
+      setAlertVisible(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleAddQuestion = () => {
-    setQuestions([
-      ...questions,
-      {
-        question: "",
-        point: "",
-        answers: { answer1: "", answer2: "", answer3: "", answer4: "" },
-        correctAnswer: "",
-        showDetails: true,
+  setQuestions((prevQuestions) => [
+    ...prevQuestions,
+    {
+      questionExam: "",
+      point: "",
+      answers: {
+        answer1: "",
+        answer2: "",
+        answer3: "",
+        answer4: "",
       },
-    ]);
+      correctAnswer: "",
+      showDetails: true,
+      isNew: true,
+    },
+  ]);
+};
+
+  const toggleQuestionDetails = (index) => {
+    setExpandedQuestions((prevState) => ({
+      ...prevState,
+      [index]: !prevState[index],
+    }));
+  };
+
+  const saveNewQuestion = (index) => {
+    const updatedQuestions = [...questions];
+    updatedQuestions[index].isNew = false; // Đánh dấu câu hỏi này không còn là mới
+    setQuestions(updatedQuestions);
   };
 
   // Handle question input change
   const handleQuestionChange = (index, field, value) => {
     const updatedQuestions = [...questions];
-    updatedQuestions[index][field] = value;
+    if (field === "correctAnswer") {
+      updatedQuestions[index][field] = parseInt(value, 10) || 0; // Chuyển thành số nguyên
+    } else {
+      updatedQuestions[index][field] = value;
+    }
     setQuestions(updatedQuestions);
   };
 
-  // Handle answer input change
   const handleAnswerChange = (qIndex, aIndex, value) => {
     const updatedQuestions = [...questions];
-    updatedQuestions[qIndex].answers[`answer${aIndex}`] = value;
+    updatedQuestions[qIndex].answers[`answer${aIndex}`] = value || ""; // Đảm bảo không null
     setQuestions(updatedQuestions);
   };
 
-  // Submit all questions and answers
   const handleCreateAll = async () => {
     if (!selectedExam) {
       setAlertType("warning");
@@ -141,27 +227,40 @@ const CreateTest = () => {
       setAlertVisible(true);
       return;
     }
-
+  
     setLoading(true);
     const token = Cookies.get("token");
+  
     try {
-      for (const question of questions) {
-        // Create question
+      const newQuestions = questions.filter((q) => q.isNew); // Lọc chỉ câu hỏi mới
+  
+      for (const question of newQuestions) {
+        console.log("Payload gửi đến /questions/add:", {
+          examId: selectedExam,
+          questionExam: question.questionExam,
+          point: parseInt(question.point, 10) || 0,
+        });
+  
         const questionResponse = await axios.post(
           "http://46.202.178.139:5050/api/v1/questions/add",
           {
             examId: selectedExam,
-            questionExam: question.question,
-            point: question.point,
+            questionExam: question.questionExam,
+            point: parseInt(question.point, 10) || 0,
           },
           {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
-
+  
         const questionId = questionResponse.data?.data?.id;
-
-        // Add answers linked to the question
+  
+        if (!questionId) {
+          throw new Error("Failed to retrieve questionId from the response.");
+        }
+  
+        console.log("Created questionId:", questionId);
+  
         await axios.post(
           "http://46.202.178.139:5050/api/v1/answers/add",
           {
@@ -177,18 +276,9 @@ const CreateTest = () => {
           }
         );
       }
-      setAlertType("success");
-      setAlertDescription("All questions and answers created successfully!");
-      setAlertVisible(true);
-      setQuestions([
-        {
-          question: "",
-          point: "",
-          answers: { answer1: "", answer2: "", answer3: "", answer4: "" },
-          correctAnswer: "",
-          showDetails: true,
-        },
-      ]);
+  
+      // Reload lại trang
+      window.location.reload();
     } catch (error) {
       console.error("Error creating questions or answers:", error);
       setAlertType("error");
@@ -198,12 +288,8 @@ const CreateTest = () => {
       setLoading(false);
     }
   };
-
-  const toggleQuestionDetails = (index) => {
-    const updatedQuestions = [...questions];
-    updatedQuestions[index].showDetails = !updatedQuestions[index].showDetails;
-    setQuestions(updatedQuestions);
-  };
+  
+  
 
   return (
     <div className="manage-questions-answers-container">
@@ -257,9 +343,7 @@ const CreateTest = () => {
           <div className="exam-group">
             <label
               onClick={() => setShowDurationInput(!showDurationInput)}
-              className={`dropdown-label ${
-                showDurationInput ? "active" : ""
-              }`}
+              className={`dropdown-label ${showDurationInput ? "active" : ""}`}
             >
               Exam Duration <AiOutlineDown />
             </label>
@@ -286,77 +370,110 @@ const CreateTest = () => {
           <label>Select Exam:</label>
           <select
             value={selectedExam}
-            onChange={(e) => setSelectedExam(e.target.value)}
+            onChange={(e) => handleSelectExam(e.target.value)}
           >
             <option value="">Select an Exam</option>
-            {Array.isArray(exams) && exams.length > 0 ? (
+            {Array.isArray(exams) &&
+              exams.length > 0 &&
               exams.map((exam) => (
                 <option key={exam.id} value={exam.id}>
                   {exam.title}
                 </option>
-              ))
-            ) : (
-              <option value="" disabled>
-                No exams available
-              </option>
-            )}
+              ))}
           </select>
         </div>
 
         {/* Questions List */}
         <div className="question-list">
-          {questions.map((q, qIndex) => (
-            <div key={qIndex} className="question-group">
+          {questions.map((q, index) => (
+            <div key={index} className="question-group">
+              {/* Header câu hỏi với dropdown */}
               <div
                 className="question-header"
-                onClick={() => toggleQuestionDetails(qIndex)}
+                onClick={() => toggleQuestionDetails(index)}
               >
-                <span>Question {qIndex + 1}</span>
+                <span>
+                  {index + 1}.{" "}
+                  {q.isNew
+                    ? "New Question"
+                    : q.questionExam || "Untitled Question"}
+                </span>
                 <AiOutlineDown
-                  className={`dropdown-icon ${q.showDetails ? "open" : ""}`}
+                  className={`dropdown-icon ${
+                    expandedQuestions[index] ? "open" : ""
+                  }`}
                 />
               </div>
-              {q.showDetails && (
+
+              {/* Nội dung chi tiết của câu hỏi */}
+              {expandedQuestions[index] && (
                 <div className="question-details">
-                  <input
-                    type="text"
-                    placeholder="Enter question"
-                    value={q.question}
-                    onChange={(e) =>
-                      handleQuestionChange(qIndex, "question", e.target.value)
-                    }
-                  />
-                  <input
-                    type="number"
-                    placeholder="Enter points"
-                    value={q.point}
-                    onChange={(e) =>
-                      handleQuestionChange(qIndex, "point", e.target.value)
-                    }
-                  />
-                  {Object.keys(q.answers).map((key, aIndex) => (
-                    <input
-                      key={aIndex}
-                      type="text"
-                      placeholder={`Answer ${aIndex + 1}`}
-                      value={q.answers[key]}
-                      onChange={(e) =>
-                        handleAnswerChange(qIndex, aIndex + 1, e.target.value)
-                      }
-                    />
-                  ))}
-                  <input
-                    type="number"
-                    placeholder="Correct Answer (1-4)"
-                    value={q.correctAnswer}
-                    onChange={(e) =>
-                      handleQuestionChange(
-                        qIndex,
-                        "correctAnswer",
-                        e.target.value
-                      )
-                    }
-                  />
+                  {q.isNew ? (
+                    <>
+                      <label>Question:</label>
+                      <input
+                        type="text"
+                        placeholder="Enter question"
+                        value={q.questionExam} // Đảm bảo lấy giá trị từ state
+                        onChange={(e) =>
+                          handleQuestionChange(
+                            index,
+                            "questionExam",
+                            e.target.value
+                          )
+                        }
+                      />
+
+                      <label>Point:</label>
+                      <input
+                        type="number"
+                        placeholder="Enter points"
+                        value={q.point}
+                        onChange={(e) =>
+                          handleQuestionChange(index, "point", e.target.value)
+                        }
+                      />
+
+                      {[1, 2, 3, 4].map((num) => (
+                        <div key={num}>
+                          <label>Answer {num}:</label>
+                          <input
+                            type="text"
+                            placeholder={`Answer ${num}`}
+                            value={q.answers[`answer${num}`]}
+                            onChange={(e) =>
+                              handleAnswerChange(index, num, e.target.value)
+                            }
+                          />
+                        </div>
+                      ))}
+                      <label>Correct Answer:</label>
+                      <input
+                        type="number" 
+                        placeholder="Correct Answer (1-4)"
+                        value={q.correctAnswer}
+                        onChange={(e) =>
+                          handleQuestionChange(
+                            index,
+                            "correctAnswer",
+                            e.target.value
+                          )
+                        }
+                      />
+                    </>
+                  ) : (
+                    <>
+                      <p className="point">Point: {q.point || "N/A"}</p>
+                      <p>Answer 1: {q.answers?.[0]?.answer1 || "N/A"}</p>
+                      <p>Answer 2: {q.answers?.[0]?.answer2 || "N/A"}</p>
+                      <p>Answer 3: {q.answers?.[0]?.answer3 || "N/A"}</p>
+                      <p>Answer 4: {q.answers?.[0]?.answer4 || "N/A"}</p>
+                      <p>
+                        <strong>Correct Answer:</strong>{" "}
+                        {q.answers?.[0]?.correctAnswer || "N/A"}
+                      </p>
+                    </>
+                  )}
                 </div>
               )}
             </div>
