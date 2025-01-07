@@ -51,4 +51,22 @@ export const apiService = {
             throw error;
         }
     },
+    submitAnswer: async (answerData) => {
+        try {
+            const response = await api.post("/results/add", answerData);
+            return response.data;
+        } catch (error) {
+            console.error("Error submitting answer:", error);
+            throw error;
+        }
+    },
+    updateAnswer: async (id, updatedAnswerData) => {
+        try {
+            const response = await api.put(`/results/update/${id}`, updatedAnswerData);
+            return response.data;
+        } catch (error) {
+            console.error("Error updating answer:", error);
+            throw error;
+        }
+    },
 };

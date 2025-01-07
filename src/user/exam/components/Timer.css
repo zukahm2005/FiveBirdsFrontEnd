@@ -1,13 +1,19 @@
 .timer-container {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
     color: #ffffff;
     background-color: #000918;
-    padding: 50px 60px;
+    padding: 20px 40px;
     border-radius: 8px;
     font-size: 16px;
     font-weight: bold;
+}
+
+.timer-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .timer-icon {
@@ -22,4 +28,11 @@
     font-size: 14px;
     font-weight: normal;
     opacity: 0.8;
+}
+
+.section-title {
+    margin-top: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #00d4ff;
 }

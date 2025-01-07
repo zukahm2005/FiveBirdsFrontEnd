@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./Timer.css";
 
-const Timer = ({ durationMinutes, onTimeout }) => {
+const Timer = ({ durationMinutes, onTimeout, sectionTitle }) => {
   const [timeLeft, setTimeLeft] = useState(durationMinutes * 60);
 
   useEffect(() => {
@@ -27,9 +27,14 @@ const Timer = ({ durationMinutes, onTimeout }) => {
 
   return (
       <div className="timer-container">
-        <span className="timer-icon">⏱️</span>
-        <span className="time-left">{formatTime(timeLeft)}</span>
-        <span className="session-text">TIME LEFT IN THIS ASSIGNMENT SESSION</span>
+        <div className="timer-header">
+          <span className="timer-icon">⏱️</span>
+          <span className="time-left">{formatTime(timeLeft)}</span>
+          <span className="session-text">TIME LEFT IN THIS ASSIGNMENT SESSION</span>
+        </div>
+        <div className="section-title">
+          <strong>Current Section:</strong> {sectionTitle}
+        </div>
       </div>
   );
 };
