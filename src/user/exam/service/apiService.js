@@ -1,8 +1,8 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 
-const BASE_URL = "http://localhost:5005/api/v1";
-// const BASE_URL = "http://46.202.178.139:5050/api/v1";
+// const BASE_URL = "http://localhost:5005/api/v1";
+const BASE_URL = "http://46.202.178.139:5050/api/v1";
 
 const api = axios.create({
     baseURL: BASE_URL,
@@ -48,6 +48,24 @@ export const apiService = {
             return response.data;
         } catch (error) {
             console.error("Error fetching exam details:", error);
+            throw error;
+        }
+    },
+    submitAnswer: async (answerData) => {
+        try {
+            const response = await api.post("/results/add", answerData);
+            return response.data;
+        } catch (error) {
+            console.error("Error submitting answer:", error);
+            throw error;
+        }
+    },
+    updateAnswer: async (id, updatedAnswerData) => {
+        try {
+            const response = await api.put(`/results/update/${id}`, updatedAnswerData);
+            return response.data;
+        } catch (error) {
+            console.error("Error updating answer:", error);
             throw error;
         }
     },
