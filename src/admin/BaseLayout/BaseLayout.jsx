@@ -89,15 +89,15 @@ const BaseLayout = () => {
     {
       key: "2",
       icon: <FileTextOutlined />,
-      label: "Test",
+      label: "Exam",
       children: [
         {
           key: "/admin/test/all-tests",
-          label: <a href="/admin/test/all-tests">All Tests</a>,
+          label: <a href="/admin/test/all-tests">All Exam</a>,
         },
         {
           key: "/admin/test/create-test",
-          label: <a href="/admin/test/create-test">Create Test</a>,
+          label: <a href="/admin/test/create-test">Create Exam</a>,
         },
       ],
     },

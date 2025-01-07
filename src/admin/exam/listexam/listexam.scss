@@ -1,0 +1,28 @@
+.list-exam {
+    padding: 20px;
+    background-color: #f9f9f9;
+    font-family: Arial, sans-serif;
+  
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+      font-size: 24px;
+      text-transform: uppercase;
+    }
+  
+    .exam-container {
+      padding: 20px;
+     
+  
+      .ant-table {
+        min-height: 530px; /* Chiều cao tối thiểu cho bảng */
+      }
+  
+      .ant-table-body {
+        max-height: 550px; /* Chiều cao cố định cho nội dung */
+        overflow-y: auto; /* Cuộn dọc */
+      }
+    }
+  }
+  

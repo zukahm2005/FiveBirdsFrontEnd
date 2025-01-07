@@ -3,7 +3,7 @@ import Cookies from "js-cookie";
 import React, { useEffect, useState } from "react";
 import { AiOutlineDown } from "react-icons/ai";
 import { GoPlus } from "react-icons/go";
-import GlobalAlert from "../../common/globalAlert/GlobalAlert";
+import GlobalAlert from "../../../common/globalAlert/GlobalAlert";
 import "./createtest.scss";
 
 const CreateTest = () => {
@@ -50,9 +50,6 @@ const CreateTest = () => {
           }
         );
         setExams(response.data.data || []);
-        setAlertType("success");
-        setAlertDescription("Exams fetched successfully!");
-        setAlertVisible(true);
       } catch (error) {
         console.error("Error fetching exams:", error);
         setAlertType("error");
