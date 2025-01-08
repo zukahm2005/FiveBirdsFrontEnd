@@ -28,7 +28,6 @@ const ExamCard = ({ exam, onStartExam, loading }) => {
                     <Button
                         type="primary"
                         onClick={onStartExam}
-                        loading={loading}
                         className="start-exam-btn"
                     >
                         <p><FaPlay /> START TAKING THIS ASSIGMENT</p>

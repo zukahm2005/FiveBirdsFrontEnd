@@ -72,6 +72,9 @@
     color: white;
     height: 3rem;
     margin: 0 auto;
+    position: relative;
+
+    
 }
 
 .start-exam-btn:hover {
