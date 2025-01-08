@@ -39,6 +39,12 @@ const columns = [
     key: "experience",
   },
   {
+    title: "Position",
+    dataIndex: "candidatePosition",
+    key: "candidatePosition",
+    render: (candidatePosition) => candidatePosition?.name || "N/A",
+  },
+  {
     title: "Status",
     dataIndex: "statusEmail",
     key: "statusEmail",
@@ -65,7 +71,6 @@ const TableDashBoard = () => {
   const [candidatePositions, setCandidatePositions] = useState([])
 
 
-  // Pagination state
   const [pagination, setPagination] = useState({
     current: 1,
     pageSize: 10,
@@ -192,7 +197,7 @@ const TableDashBoard = () => {
 
           <div>
             <Select
-              placeholder="Select Position" 
+              placeholder="Select Candidate Position" 
               style={{ width: 170 }}
               value={candidatePositionId || undefined} 
               onChange={(id) => {

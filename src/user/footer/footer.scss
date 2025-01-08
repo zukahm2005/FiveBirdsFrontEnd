@@ -69,10 +69,10 @@
         label {
           font-size: 14px;
           font-weight: bold;
-          color: #333; // Màu sắc cho label
+          color: #333; 
         }
 
-        .ant-input,
+        .ant-input, select
         > input {
           border-radius: 8px;
           border: 1px solid #ccc;
@@ -119,12 +119,15 @@
           padding: 1rem;
           display: flex;
           flex-direction: column;
-          gap: 2rem;
+          gap: 1rem;
           .phone-form {
             input {
-              width: 100%;
+              max-width: 100%;
             }
           }
+        }
+        .flex-container{
+          gap: 1rem;
         }
 
         .btn-send {

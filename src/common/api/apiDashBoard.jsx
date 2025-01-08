@@ -71,7 +71,6 @@ const getCandidatePositions = async () => {
       });
 }
 
-
 export {
     getCandidateById,
     getCandidate,

@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import Component from "../components/Component";
 import Logo from "../components/logo/Logo";
 import "./headercomponent.scss";
-import { IoIosArrowForward } from "react-icons/io";
 
 const menuItems = [
   { path: "/", name: "HOME" },
