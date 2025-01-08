@@ -1,23 +1,31 @@
 .exam-card-container {
-    background-color: #001529; /* Màu nền tối */
+    background-color: #011e39; /* Màu nền tối */
     color: white; /* Màu chữ trắng */
-    border-radius: 8px;
     padding: 30px;
-    max-width: 80%;
+    max-width: 70%;
     margin: 5rem auto;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    height: 20rem;
+    position: relative;
 }
 
 .exam-card-header {
-    margin-bottom: 20px;
-    text-align: center;
+    margin-bottom: 25px;
+    text-align: left;
+    position: absolute;
+    bottom: 10%;
+    z-index: 0;
+    p{
+        padding: 0;
+        margin: 0;
+    }
 }
 
 .exam-title {
     font-size: 24px;
     font-weight: bold;
     color: #ffffff;
-    margin: 0;
+    
     p{
         color: white;
     }
@@ -25,43 +33,60 @@
 }
 
 .exam-description {
-    font-size: 16px;
+    font-size: 20px;
     color: #d1d5db;
-    margin: 5px 0 20px;
 }
 
 .exam-card-body {
+    position: absolute;
+    width: 95%;
+    margin: 0 auto;
     padding: 20px;
     background: #ffffff;
     color: #000000;
-    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+    height: 25rem;
+    top: 80%;
 }
 
 .instructions-title {
     font-weight: bold;
-    font-size: 18px;
-    margin-bottom: 10px;
+    font-size: 1.5rem;
 }
 
 .instructions-text {
-    font-size: 14px;
+    font-size: 20px;
     color: #333333;
     line-height: 1.8;
-    margin-bottom: 20px;
+    padding-left: 2rem;
 }
 
 .start-exam-btn {
     display: block;
-    width: 100%;
+    width: 40%;
     text-align: center;
     font-size: 16px;
     font-weight: bold;
     padding: 10px 0;
-    background-color: #1890ff;
+    background-color: rgb(36, 48, 132);
     color: white;
-    border-radius: 4px;
+    height: 3rem;
+    margin: 0 auto;
 }
 
 .start-exam-btn:hover {
-    background-color: #40a9ff;
+    background-color: #1e537f;
 }
+
+.instructions-info{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #c8c8c8;
+    gap: 0.2rem;
+    text-align: center;
+    justify-content: center;    
+}
+

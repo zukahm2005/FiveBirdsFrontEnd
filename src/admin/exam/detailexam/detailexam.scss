@@ -272,3 +272,45 @@
     z-index: 1000;
   }
 }
+/* Container cho Select */
+.dropdown-select {
+  width: 100%;
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:focus {
+    border-color: #1890ff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(24, 144, 255, 0.5);
+  }
+
+  &:hover {
+    border-color: #007bff;
+  }
+}
+
+/* Label với mũi tên */
+.dropdown-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  color: #333;
+  margin-bottom: 10px;
+
+  svg {
+    transition: transform 0.3s ease;
+  }
+
+  &.active svg {
+    transform: rotate(180deg);
+  }
+}
