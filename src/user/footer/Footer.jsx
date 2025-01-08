@@ -1,5 +1,5 @@
 import { UploadOutlined } from "@ant-design/icons";
-import { Button, DatePicker, Form, Input, Upload } from "antd";
+import { Button, Form, Input, Select, Upload } from "antd";
 import axios from "axios";
 import React, { useState } from "react";
 import { BiLogoFacebook } from "react-icons/bi";
@@ -13,26 +13,59 @@ import GlobalAlert from "../../common/globalAlert/GlobalAlert";
 import Logo from "../components/logo/Logo";
 import "./footer.scss";
 
+const { Option } = Select;
 
 export default function Footer() {
   const [form] = Form.useForm();
   const [fileList, setFileList] = useState([]);
-  const [visible, setVisible] = useState(false)
-  const [type, setType] = useState(null)
-  const [description, setDescription] = useState(null)
-  const [loading, setLoading] = useState(false)
+  const [visible, setVisible] = useState(false);
+  const [type, setType] = useState(null);
+  const [description, setDescription] = useState(null);
+  const [loading, setLoading] = useState(false);
 
+  // Hàm xử lý khi chọn file
   const handleFileChange = ({ fileList: newFileList }) => {
+    const isPdfOrDoc =
+      newFileList[0]?.type === "application/pdf" ||
+      newFileList[0]?.type.includes("msword");
+    if (!isPdfOrDoc) {
+      setType("error");
+      setDescription("Only PDF or DOC files are allowed!");
+      setVisible(true);
+      return;
+    }
+
+    const isFileSizeValid = newFileList[0]?.size / 1024 / 1024 < 5; // Dung lượng < 5MB
+    if (!isFileSizeValid) {
+      setType("error");
+      setDescription("File size should be less than 5MB!");
+      setVisible(true);
+      return;
+    }
+
     setFileList(newFileList);
   };
 
+  // Hàm xử lý khi gửi form
   const handleFinish = async (values) => {
-    setLoading(true)
+    setLoading(true);
+
+    const { day, month, year } = values.dateOfBirth;
+
+    if (!day || !month || !year) {
+      setType("error");
+      setDescription("Please select a valid date of birth!");
+      setLoading(false);
+      setVisible(true);
+      return;
+    }
+
+    const formattedDate = `${day}/${month}/${year}`;
     const formData = new FormData();
     formData.append("fullname", values.fullName);
     formData.append("email", values.email);
     formData.append("phone", values.phoneNumber);
-    formData.append("birthday", values.dateOfBirth.format("DD/MM/YYYY"));
+    formData.append("birthday", formattedDate);
     formData.append("education", values.education);
     formData.append("experience", values.experience);
     formData.append("applyLocation", values.applyLocation);
@@ -51,19 +84,35 @@ export default function Footer() {
           },
         }
       );
-      setType("success"),
-        setDescription("submit cv success")
-      setVisible(true)
+      setType("success");
+      setDescription("Submit CV success");
+      setVisible(true);
       form.resetFields();
       setFileList([]);
-      setLoading(false)
+      setLoading(false);
     } catch (error) {
-      setType("error")
-      setDescription("submit cv error")
-      setLoading(false)
-      setVisible(true)
+      const errorMessage =
+        error.response?.data?.message || "Submit CV error";
+      setType("error");
+      setDescription(errorMessage);
+      setLoading(false);
+      setVisible(true);
     }
   };
+
+  const generateRange = (start, end) => {
+    const range = [];
+    for (let i = start; i <= end; i++) {
+      range.push(i.toString().padStart(2, "0")); 
+    }
+    return range;
+  };
+
+  const days = generateRange(1, 31);
+  const months = generateRange(1, 12);
+
+  const currentYear = new Date().getFullYear();
+  const years = Array.from({ length: 101 }, (_, i) => (currentYear - i).toString()); 
 
   const iconsF1 = [
     { id: 1, icon: <BiLogoFacebook /> },
@@ -73,27 +122,40 @@ export default function Footer() {
   ];
 
   const iconsF2 = [
-    {
-      id: 1, icon: <FaPhone />
-      , content: " 800 123 4567"
-    },
+    { id: 1, icon: <FaPhone />, content: "800 123 4567" },
     { id: 2, icon: <MdEmail />, content: "nafta@example.com" },
     {
-      id: 3, icon: <RiMapPinFill />, content: "2469 Hoffman AvenueNew York, NY 10016"
+      id: 3,
+      icon: <RiMapPinFill />,
+      content: "2469 Hoffman AvenueNew York, NY 10016",
     },
-    { id: 4, icon: <BsFillClockFill />, content: "Mo-Fri: 8am - 6pm | Sat: 10am - 4pm | Sun: of" },
+    {
+      id: 4,
+      icon: <BsFillClockFill />,
+      content: "Mo-Fri: 8am - 6pm | Sat: 10am - 4pm | Sun: off",
+    },
   ];
+  const locations = ["Hanoi", "Ho Chi Minh", "Da Nang", "Other"];
 
   return (
     <div className="footer-container">
-      <GlobalAlert setVisible={setVisible} visible={visible} type={type} description={description} />
+      <GlobalAlert
+        setVisible={setVisible}
+        visible={visible}
+        type={type}
+        description={description}
+      />
 
       <div className="content-footer flex-row">
         <div className="left-content flex-col">
-          <div className="logo-f"><Logo /></div>
+          <div className="logo-f">
+            <Logo />
+          </div>
           <div className="content-f">
             <p>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua enim minim.
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+              eiusmod tempor incididunt ut labore et dolore magna aliqua enim
+              minim.
             </p>
           </div>
           <div className="icon1-f">
@@ -105,7 +167,12 @@ export default function Footer() {
           </div>
         </div>
         <div className="form-container">
-          <Form form={form} layout="vertical" onFinish={handleFinish} className="info-form">
+          <Form
+            form={form}
+            layout="vertical"
+            onFinish={handleFinish}
+            className="info-form"
+          >
             <div className="title-form">
               <p>Write Us</p>
             </div>
@@ -116,23 +183,61 @@ export default function Footer() {
             >
               <Input placeholder="Enter your full name..." />
             </Form.Item>
-            <Form.Item label="Date of Birth & Phone Number">
-              <div className="flex-container">
+
+            <Form.Item
+              label="Date of Birth"
+              required={true}            >
+              <div className="flex-row" style={{ gap: "5px" }}>
                 <Form.Item
-                  name="dateOfBirth"
-                  rules={[{ required: true, message: "Please input your date of birth!" }]}
+                  name={["dateOfBirth", "day"]}
+                  rules={[{ required: true, message: "Please select a day!" }]}
+                  noStyle
                 >
-                  <DatePicker className="custom-date-picker" placeholder="Date of birth..." format="DD/MM/YYYY" />
+                  <Select placeholder="Day" style={{ width: 80 }}>
+                    {days.map((day) => (
+                      <Option key={day} value={day}>
+                        {day}
+                      </Option>
+                    ))}
+                  </Select>
                 </Form.Item>
 
                 <Form.Item
-                  name="phoneNumber"
-                  className="phone-input"
-                  rules={[{ required: true, message: "Please input your phone number!" }]}
+                  name={["dateOfBirth", "month"]}
+                  rules={[{ required: true, message: "Please select a month!" }]}
+                  noStyle
                 >
-                  <Input placeholder="Enter your phone number..." />
+                  <Select placeholder="Month" style={{ width: 85 }}>
+                    {months.map((month) => (
+                      <Option key={month} value={month}>
+                        {month}
+                      </Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+
+                <Form.Item
+                  name={["dateOfBirth", "year"]}
+                  rules={[{ required: true, message: "Please select a year!" }]}
+                  noStyle
+                >
+                  <Select placeholder="Year" style={{ width: 100 }}>
+                    {years.map((year) => (
+                      <Option key={year} value={year}>
+                        {year}
+                      </Option>
+                    ))}
+                  </Select>
                 </Form.Item>
               </div>
+            </Form.Item>
+
+            <Form.Item
+              name="phoneNumber"
+              label="Phone Number"
+              rules={[{ required: true, message: "Please input your phone number!" }]}
+            >
+              <Input placeholder="Enter your phone number..." />
             </Form.Item>
 
             <Form.Item
@@ -162,12 +267,22 @@ export default function Footer() {
               <Input placeholder="Enter your experience..." />
             </Form.Item>
 
+
             <Form.Item
-              name="applyLocation"
-              label="Apply Location"
-              rules={[{ required: true, message: "Please input your ApplyLocation!" }]}
+              name="applyingForJob"
+              label="Applying for a job"
+              rules={[{ required: true, message: "Please select your Apply Location!" }]}
+              style={{textAlign:"left"}}
             >
-              <Input placeholder="Enter your ApplyLocation..." />
+              <Select placeholder="Select your Apply Location..." 
+                style={{height: "2.5rem", width:"15rem"}}
+              >
+                {locations.map((location) => (
+                  <Option key={location} value={location}>
+                    {location}
+                  </Option>
+                ))}
+              </Select>
             </Form.Item>
 
             <Form.Item
@@ -188,22 +303,29 @@ export default function Footer() {
             </Form.Item>
 
             <Form.Item>
-              <Button type="primary" htmlType="submit" className="btn-send" loading={loading}>
+              <Button
+                type="primary"
+                htmlType="submit"
+                className="btn-send"
+                loading={loading}
+              >
                 <p>Send</p>
               </Button>
             </Form.Item>
           </Form>
         </div>
 
-
         <div className="right-content">
           {iconsF2.map((iconF2) => (
-            <div key={iconF2.id} >
+            <div key={iconF2.id}>
               <div className="icon-right">
-                <div className="icon-footer"><p>{iconF2.icon}</p> </div>
-                <div className="content-footer1"><p>{iconF2.content}</p></div>
+                <div className="icon-footer">
+                  <p>{iconF2.icon}</p>
+                </div>
+                <div className="content-footer1">
+                  <p>{iconF2.content}</p>
+                </div>
               </div>
-
             </div>
           ))}
         </div>
