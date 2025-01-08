@@ -64,6 +64,16 @@ const getCandidateById = async (candidateId) => {
       });
 }
 
+const getCandidatePositions = async () => {
+    const response = await fetch("http://46.202.178.139:5050/api/v1/candidate-positions", {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+        }
+    });
+    return await response.json();
+};
+
 
 
 export {
@@ -72,5 +82,6 @@ export {
     getAllCandidate,
     getExam,
     sendEmailCandidate,
-    addUserExam
+    addUserExam,
+    getCandidatePositions
 }
