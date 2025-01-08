@@ -64,7 +64,7 @@ const getCandidateById = async (candidateId) => {
       });
 }
 const getCandidatePositions = async () => {
-    return await axios.get(`http://localhost:5005/api/v1/candidate-positions`, {
+    return await axios.get(`http://46.202.178.139:5050/api/v1/candidate-positions`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
