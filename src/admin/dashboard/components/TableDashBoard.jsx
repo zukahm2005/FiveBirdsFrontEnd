@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Button, Table, Typography, Spin, Select, Input } from "antd";
+import { Button, Table, Typography, Spin, Select, Input, DatePicker } from "antd";
 import ExamRequest from "./ExamRequest";
-import moment from "moment/moment";
+import moment from "moment";
 import { getAllCandidate, getExam, getCandidatePositions } from "../../../common/api/apiDashBoard";
 
 const { Text } = Typography;
 const { Search } = Input;
 const { Option } = Select;
+const { RangePicker } = DatePicker;
 
 const columns = [
   {
@@ -48,7 +49,7 @@ const columns = [
     title: "Created At",
     dataIndex: "createdAt",
     key: "createdAt",
-    render: (text) => moment(text).format("YYYY-MM-DD HH:mm:ss"),
+    render: (text) => moment(text).format("DD-MM-YYYY HH:mm:ss"),
   },
 ];
 
@@ -63,6 +64,7 @@ const TableDashBoard = () => {
   const [exam, setExam] = useState([]);
   const [candidatePositions, setCandidatePositions] = useState([]);
   const [selectedCandidatePosition, setSelectedCandidatePosition] = useState(null);
+  const [selectedDateRange, setSelectedDateRange] = useState([]);
 
   // Pagination state
   const [pagination, setPagination] = useState({
@@ -140,6 +142,24 @@ const TableDashBoard = () => {
     setFilteredData(filtered);
   };
 
+  const onDateRangeChange = (dates) => {
+    setSelectedDateRange(dates);
+
+    if (dates && dates.length === 2) {
+      const [start, end] = dates.map((date) => moment(date).startOf("day"));
+
+      const filtered = data.filter((item) => {
+        const createdAtDate = moment(item.createdAt);
+        return createdAtDate.isSameOrAfter(start) && createdAtDate.isSameOrBefore(end);
+      });
+
+      setFilteredData(filtered);
+    } else {
+      setFilteredData(data);
+    }
+  };
+
+
   const onSelectChange = (newSelectedRowKeys) => {
     setSelectedRowKeys(newSelectedRowKeys);
     const newSelectedRows = data.filter((item) =>
@@ -207,6 +227,13 @@ const TableDashBoard = () => {
                     </Option>
                 ))}
               </Select>
+            </div>
+
+            <div style={{ width: "30%" }}>
+              <RangePicker
+                  onChange={onDateRangeChange}
+                  format="DD-MM-YYYY"
+              />
             </div>
           </div>
 
