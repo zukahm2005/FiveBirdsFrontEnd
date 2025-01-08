@@ -1,7 +1,7 @@
 import { UploadOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Select, Upload } from "antd";
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BiLogoFacebook } from "react-icons/bi";
 import { BsFillClockFill } from "react-icons/bs";
 import { FaInstagram, FaPhone } from "react-icons/fa";
@@ -22,35 +22,27 @@ export default function Footer() {
   const [type, setType] = useState(null);
   const [description, setDescription] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [positions, setPositions] = useState([]);
 
-  // Hàm xử lý khi chọn file
   const handleFileChange = ({ fileList: newFileList }) => {
-    const isPdfOrDoc =
+    const isSupportedFile =
       newFileList[0]?.type === "application/pdf" ||
-      newFileList[0]?.type.includes("msword");
-    if (!isPdfOrDoc) {
+      newFileList[0]?.type === "image/jpeg" ||
+      newFileList[0]?.type === "image/png";
+
+    if (!isSupportedFile) {
       setType("error");
-      setDescription("Only PDF or DOC files are allowed!");
+      setDescription("Only PDF, JPG, or PNG files are allowed!");
       setVisible(true);
       return;
     }
-
-    const isFileSizeValid = newFileList[0]?.size / 1024 / 1024 < 5; // Dung lượng < 5MB
-    if (!isFileSizeValid) {
-      setType("error");
-      setDescription("File size should be less than 5MB!");
-      setVisible(true);
-      return;
-    }
-
     setFileList(newFileList);
   };
 
-  // Hàm xử lý khi gửi form
   const handleFinish = async (values) => {
     setLoading(true);
 
-    const { day, month, year } = values.dateOfBirth;
+    const { day, month, year } = values.dateOfBirth || {};
 
     if (!day || !month || !year) {
       setType("error");
@@ -60,20 +52,22 @@ export default function Footer() {
       return;
     }
 
-    const formattedDate = `${day}/${month}/${year}`;
-    const formData = new FormData();
-    formData.append("fullname", values.fullName);
-    formData.append("email", values.email);
-    formData.append("phone", values.phoneNumber);
-    formData.append("birthday", formattedDate);
-    formData.append("education", values.education);
-    formData.append("experience", values.experience);
-    formData.append("applyLocation", values.applyLocation);
+    const formattedDate = `${day.padStart(2, "0")}/${month.padStart(2, "0")}/${year}`;
 
+    const formData = new FormData();
+    formData.append("FullName", values.fullName);
+    formData.append("Email", values.email);
+    formData.append("Phone", values.phoneNumber);
+    formData.append("Birthday", formattedDate);
+    formData.append("Education", values.education);
+    formData.append("Experience", values.experience);
+    formData.append("CandidatePositionId", values.applyPositions);
     if (fileList.length > 0) {
       formData.append("CvFile", fileList[0].originFileObj);
     }
-
+    for (let pair of formData.entries()) {
+      console.log(`${pair[0]}: ${pair[1]}`);
+    }
     try {
       const response = await axios.post(
         "http://46.202.178.139:5050/api/v1/candidates",
@@ -84,6 +78,8 @@ export default function Footer() {
           },
         }
       );
+
+
       setType("success");
       setDescription("Submit CV success");
       setVisible(true);
@@ -100,10 +96,11 @@ export default function Footer() {
     }
   };
 
+
   const generateRange = (start, end) => {
     const range = [];
     for (let i = start; i <= end; i++) {
-      range.push(i.toString().padStart(2, "0")); 
+      range.push(i.toString().padStart(2, "0"));
     }
     return range;
   };
@@ -112,7 +109,7 @@ export default function Footer() {
   const months = generateRange(1, 12);
 
   const currentYear = new Date().getFullYear();
-  const years = Array.from({ length: 101 }, (_, i) => (currentYear - i).toString()); 
+  const years = Array.from({ length: 101 }, (_, i) => (currentYear - i).toString());
 
   const iconsF1 = [
     { id: 1, icon: <BiLogoFacebook /> },
@@ -135,7 +132,20 @@ export default function Footer() {
       content: "Mo-Fri: 8am - 6pm | Sat: 10am - 4pm | Sun: off",
     },
   ];
-  const locations = ["Hanoi", "Ho Chi Minh", "Da Nang", "Other"];
+  useEffect(() => {
+    const fetchLocations = async () => {
+      try {
+        const response = await axios.get(
+          "http://46.202.178.139:5050/api/v1/candidate-positions"
+        );
+        setPositions(response.data.data || []);
+      } catch (error) {
+        console.error("Error fetching locations:", error);
+      }
+    };
+
+    fetchLocations();
+  }, []);
 
   return (
     <div className="footer-container">
@@ -267,19 +277,19 @@ export default function Footer() {
               <Input placeholder="Enter your experience..." />
             </Form.Item>
 
-
             <Form.Item
-              name="applyingForJob"
+              name="applyPositions"
               label="Applying for a job"
               rules={[{ required: true, message: "Please select your Apply Location!" }]}
-              style={{textAlign:"left"}}
+              style={{ textAlign: "left" }}
             >
-              <Select placeholder="Select your Apply Location..." 
-                style={{height: "2.5rem", width:"15rem"}}
+              <Select
+                placeholder="Select your Apply Location..."
+                style={{ height: "2.5rem", width: "15rem" }}
               >
-                {locations.map((location) => (
-                  <Option key={location} value={location}>
-                    {location}
+                {positions.map((position) => (
+                  <Option key={position.id} value={position.id}>
+                    {position.name}
                   </Option>
                 ))}
               </Select>
