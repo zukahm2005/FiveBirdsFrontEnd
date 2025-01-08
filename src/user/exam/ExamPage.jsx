@@ -40,8 +40,8 @@ const ExamPage = () => {
     const section = getCurrentSection();
     if (!section) return [];
     const sectionStartIndex = sections
-      .slice(0, section.sectionIndex)
-      .reduce((sum, s) => sum + s.count, 0);
+        .slice(0, section.sectionIndex)
+        .reduce((sum, s) => sum + s.count, 0);
     const sectionEndIndex = sectionStartIndex + section.count;
     return questions.slice(sectionStartIndex, sectionEndIndex);
   };
@@ -73,135 +73,130 @@ const ExamPage = () => {
     }
   };
 
-  // Hàm lưu câu trả lời vào bộ nhớ cục bộ và gọi API cập nhật (nếu cần)
-  const saveAnswer = async () => {
+  const saveAnswer = () => {
     const currentQuestion = questions[currentQuestionIndex];
-    const existingAnswer = answers[currentQuestionIndex];
-
-    if (selectedAnswer) {
-      const answerData = {
-        userId,
-        examId,
+    if (selectedAnswer !== null) {
+      const updatedAnswers = [...answers];
+      updatedAnswers[currentQuestionIndex] = {
         questionId: currentQuestion.id,
         answerId: selectedAnswer,
         examAnswer: selectedAnswer,
       };
-
-      // Lưu câu trả lời vào bộ nhớ cục bộ
-      const updatedAnswers = [...answers];
-      updatedAnswers[currentQuestionIndex] = {
-        ...existingAnswer,
-        ...answerData,
-      };
       setAnswers(updatedAnswers);
-
-      try {
-        if (existingAnswer && existingAnswer.id) {
-          // Nếu đã tồn tại, gọi API update
-          await apiService.updateAnswer(existingAnswer.id, answerData);
-        } else {
-          // Nếu chưa có, gọi API submit mới
-          const response = await apiService.submitAnswer(answerData);
-          updatedAnswers[currentQuestionIndex].id = response.id; // Gắn ID từ API
-          setAnswers(updatedAnswers);
-        }
-      } catch (error) {
-        console.error("Error saving answer:", error);
-      }
     }
   };
 
-  // Chuyển sang câu hỏi khác
-  const handleQuestionClick = (newIndex) => {
-    saveAnswer(); // Lưu câu trả lời trước khi chuyển câu hỏi
-    setCurrentQuestionIndex(newIndex);
-    setSelectedAnswer(answers[newIndex]?.examAnswer || null); // Hiển thị lại câu trả lời nếu có
+  const handleFinishExam = async () => {
+    try {
+      const answerData = answers.map((answer, index) => ({
+        userId: Number(userId),
+        examId: Number(examId),
+        questionId: Number(questions[index]?.id),
+        answerId: Number(answer?.answerId || 0),
+        examAnswer: Number(answer?.examAnswer || 0),
+      }));
+      await apiService.submitAnswer(answerData);
+      alert("Bài thi đã được nộp thành công!");
+    } catch (error) {
+      console.error("Error submitting exam:", error);
+      alert("Có lỗi xảy ra khi nộp bài thi. Vui lòng thử lại.");
+    }
   };
 
-  const visibleQuestions = getQuestionsForCurrentSection();
+  const handleQuestionClick = (newIndex) => {
+    saveAnswer();
+    setCurrentQuestionIndex(newIndex);
+    setSelectedAnswer(answers[newIndex]?.examAnswer || null);
+  };
 
   if (!isStarted) {
     const examInfo = {
       title: "TH-7091-Sem 3-Developing Microsoft Azure Solutions",
-      description: <div className="exam-info">
-        <span className="exam-info-details">
-          <HiOutlineClipboardDocumentList className="exam-icon" />
-           20 problems
-        </span>
-
-        <span className="exam-info-details">
-          <GoClock className="exam-icon" />
-           40 minutes
-        </span>
-      </div>,
+      description: (
+          <div className="exam-info">
+          <span className="exam-info-details">
+            <HiOutlineClipboardDocumentList className="exam-icon" />
+            20 problems
+          </span>
+            <span className="exam-info-details">
+            <GoClock className="exam-icon" />
+            40 minutes
+          </span>
+          </div>
+      ),
     };
 
     return (
-      <div className="exam-page">
-        <ExamCard exam={examInfo} onStartExam={handleStart} loading={loading} />
-      </div>
+        <div className="exam-page">
+          <ExamCard exam={examInfo} onStartExam={handleStart} loading={loading} />
+        </div>
     );
   }
 
   const currentQuestion = questions[currentQuestionIndex];
 
   return (
-    <div className="exam-page">
-      <div className="header">
-        <Timer
-          durationMinutes={duration}
-          onTimeout={() => alert("Time's up!")}
-          sectionTitle={getCurrentSection()?.name}
+      <div className="exam-page">
+        <div className="header">
+          <Timer
+              durationMinutes={duration}
+              onTimeout={() => alert("Time's up!")}
+              sectionTitle={getCurrentSection()?.name}
+          />
+        </div>
+        <div className="question-navigation">
+          <Button
+              className="prev-next-btn"
+              onClick={() => handleQuestionClick(currentQuestionIndex - 1)}
+              disabled={currentQuestionIndex === 0}
+          >
+            Prev
+          </Button>
+          {getQuestionsForCurrentSection().map((_, index) => {
+            const globalQuestionIndex =
+                sections
+                    .slice(0, getCurrentSection().sectionIndex)
+                    .reduce((sum, s) => sum + s.count, 0) + index;
+
+            return (
+                <Button
+                    key={globalQuestionIndex}
+                    type={
+                      currentQuestionIndex === globalQuestionIndex
+                          ? "primary"
+                          : "default"
+                    }
+                    onClick={() => handleQuestionClick(globalQuestionIndex)}
+                >
+                  {globalQuestionIndex + 1}
+                </Button>
+            );
+          })}
+          <Button
+              className="prev-next-btn"
+              onClick={() => handleQuestionClick(currentQuestionIndex + 1)}
+              disabled={currentQuestionIndex === questions.length - 1}
+          >
+            Next
+          </Button>
+        </div>
+        <QuestionCard
+            question={currentQuestion}
+            questionNumber={currentQuestionIndex + 1}
+            totalQuestions={questions.length}
+            selectedAnswer={selectedAnswer}
+            onAnswerSelect={setSelectedAnswer}
         />
+        <div className="footer">
+          <Button
+              type="primary"
+              onClick={handleFinishExam}
+              disabled={answers.some((answer) => answer === null)}
+          >
+            Hoàn thành bài thi
+          </Button>
+        </div>
       </div>
-
-      <div className="question-navigation">
-        <Button
-          className="prev-next-btn"
-          onClick={() => handleQuestionClick(currentQuestionIndex - 1)}
-          disabled={currentQuestionIndex === 0}
-        >
-          Prev
-        </Button>
-
-        {visibleQuestions.map((_, index) => {
-          const globalQuestionIndex =
-            sections
-              .slice(0, getCurrentSection().sectionIndex)
-              .reduce((sum, s) => sum + s.count, 0) + index;
-
-          return (
-            <Button
-              key={globalQuestionIndex}
-              type={
-                currentQuestionIndex === globalQuestionIndex
-                  ? "primary"
-                  : "default"
-              }
-              onClick={() => handleQuestionClick(globalQuestionIndex)}
-            >
-              {globalQuestionIndex + 1}
-            </Button>
-          );
-        })}
-
-        <Button
-          className="prev-next-btn"
-          onClick={() => handleQuestionClick(currentQuestionIndex + 1)}
-          disabled={currentQuestionIndex === questions.length - 1}
-        >
-          Next
-        </Button>
-      </div>
-
-      <QuestionCard
-        question={currentQuestion}
-        questionNumber={currentQuestionIndex + 1}
-        totalQuestions={questions.length}
-        selectedAnswer={selectedAnswer}
-        onAnswerSelect={setSelectedAnswer}
-      />
-    </div>
   );
 };
 
