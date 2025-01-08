@@ -17,6 +17,9 @@ const CreateTest = () => {
   const [examDescription, setExamDescription] = useState("");
   const [showDurationInput, setShowDurationInput] = useState(false);
   const [examDuration, setExamDuration] = useState("");
+  const [candidatePositions, setCandidatePositions] = useState([]);
+  const [selectedCandidatePosition, setSelectedCandidatePosition] =
+    useState("");
 
   // States for questions
   const [questions, setQuestions] = useState([
@@ -62,6 +65,35 @@ const CreateTest = () => {
   useEffect(() => {
     fetchExams();
   }, []);
+  const fetchCandidatePositions = async () => {
+    try {
+      const token = Cookies.get("token");
+      const response = await axios.get(
+        "http://46.202.178.139:5050/api/v1/candidate-positions",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const names = response.data.data.map((item) => item.name);
+      console.log("Candidate Names:", names);
+      const data = response.data.data;
+      // Đảm bảo response.data luôn là một mảng
+      setCandidatePositions(Array.isArray(data) ? data : []);
+    } catch (error) {
+      console.error("Error fetching candidate positions:", error);
+      setAlertType("error");
+      setAlertDescription("Failed to fetch candidate positions.");
+      setAlertVisible(true);
+    }
+  };
+  
+
+  // Gọi API khi component mount
+  useEffect(() => {
+    fetchCandidatePositions();
+  }, []);
 
   // Handle creating an exam
   const handleCreateExam = async (e) => {
@@ -72,6 +104,7 @@ const CreateTest = () => {
       setAlertVisible(true);
       return;
     }
+    console.log("Selected Candidate Position ID:", selectedCandidatePosition);
 
     setLoading(true);
     try {
@@ -82,6 +115,8 @@ const CreateTest = () => {
           title: examTitle,
           description: examDescription,
           duration: examDuration,
+          candidatePositionId: selectedCandidatePosition, // Gửi id của Candidate Position
+
         },
         {
           headers: {
@@ -121,10 +156,10 @@ const CreateTest = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-  
+
       const examData = response.data;
       console.log("Fetched exam details:", examData);
-  
+
       // Cập nhật câu hỏi chỉ khi cần thiết
       if (examData.questions) {
         setQuestions(
@@ -145,7 +180,7 @@ const CreateTest = () => {
       setLoading(false);
     }
   };
-  
+
   const handleSelectExam = async (examId) => {
     setSelectedExam(examId);
     setLoading(true);
@@ -172,23 +207,23 @@ const CreateTest = () => {
   };
 
   const handleAddQuestion = () => {
-  setQuestions((prevQuestions) => [
-    ...prevQuestions,
-    {
-      questionExam: "",
-      point: "",
-      answers: {
-        answer1: "",
-        answer2: "",
-        answer3: "",
-        answer4: "",
+    setQuestions((prevQuestions) => [
+      ...prevQuestions,
+      {
+        questionExam: "",
+        point: "",
+        answers: {
+          answer1: "",
+          answer2: "",
+          answer3: "",
+          answer4: "",
+        },
+        correctAnswer: "",
+        showDetails: true,
+        isNew: true,
       },
-      correctAnswer: "",
-      showDetails: true,
-      isNew: true,
-    },
-  ]);
-};
+    ]);
+  };
 
   const toggleQuestionDetails = (index) => {
     setExpandedQuestions((prevState) => ({
@@ -227,20 +262,20 @@ const CreateTest = () => {
       setAlertVisible(true);
       return;
     }
-  
+
     setLoading(true);
     const token = Cookies.get("token");
-  
+
     try {
       const newQuestions = questions.filter((q) => q.isNew); // Lọc chỉ câu hỏi mới
-  
+
       for (const question of newQuestions) {
         console.log("Payload gửi đến /questions/add:", {
           examId: selectedExam,
           questionExam: question.questionExam,
           point: parseInt(question.point, 10) || 0,
         });
-  
+
         const questionResponse = await axios.post(
           "http://46.202.178.139:5050/api/v1/questions/add",
           {
@@ -252,15 +287,15 @@ const CreateTest = () => {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
-  
+
         const questionId = questionResponse.data?.data?.id;
-  
+
         if (!questionId) {
           throw new Error("Failed to retrieve questionId from the response.");
         }
-  
+
         console.log("Created questionId:", questionId);
-  
+
         await axios.post(
           "http://46.202.178.139:5050/api/v1/answers/add",
           {
@@ -276,7 +311,7 @@ const CreateTest = () => {
           }
         );
       }
-  
+
       // Reload lại trang
       window.location.reload();
     } catch (error) {
@@ -288,8 +323,6 @@ const CreateTest = () => {
       setLoading(false);
     }
   };
-  
-  
 
   return (
     <div className="manage-questions-answers-container">
@@ -356,6 +389,21 @@ const CreateTest = () => {
                 className="dropdown-input"
               />
             )}
+          </div>
+          <div className="exam-group">
+            <label>Candidate Position:</label>
+            <select
+              value={selectedCandidatePosition}
+              onChange={(e) => setSelectedCandidatePosition(e.target.value)}
+            >
+              <option value="">Select a Candidate Position</option>
+              {Array.isArray(candidatePositions) &&
+                candidatePositions.map((position) => (
+                  <option key={position.id} value={position.id}>
+                    {position.name}
+                  </option>
+                ))}
+            </select>
           </div>
           <button type="submit" className="submit-btn create-exam-btn">
             Create Exam
@@ -449,7 +497,7 @@ const CreateTest = () => {
                       ))}
                       <label>Correct Answer:</label>
                       <input
-                        type="number" 
+                        type="number"
                         placeholder="Correct Answer (1-4)"
                         value={q.correctAnswer}
                         onChange={(e) =>
