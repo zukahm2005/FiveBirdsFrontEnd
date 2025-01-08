@@ -115,17 +115,17 @@ const LishExam = () => {
       key: 'id',
     },
     {
-      title: 'Tên bài kiểm tra',
+      title: 'Title',
       dataIndex: 'title',
       key: 'title',
     },
     {
-      title: 'Mô tả',
+      title: 'Description',
       dataIndex: 'description',
       key: 'description',
     },
     {
-      title: 'Hành động',
+      title: 'Action',
       key: 'action',
       render: (_, record) => (
         <Space size="middle">

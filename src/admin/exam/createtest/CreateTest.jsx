@@ -262,21 +262,26 @@ const CreateTest = () => {
       setAlertDescription("Please select an exam.");
       setAlertVisible(true);
       return;
+      
     }
-
+    console.log("Alert State Updated:", {
+      alertType,
+      alertDescription,
+      alertVisible,
+    });
     setLoading(true);
     const token = Cookies.get("token");
 
     try {
       const newQuestions = questions.filter((q) => q.isNew); // Lọc chỉ câu hỏi mới
-
+    
       for (const question of newQuestions) {
         console.log("Payload gửi đến /questions/add:", {
           examId: selectedExam,
           questionExam: question.questionExam,
           point: parseInt(question.point, 10) || 0,
         });
-
+    
         const questionResponse = await axios.post(
           "http://46.202.178.139:5050/api/v1/questions/add",
           {
@@ -288,15 +293,15 @@ const CreateTest = () => {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
-
+    
         const questionId = questionResponse.data?.data?.id;
-
+    
         if (!questionId) {
           throw new Error("Failed to retrieve questionId from the response.");
         }
-
+    
         console.log("Created questionId:", questionId);
-
+    
         await axios.post(
           "http://46.202.178.139:5050/api/v1/answers/add",
           {
@@ -312,9 +317,12 @@ const CreateTest = () => {
           }
         );
       }
-
-      // Reload lại trang
-      window.location.reload();
+    
+      // Thông báo thành công sau khi tất cả câu hỏi được tạo
+      setAlertType("success");
+      setAlertDescription("All questions and answers created successfully!");
+      setAlertVisible(true);
+    
     } catch (error) {
       console.error("Error creating questions or answers:", error);
       setAlertType("error");
@@ -323,7 +331,7 @@ const CreateTest = () => {
     } finally {
       setLoading(false);
     }
-  };
+  };    
 
   return (
     <div className="manage-questions-answers-container">
