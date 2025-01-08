@@ -39,6 +39,12 @@ const columns = [
     key: "experience",
   },
   {
+    title: "Candidate Position",
+    dataIndex: "candidatePosition",
+    key: "candidatePosition",
+    render: (candidatePosition) => candidatePosition?.name || "N/A",
+  },
+  {
     title: "Created At",
     dataIndex: "createdAt",
     key: "createdAt",
