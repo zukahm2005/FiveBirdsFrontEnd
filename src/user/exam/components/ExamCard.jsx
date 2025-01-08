@@ -11,7 +11,7 @@ const ExamCard = ({ exam, onStartExam, loading }) => {
         <div style={{ position: "relative" }}>
            
             <div className="exam-card-container">
-                <Logo className="logo-container"/>
+                <Logo />
                 <div className="exam-card-header">
                     <Title level={2} className="exam-title"><p>{exam.title}</p></Title>
                     <Paragraph className="exam-description"><p>{exam.description}</p></Paragraph>
