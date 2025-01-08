@@ -10,7 +10,7 @@ const PageSlide = () => {
   const slides = [
     {
       id: 1,
-      image: "https://html.modernwebtemplates.com/nafta/images/slide01.jpg",
+      image: "https://html.modernwebtemplates.com/nafta/images/slide03.jpg",
       alt: "Slide 1",
       title: "Vital Oil & Natural Gas",
       subtitle: "01. PROVIDING FOR TODAY",
@@ -24,7 +24,7 @@ const PageSlide = () => {
     },
     {
       id: 3,
-      image: "https://html.modernwebtemplates.com/nafta/images/slide03.jpg",
+      image: "https://html.modernwebtemplates.com/nafta/images/slide01.jpg",
       alt: "Slide 3",
       title: "Energy & Commodities",
       subtitle: "03. INDUSTRY",
@@ -44,17 +44,16 @@ const PageSlide = () => {
           renderBullet: (index, className) => {
             return `
               <div class="${className}">
-                <span class="pagination-bullet-number ${
-                  index + 1 === currentSlide ? "active" : ""
-                }">${index + 1}/${slides.length}</span>
+                <span class="pagination-bullet-number ${index + 1 === currentSlide ? "active" : ""
+              }">${index + 1}/${slides.length}</span>
               </div>
             `;
           },
         }}
         autoplay={{
-            delay: 2000,
-            disableOnInteraction: false,
-          }}
+          delay: 2000,
+          disableOnInteraction: false,
+        }}
         onSlideChange={(swiper) => setCurrentSlide(swiper.realIndex + 1)}
         className="mySwiper"
       >
@@ -78,7 +77,7 @@ const PageSlide = () => {
                     <button><p>Get A Quote</p></button>
                   </div>
                   <span>
-                   or
+                    or
                   </span>
                   <div>
                     <p>Request A Callback</p>
