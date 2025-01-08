@@ -2,28 +2,28 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 const token = Cookies.get("token");
+const apiUrl = "http://46.202.178.139:5050/api/v1/";
+
 
 const getCandidate = async () => {
-    const response = await fetch("http://46.202.178.139:5050/api/v1/candidates",
+    const response = await axios.get(apiUrl + "candidates",
         {
-            method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
             }
         }
     );
-    return await response.json();
+    return response;
 }
-const getAllCandidate = async (pageNumber, pageSize) => {
-    const response = await fetch(`http://46.202.178.139:5050/api/v1/candidates?pageNumber=${pageNumber}&pageSize=${pageSize}`,
+const getAllCandidate = async (pageNumber, pageSize, statusEmail, CandidatePositionId) => {
+    const response = await axios.get(`http://46.202.178.139:5050/api/v1/candidates/get/all?pageNumber=${pageNumber}&pageSize=${pageSize}&statusEmail=${statusEmail}&CandidatePositionId=${CandidatePositionId}`,
         {
-            method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
             }
         }
     );
-    return await response.json();
+    return response;
 }
 const getExam = async () => {
     const dataExam = await fetch("http://46.202.178.139:5050/api/v1/exams/get", {
@@ -63,7 +63,13 @@ const getCandidateById = async (candidateId) => {
         }
       });
 }
-
+const getCandidatePositions = async () => {
+    return await axios.get(`http://localhost:5005/api/v1/candidate-positions`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+}
 
 
 export {
@@ -72,5 +78,6 @@ export {
     getAllCandidate,
     getExam,
     sendEmailCandidate,
-    addUserExam
+    addUserExam,
+    getCandidatePositions
 }

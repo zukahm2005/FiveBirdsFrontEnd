@@ -11,8 +11,8 @@ const DashboardContent = () => {
   
   useEffect(() => {
     const fetchData = async () => {
-        const result =  await getCandidate()
-      setData(result.data);
+        const result =  await getCandidate();
+        setData(result.data);
     };
     fetchData();
   }, []);

@@ -4,7 +4,6 @@ import { CloseOutlined } from "@ant-design/icons";
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import "./ExamRequst.scss";
-import axios from "axios";
 import GlobalAlert from "../../../common/globalAlert/GlobalAlert";
 import { sendEmailCandidate, addUserExam, getCandidateById } from "../../../common/api/apiDashBoard";
 const { Option } = Select;

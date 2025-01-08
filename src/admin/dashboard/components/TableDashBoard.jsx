@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Button, Table, Typography, Spin } from "antd";
+import { Button, Table, Typography, Spin, Select } from "antd";
 import ExamRequest from "./ExamRequest";
 import moment from "moment/moment";
 import { Input } from 'antd';
 const { Search } = Input;
-import { getAllCandidate, getExam } from "../../../common/api/apiDashBoard";
+import { getAllCandidate, getCandidatePositions } from "../../../common/api/apiDashBoard";
 
 const { Text } = Typography;
 
@@ -39,6 +39,11 @@ const columns = [
     key: "experience",
   },
   {
+    title: "Status",
+    dataIndex: "statusEmail",
+    key: "statusEmail",
+  },
+  {
     title: "Created At",
     dataIndex: "createdAt",
     key: "createdAt",
@@ -55,28 +60,31 @@ const TableDashBoard = () => {
   const [error, setError] = useState(null);
   const [filteredData, setFilteredData] = useState([]);
   const [exam, setExam] = useState([]);
+  const [statusEmail, SetStatusEmail] = useState('PENDING')
+  const [candidatePositionId, SetcandidatePositionId] = useState('')
+  const [candidatePositions, setCandidatePositions] = useState([])
+
 
   // Pagination state
   const [pagination, setPagination] = useState({
     current: 1,
     pageSize: 10,
-    total: 0,
   });
 
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await getAllCandidate(pagination.current, pagination.pageSize);
-        const exemResult = await getExam();
-        
+        const result = await getAllCandidate(pagination.current, pagination.pageSize, statusEmail, candidatePositionId)
+        const resultCandidatePositions = await getCandidatePositions()
         if (result.data) {
-          setExam(exemResult.data);
-          setData(result.data);
-          setFilteredData(result.data);
+          setCandidatePositions(resultCandidatePositions.data.data)
+          setExam(result.data.data);
+          setData(result.data.data);
+          setFilteredData(result.data.data);
           setPagination(prev => ({
             ...prev,
-            total: result.totalCount, 
+            total: result.totalCount,
           }));
         } else {
           setError("No data available");
@@ -89,8 +97,8 @@ const TableDashBoard = () => {
     };
     setLoading(true);
     fetchData();
-  }, [pagination.current, pagination.pageSize]); 
-
+  }, [pagination.current, pagination.pageSize, statusEmail, candidatePositionId]);
+  console.log(exam)
   const start = () => {
     setLoading(true);
     setTimeout(() => {
@@ -167,6 +175,40 @@ const TableDashBoard = () => {
               onSearch={onSearch}
             />
           </div>
+
+          <div>
+            <Select
+              defaultValue="PENDING"
+              style={{ width: 120 }}
+              allowClear
+              options={[
+                { value: 'PENDING', label: 'Pending' },
+                { value: 'SUCCESS', label: 'Success' },
+              ]}
+              placeholder="Select a status"
+              onChange={(value) => SetStatusEmail(value)}
+            />
+          </div>
+
+          <div>
+            <Select
+              placeholder="Select Position" 
+              style={{ width: 170 }}
+              value={candidatePositionId || undefined} 
+              onChange={(id) => {
+                SetcandidatePositionId(id); 
+              }}
+            >
+              <Option value="" disabled>Select Position</Option> 
+              <Option value="">All Position</Option> 
+              {candidatePositions.map((status) => (
+                <Option key={status.id} value={status.id}>
+                  {status.name}
+                </Option>
+              ))}
+            </Select>
+          </div>
+
         </div>
 
         {loading ? (
