@@ -1,5 +1,5 @@
+import { Button, Typography } from "antd";
 import React from "react";
-import { Typography, Button } from "antd";
 import "./ExamCard.css";
 
 const { Title, Paragraph } = Typography;
@@ -8,7 +8,7 @@ const ExamCard = ({ exam, onStartExam, loading }) => {
     return (
         <div className="exam-card-container">
             <div className="exam-card-header">
-                <Title level={2} className="exam-title">{exam.title}</Title>
+                <Title level={2} className="exam-title"><p>{exam.title}</p></Title>
                 <Paragraph className="exam-description">{exam.description}</Paragraph>
             </div>
             <div className="exam-card-body">
