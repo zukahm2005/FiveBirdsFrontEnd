@@ -18,8 +18,9 @@ const CreateTest = () => {
   const [showDurationInput, setShowDurationInput] = useState(false);
   const [examDuration, setExamDuration] = useState("");
   const [candidatePositions, setCandidatePositions] = useState([]);
-  const [selectedCandidatePosition, setSelectedCandidatePosition] =
-    useState("");
+  const [selectedCandidatePosition, setSelectedCandidatePosition] =useState("");
+  const [showCandidatePositionDropdown, setShowCandidatePositionDropdown] = useState(false);
+
 
   // States for questions
   const [questions, setQuestions] = useState([
@@ -391,20 +392,29 @@ const CreateTest = () => {
             )}
           </div>
           <div className="exam-group">
-            <label>Candidate Position:</label>
-            <select
-              value={selectedCandidatePosition}
-              onChange={(e) => setSelectedCandidatePosition(e.target.value)}
-            >
-              <option value="">Select a Candidate Position</option>
-              {Array.isArray(candidatePositions) &&
-                candidatePositions.map((position) => (
-                  <option key={position.id} value={position.id}>
-                    {position.name}
-                  </option>
-                ))}
-            </select>
-          </div>
+  <label
+    onClick={() => setShowCandidatePositionDropdown(!showCandidatePositionDropdown)}
+    className={`dropdown-label ${showCandidatePositionDropdown ? "active" : ""}`}
+  >
+    Candidate Position <AiOutlineDown />
+  </label>
+  {showCandidatePositionDropdown && (
+    <select
+      value={selectedCandidatePosition}
+      onChange={(e) => setSelectedCandidatePosition(e.target.value)}
+      className="dropdown-select"
+    >
+      <option value="">Select a Candidate Position</option>
+      {candidatePositions.map((position) => (
+        <option key={position.id} value={position.id}>
+          {position.name}
+        </option>
+      ))}
+    </select>
+  )}
+</div>
+
+
           <button type="submit" className="submit-btn create-exam-btn">
             Create Exam
           </button>
