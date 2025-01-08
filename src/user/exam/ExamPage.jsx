@@ -1,10 +1,12 @@
-import React, { useState } from "react";
 import { Button } from "antd";
+import React, { useState } from "react";
+import { GoClock } from "react-icons/go";
+import { HiOutlineClipboardDocumentList } from "react-icons/hi2";
+import "./ExamPage.css";
+import ExamCard from "./components/ExamCard.jsx";
 import QuestionCard from "./components/QuestionCard";
 import Timer from "./components/Timer";
 import { apiService } from "./service/apiService";
-import "./ExamPage.css";
-import ExamCard from "./components/ExamCard.jsx";
 
 const ExamPage = () => {
   const [isStarted, setIsStarted] = useState(false);
@@ -38,8 +40,8 @@ const ExamPage = () => {
     const section = getCurrentSection();
     if (!section) return [];
     const sectionStartIndex = sections
-        .slice(0, section.sectionIndex)
-        .reduce((sum, s) => sum + s.count, 0);
+      .slice(0, section.sectionIndex)
+      .reduce((sum, s) => sum + s.count, 0);
     const sectionEndIndex = sectionStartIndex + section.count;
     return questions.slice(sectionStartIndex, sectionEndIndex);
   };
@@ -121,75 +123,85 @@ const ExamPage = () => {
   if (!isStarted) {
     const examInfo = {
       title: "TH-7091-Sem 3-Developing Microsoft Azure Solutions",
-      description: "20 problems | 40 minutes",
+      description: <div className="exam-info">
+        <span className="exam-info-details">
+          <HiOutlineClipboardDocumentList className="exam-icon" />
+           20 problems
+        </span>
+
+        <span className="exam-info-details">
+          <GoClock className="exam-icon" />
+           40 minutes
+        </span>
+      </div>,
     };
 
     return (
-        <div className="exam-page">
-          <ExamCard exam={examInfo} onStartExam={handleStart} loading={loading} />
-        </div>
+      <div className="exam-page">
+        <ExamCard exam={examInfo} onStartExam={handleStart} loading={loading} />
+      </div>
     );
   }
 
   const currentQuestion = questions[currentQuestionIndex];
 
   return (
-      <div className="exam-page">
-        <div className="header">
-          <Timer
-              durationMinutes={duration}
-              onTimeout={() => alert("Time's up!")}
-              sectionTitle={getCurrentSection()?.name}
-          />
-        </div>
-
-        <div className="question-navigation">
-          <Button
-              className="prev-next-btn"
-              onClick={() => handleQuestionClick(currentQuestionIndex - 1)}
-              disabled={currentQuestionIndex === 0}
-          >
-            Prev
-          </Button>
-
-          {visibleQuestions.map((_, index) => {
-            const globalQuestionIndex =
-                sections
-                    .slice(0, getCurrentSection().sectionIndex)
-                    .reduce((sum, s) => sum + s.count, 0) + index;
-
-            return (
-                <Button
-                    key={globalQuestionIndex}
-                    type={
-                      currentQuestionIndex === globalQuestionIndex
-                          ? "primary"
-                          : "default"
-                    }
-                    onClick={() => handleQuestionClick(globalQuestionIndex)}
-                >
-                  {globalQuestionIndex + 1}
-                </Button>
-            );
-          })}
-
-          <Button
-              className="prev-next-btn"
-              onClick={() => handleQuestionClick(currentQuestionIndex + 1)}
-              disabled={currentQuestionIndex === questions.length - 1}
-          >
-            Next
-          </Button>
-        </div>
-
-        <QuestionCard
-            question={currentQuestion}
-            questionNumber={currentQuestionIndex + 1}
-            totalQuestions={questions.length}
-            selectedAnswer={selectedAnswer}
-            onAnswerSelect={setSelectedAnswer}
+    <div className="exam-page">
+      <div className="header">
+        <Timer
+          durationMinutes={duration}
+          onTimeout={() => alert("Time's up!")}
+          sectionTitle={getCurrentSection()?.name}
         />
       </div>
+
+      <div className="question-navigation">
+        <Button
+          className="prev-next-btn"
+          onClick={() => handleQuestionClick(currentQuestionIndex - 1)}
+          disabled={currentQuestionIndex === 0}
+        >
+          Prev
+        </Button>
+
+        {visibleQuestions.map((_, index) => {
+          const globalQuestionIndex =
+            sections
+              .slice(0, getCurrentSection().sectionIndex)
+              .reduce((sum, s) => sum + s.count, 0) + index;
+
+          return (
+            <Button
+              key={globalQuestionIndex}
+              type={
+                currentQuestionIndex === globalQuestionIndex
+                  ? "primary"
+                  : "default"
+              }
+              onClick={() => handleQuestionClick(globalQuestionIndex)}
+            >
+              {globalQuestionIndex + 1}
+            </Button>
+          );
+        })}
+
+        <Button
+          className="prev-next-btn"
+          onClick={() => handleQuestionClick(currentQuestionIndex + 1)}
+          disabled={currentQuestionIndex === questions.length - 1}
+        >
+          Next
+        </Button>
+      </div>
+
+      <QuestionCard
+        question={currentQuestion}
+        questionNumber={currentQuestionIndex + 1}
+        totalQuestions={questions.length}
+        selectedAnswer={selectedAnswer}
+        onAnswerSelect={setSelectedAnswer}
+      />
+    </div>
   );
 };
 

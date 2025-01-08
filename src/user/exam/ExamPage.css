@@ -32,3 +32,17 @@
 .question-navigation .prev-next-btn:hover {
   background-color: rgba(24, 144, 255, 0.1);
 }
+
+.exam-info{
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  align-items: center;
+}
+
+.exam-info-details{
+  display: flex;
+  flex-direction: row;
+  gap: 0.2rem;
+  align-items: center;
+}
