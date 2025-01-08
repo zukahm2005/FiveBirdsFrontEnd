@@ -176,54 +176,58 @@
 }
 
 /* Question Group */
-.question-group {
-  margin-bottom: 20px;
-  border: 1px solid #ddd;
-  padding: 15px;
-  border-radius: 8px;
-  background-color: #f9f9f9;
+// Updated SCSS for question details dropdown
+.manage-questions-answers-container {
+  .question-group {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+    padding: 25px;
+  }
 
   .question-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 0;
-    cursor: pointer;
-
-    span {
-      font-size: 1rem;
-      font-weight: bold;
-    }
-
-    .dropdown-icon {
-      transition: transform 0.3s ease;
-    }
-
-    .dropdown-icon.open {
-      transform: rotate(180deg);
-    }
+    font-weight: bold;
+    font-size: 1rem;
   }
 
   .question-details {
+    margin-top: 10px;
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    // padding: 20px;
+    border-radius: 8px;
+  }
 
-    input {
-      width: 100%;
-      padding: 10px;
-      font-size: 1rem;
-      border: 1px solid #ccc;
-      border-radius: 4px;
+  .question-details p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #333;
+  }
+  .question-details p strong {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #007bff;
+  }
+  .question-details .point {
+    grid-column: span 2;
+    text-align: right;
+    font-weight: bold;
+    color: black;
+  }
 
-      &:focus {
-        border-color: #1890ff;
-        outline: none;
-        box-shadow: 0 0 5px rgba(24, 144, 255, 0.5);
-      }
-    }
+  .question-details .correct-answer {
+    grid-column: span 2;
+    font-weight: bold;
+    color: #333;
   }
 }
+
 
 /* Exam Group */
 .exam-group {
