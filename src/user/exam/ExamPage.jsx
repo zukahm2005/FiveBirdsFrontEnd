@@ -18,6 +18,8 @@ const ExamPage = () => {
   const [loading, setLoading] = useState(false);
   const [userId, setUserId] = useState(null);
   const [examId, setExamId] = useState(null);
+  const [resultData, setResultData] = useState(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const sections = [
     { name: "Kiến thức chung", count: 6 },
@@ -95,13 +97,36 @@ const ExamPage = () => {
         answerId: Number(answer?.answerId || 0),
         examAnswer: Number(answer?.examAnswer || 0),
       }));
-      await apiService.submitAnswer(answerData);
+
+      const submitResponse = await apiService.submitAnswer(answerData);
+      console.log("submitAnswer response:", submitResponse);
+
+      if (!submitResponse || submitResponse.errorCode !== 200) {
+        alert("Có lỗi xảy ra khi nộp bài thi. Vui lòng thử lại.");
+        return;
+      }
+
       alert("Bài thi đã được nộp thành công!");
+
+      const testPayload = {
+        userId: Number(userId),
+        examId: Number(examId),
+      };
+      const testResponse = await apiService.addTest(testPayload);
+      console.log("addTest response:", testResponse);
+
+      if (!testResponse || testResponse.errorCode !== 200) {
+        alert("Có lỗi xảy ra khi thêm bài thi. Vui lòng thử lại.");
+        return;
+      }
+
+      alert("Dữ liệu bài thi đã được lưu thành công.");
     } catch (error) {
-      console.error("Error submitting exam:", error);
-      alert("Có lỗi xảy ra khi nộp bài thi. Vui lòng thử lại.");
+      console.error("Error during finish exam:", error);
+      alert("Có lỗi xảy ra. Vui lòng thử lại.");
     }
   };
+
 
   const handleQuestionClick = (newIndex) => {
     saveAnswer();
