@@ -22,20 +22,28 @@ const Timer = ({ durationMinutes, onTimeout, sectionTitle }) => {
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${minutes}M ${secs}s`;
+    return `${minutes}m ${secs}s`;
   };
 
   return (
-      <div className="timer-container">
-        <div className="timer-header">
+    <div className="timer-container">
+      <div className="section-title">
+        <strong>{sectionTitle}</strong>
+      </div>
+      <div className="timer-header">
+        <div>
           <span className="timer-icon">⏱️</span>
           <span className="time-left">{formatTime(timeLeft)}</span>
-          <span className="session-text">TIME LEFT IN THIS ASSIGNMENT SESSION</span>
         </div>
-        <div className="section-title">
-          <strong>Current Section:</strong> {sectionTitle}
+        <div>
+          <span className="session-text"><p>TIME LEFT IN THIS ASSIGNMENT SESSION</p></span>
         </div>
       </div>
+      <div>
+        <p>Progress</p>
+      </div>
+
+    </div>
   );
 };
 

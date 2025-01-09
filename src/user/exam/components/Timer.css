@@ -1,38 +1,30 @@
 .timer-container {
+    max-width: 70%;
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    flex-direction: row;
+    margin: 0 auto;
     color: #ffffff;
-    background-color: #000918;
-    padding: 20px 40px;
-    border-radius: 8px;
+    background-color: rgb(16, 16, 41);
     font-size: 16px;
     font-weight: bold;
+    align-items: end;
+    justify-content: space-between;
+    padding: 4rem 2rem 5rem 2rem ;
+
+    .timer-header{
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        .time-left{
+            font-size: 1.2rem;
+        }
+        .session-text{
+            p{
+                font-size: 1rem;
+                color: rgb(210, 210, 210);
+            }
+        }
+    }
 }
 
-.timer-header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.timer-icon {
-    margin-right: 8px;
-}
-
-.time-left {
-    margin-right: 12px;
-}
-
-.session-text {
-    font-size: 14px;
-    font-weight: normal;
-    opacity: 0.8;
-}
-
-.section-title {
-    margin-top: 10px;
-    font-size: 18px;
-    font-weight: bold;
-    color: #00d4ff;
-}

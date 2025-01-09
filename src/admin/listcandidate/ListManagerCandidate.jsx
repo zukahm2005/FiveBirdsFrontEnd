@@ -186,8 +186,8 @@ export default function ListManagerCandidate() {
                   },
                   {
                     key: '7',
-                    field: 'Apply Location',
-                    value: selectedCandidate.applyLocation || 'N/A',
+                    field: 'Apply Position',
+                    value: selectedCandidate.candidatePosition.name || 'N/A',
                   },
                   {
                     key: '8',
