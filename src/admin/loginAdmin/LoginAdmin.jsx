@@ -32,8 +32,8 @@ const LoginAdmin = () => {
 
   // Hàm gọi API checkrole
   const checkRole = async (token) => {
-    // const response = await fetch("http://46.202.178.139:5050/api/v1/users/checkrole", {
-    const response = await fetch("http://localhost:5005/api/v1/users/checkrole", {
+    const response = await fetch("http://46.202.178.139:5050/api/v1/users/checkrole", {
+    // const response = await fetch("http://localhost:5005/api/v1/users/checkrole", {
       
       method: "GET",
       headers: {
@@ -42,9 +42,6 @@ const LoginAdmin = () => {
       // Gửi token trong header
       credentials: "include", // Đảm bảo cookie được gửi
     });
-  console.log(token)
-
-  console.log(response)
     return response.json(); // Trả về dữ liệu JSON
   };
 
@@ -71,13 +68,9 @@ const LoginAdmin = () => {
 
         // Lưu token vào cookie
         Cookies.set("token", token, { expires: 7, secure: false, path: "/" });
-        console.log("Token saved in cookie:", Cookies.get("token"));
 
         // Gọi API checkrole
         const roleData = await checkRole(Cookies.get("token"));
-
-        console.log(roleData)
-
 
         if (roleData.role === "ROLE_ADMIN") {
           navigate("/admin"); // Chuyển hướng vào trang admin

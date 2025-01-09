@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { Button, Table, Typography, Spin, Select } from "antd";
+import { Button, Table, Typography, Spin, Select, DatePicker, Space } from "antd";
 import ExamRequest from "./ExamRequest";
 import moment from "moment/moment";
 import { Input } from 'antd';
 const { Search } = Input;
-import { getAllCandidate, getCandidatePositions } from "../../../common/api/apiDashBoard";
+import { getAllCandidate, getCandidate, getCandidatePositions, getExam } from "../../../common/api/apiDashBoard";
 
 const { Text } = Typography;
 
 const columns = [
   {
-    title: "Id",
-    dataIndex: "id",
+    title: "ID",
+    dataIndex: "index",
+    render: (text, record, index) => index + 1,
   },
   {
     title: "Full Name",
@@ -48,6 +49,34 @@ const columns = [
     title: "Status",
     dataIndex: "statusEmail",
     key: "statusEmail",
+    render: (status) => {
+      let color;
+      let borderColor;
+
+      if (status === "PENDING") {
+        color = "orange";
+        borderColor = "orange";
+      } else if (status === "SUCCESS") {
+        color = "green";
+        borderColor = "green";
+      } else {
+        color = "gray";
+        borderColor = "gray";
+      }
+
+      return (
+        <span
+          style={{
+            color,
+            border: `2px solid ${borderColor}`,
+            padding: "2px 5px",
+            borderRadius: "4px",
+          }}
+        >
+          {status}
+        </span>
+      );
+    },
   },
   {
     title: "Created At",
@@ -74,22 +103,26 @@ const TableDashBoard = () => {
   const [pagination, setPagination] = useState({
     current: 1,
     pageSize: 10,
+    total: 0
   });
 
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await getAllCandidate(pagination.current, pagination.pageSize, statusEmail, candidatePositionId)
-        const resultCandidatePositions = await getCandidatePositions()
+        const result = await getAllCandidate(pagination.current, pagination.pageSize, statusEmail, candidatePositionId);
+        const resultCandidatePositions = await getCandidatePositions();
+        const dataCandidate = await getCandidate();
+        const getExamData = await getExam();
+        console.log(getExamData.data)
         if (result.data) {
-          setCandidatePositions(resultCandidatePositions.data.data)
-          setExam(result.data.data);
+          setCandidatePositions(resultCandidatePositions.data.data);
+          setExam(getExamData.data);
           setData(result.data.data);
           setFilteredData(result.data.data);
-          setPagination(prev => ({
+          setPagination((prev) => ({
             ...prev,
-            total: result.totalCount,
+            total: dataCandidate.data.data.length,
           }));
         } else {
           setError("No data available");
@@ -103,7 +136,8 @@ const TableDashBoard = () => {
     setLoading(true);
     fetchData();
   }, [pagination.current, pagination.pageSize, statusEmail, candidatePositionId]);
-  console.log(exam)
+
+
   const start = () => {
     setLoading(true);
     setTimeout(() => {
@@ -137,11 +171,11 @@ const TableDashBoard = () => {
   };
 
   const handleTableChange = (pagination) => {
-    setPagination({
+    setPagination((prev) => ({
+      ...prev,
       current: pagination.current,
       pageSize: pagination.pageSize,
-      total: pagination.total,
-    });
+    }));
   };
 
   const rowSelection = {
@@ -184,11 +218,13 @@ const TableDashBoard = () => {
           <div>
             <Select
               defaultValue="PENDING"
-              style={{ width: 120 }}
-              allowClear
+              style={{
+                width: 120,
+                color: statusEmail === "PENDING" ? "orange" : "green",
+              }}
               options={[
-                { value: 'PENDING', label: 'Pending' },
-                { value: 'SUCCESS', label: 'Success' },
+                { value: "PENDING", label: <span style={{ color: "orange" }}>Pending</span> },
+                { value: "SUCCESS", label: <span style={{ color: "green" }}>Success</span> },
               ]}
               placeholder="Select a status"
               onChange={(value) => SetStatusEmail(value)}
@@ -197,19 +233,19 @@ const TableDashBoard = () => {
 
           <div>
             <Select
-              placeholder="Select Candidate Position" 
+              placeholder="Select Candidate Position"
               style={{ width: 170 }}
-              value={candidatePositionId || undefined} 
+              value={candidatePositionId || undefined}
               onChange={(id) => {
-                SetcandidatePositionId(id); 
+                SetcandidatePositionId(id);
               }}
             >
-              <Option value="" disabled>Select Position</Option> 
-              <Option value="">All Position</Option> 
+              <Select.Option value="" disabled key="placeholder">Select Position</Select.Option>
+              <Select.Option value="" key="all-position">All Position</Select.Option>
               {candidatePositions.map((status) => (
-                <Option key={status.id} value={status.id}>
+                <Select.Option key={status.id || `fallback-${status.name}`} value={status.id}>
                   {status.name}
-                </Option>
+                </Select.Option>
               ))}
             </Select>
           </div>
@@ -232,9 +268,18 @@ const TableDashBoard = () => {
               current: pagination.current,
               pageSize: pagination.pageSize,
               total: pagination.total,
-              onChange: handleTableChange,
+              showSizeChanger: true,
+              onChange: (page, pageSize) => {
+                setPagination((prev) => ({
+                  ...prev,
+                  current: page,
+                  pageSize: pageSize,
+                }));
+              },
             }}
+            onChange={handleTableChange}
           />
+
         )}
       </div>
       {onClose && (

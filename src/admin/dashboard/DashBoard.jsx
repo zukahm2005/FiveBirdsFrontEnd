@@ -12,7 +12,7 @@ const DashboardContent = () => {
   useEffect(() => {
     const fetchData = async () => {
         const result =  await getCandidate();
-        setData(result.data);
+        setData(result.data.data);
     };
     fetchData();
   }, []);
@@ -20,7 +20,7 @@ const DashboardContent = () => {
 
   return (
     <div className="container-dashbord">
-      <Row justify="space-between" align="middle"
+      {/* <Row justify="space-between" align="middle"
         style={{ marginBottom: 16, border: "1px solid  #f0f0f0", padding: "25px", borderRadius: "15px", boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}
       >
         <Col>
@@ -42,7 +42,7 @@ const DashboardContent = () => {
             </Col>
           </Row>
         </Col>
-      </Row>
+      </Row> */}
       <Row style={{ boxShadow: "0 4px 12px rgba(0,0,0,0.1)", borderRadius: "15px" }}>
         <Col xs={24} sm={6}>
           <Card className="cardStyle" bodyStyle={{ padding: 0 }}>
@@ -64,12 +64,12 @@ const DashboardContent = () => {
         <Col xs={24} sm={6}>
           <Card className="cardStyle2" bodyStyle={{ padding: 0 }}>
             <Space style={{ display: "flex", justifyContent: "space-between" }}>
-              <Text style={{ fontSize: "16px" }} strong>Rejected candidates</Text>
+              <Text style={{ fontSize: "16px" }} strong>Email Sent</Text>
               <MoreOutlined style={{ fontSize: "23px" }} />
             </Space>
             <Space style={{ display: "flex", justifyContent: "space-between" }}>
               <Title level={2} style={{ margin: "16px 0" }}>
-                1,945
+              {data.filter(item => item.statusEmail === 'SUCCESS').length}
               </Title>
               <Text style={{ color: "red" }}>
                 <ArrowUpOutlined /> 40%
@@ -86,7 +86,7 @@ const DashboardContent = () => {
             </Space>
             <Space style={{ display: "flex", justifyContent: "space-between" }}>
               <Title level={2} style={{ margin: "16px 0" }}>
-                500
+              {data.filter(item => item.statusEmail === 'PENDING').length}
               </Title>
               <Text style={{ color: "orange" }}>
                 <ArrowUpOutlined /> 10%
