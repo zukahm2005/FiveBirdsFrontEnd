@@ -2,6 +2,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 const token = Cookies.get("token");
+console.log(token)
 const apiUrl = "http://46.202.178.139:5050/api/v1/";
 
 
@@ -16,7 +17,7 @@ const getCandidate = async () => {
     return response;
 }
 const getAllCandidate = async (pageNumber, pageSize, statusEmail, CandidatePositionId) => {
-    const response = await axios.get(`http://46.202.178.139:5050/api/v1/candidates/get/all?pageNumber=${pageNumber}&pageSize=${pageSize}&statusEmail=${statusEmail}&CandidatePositionId=${CandidatePositionId}`,
+    const response = await axios.get(apiUrl + `candidates/get/all?pageNumber=${pageNumber}&pageSize=${pageSize}&statusEmail=${statusEmail}&CandidatePositionId=${CandidatePositionId}`,
         {
             headers: {
                 'Authorization': `Bearer ${token}`,

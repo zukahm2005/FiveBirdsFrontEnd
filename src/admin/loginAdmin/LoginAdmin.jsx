@@ -42,9 +42,6 @@ const LoginAdmin = () => {
       // Gửi token trong header
       credentials: "include", // Đảm bảo cookie được gửi
     });
-  console.log(token)
-
-  console.log(response)
     return response.json(); // Trả về dữ liệu JSON
   };
 
@@ -71,13 +68,9 @@ const LoginAdmin = () => {
 
         // Lưu token vào cookie
         Cookies.set("token", token, { expires: 7, secure: false, path: "/" });
-        console.log("Token saved in cookie:", Cookies.get("token"));
 
         // Gọi API checkrole
         const roleData = await checkRole(Cookies.get("token"));
-
-        console.log(roleData)
-
 
         if (roleData.role === "ROLE_ADMIN") {
           navigate("/admin"); // Chuyển hướng vào trang admin

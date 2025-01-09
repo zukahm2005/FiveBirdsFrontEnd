@@ -4,11 +4,11 @@ import BaseLayout from "./BaseLayout/BaseLayout";
 import CreateTest from "./exam/createtest/CreateTest";
 import LishExam from "./exam/listexam/LishExam";
 import DashBoard from "./dashboard/DashBoard";
-import InfoAdmin from "./infoAdmin/infoAdmin";
 import ListManagerCandidate from "./listcandidate/ListManagerCandidate";
 import LoginAdmin from "./loginAdmin/LoginAdmin";
 import ProtectedRoute from "./protectedroute/ProtectedRoute";
 import DetailExam from "./exam/detailexam/DetailExam";
+import UserExam from "./userExam/UserExam";
 const routes = [
   { path: "/login", element: <LoginAdmin /> },
   {
@@ -22,7 +22,7 @@ const routes = [
       { path: "", element: <DashBoard /> },
       { path: "test/all-tests", element:<LishExam/>  },
       { path: "test/create-test", element: <CreateTest/>},
-      { path: "administration", element: <InfoAdmin/> },
+      { path: "administration", element: <UserExam/> },
       { path: "manager-candidate", element: <ListManagerCandidate/>},
       { path: "detail-exam/:id", element: <DetailExam/> },
     ],
