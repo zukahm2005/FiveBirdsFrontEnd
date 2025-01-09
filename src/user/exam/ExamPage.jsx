@@ -1,4 +1,4 @@
-import { Button } from "antd";
+import { Modal, Button } from "antd";
 import React, { useState } from "react";
 import { GoClock } from "react-icons/go";
 import { HiOutlineClipboardDocumentList } from "react-icons/hi2";
@@ -18,8 +18,8 @@ const ExamPage = () => {
   const [loading, setLoading] = useState(false);
   const [userId, setUserId] = useState(null);
   const [examId, setExamId] = useState(null);
-  const [resultData, setResultData] = useState(null);
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [resultData, setResultData] = useState(null); // Lưu dữ liệu kết quả từ API
+  const [isModalVisible, setIsModalVisible] = useState(false); // Hiển thị Modal
 
   const sections = [
     { name: "Kiến thức chung", count: 6 },
@@ -106,12 +106,11 @@ const ExamPage = () => {
         return;
       }
 
-      alert("Bài thi đã được nộp thành công!");
-
       const testPayload = {
         userId: Number(userId),
         examId: Number(examId),
       };
+
       const testResponse = await apiService.addTest(testPayload);
       console.log("addTest response:", testResponse);
 
@@ -120,13 +119,19 @@ const ExamPage = () => {
         return;
       }
 
-      alert("Dữ liệu bài thi đã được lưu thành công.");
+      // Lưu dữ liệu và hiển thị Modal
+      setResultData(testResponse.data);
+      setIsModalVisible(true);
     } catch (error) {
       console.error("Error during finish exam:", error);
       alert("Có lỗi xảy ra. Vui lòng thử lại.");
     }
   };
 
+  const handleModalOk = () => {
+    setIsModalVisible(false);
+    window.location.href = "/login"; // Chuyển hướng về trang login sau khi đóng Modal
+  };
 
   const handleQuestionClick = (newIndex) => {
     saveAnswer();
@@ -221,6 +226,24 @@ const ExamPage = () => {
             Hoàn thành bài thi
           </Button>
         </div>
+
+        {/* Modal hiển thị kết quả */}
+        <Modal
+            title="Kết quả bài thi"
+            visible={isModalVisible}
+            onOk={handleModalOk}
+            cancelButtonProps={{ style: { display: "none" } }}
+        >
+          {resultData && (
+              <div>
+                <p>ID: {resultData.id}</p>
+                <p>User ID: {resultData.userId}</p>
+                <p>Exam ID: {resultData.examId}</p>
+                <p>Điểm: {resultData.point}</p>
+                <p>{resultData.isPast ? "Bạn đã trúng tuyển" : "Bạn đã trượt"}</p>
+              </div>
+          )}
+        </Modal>
       </div>
   );
 };
