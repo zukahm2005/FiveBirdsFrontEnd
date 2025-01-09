@@ -125,7 +125,7 @@ export default function ListManagerCandidate() {
         onCancel={handleCancel}
         footer={null}
         width={800}
-      >
+      >   
         {loading ? (
           <Spin spinning={loading} tip="Loading details..." />
         ) : (

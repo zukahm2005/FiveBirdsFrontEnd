@@ -1,20 +1,22 @@
+import { Card, Radio, Typography } from "antd";
 import React from "react";
-import { Card, Radio, Typography, Button } from "antd";
-import "./QuestionCard.css";
+import { GoBookmark } from "react-icons/go";
+import { MdClearAll } from "react-icons/md";
+import "./QuestionCard.scss";
 
 const { Title, Paragraph } = Typography;
 
 const QuestionCard = ({
-                          question,
-                          questionNumber,
-                          totalQuestions,
-                          onPrevious,
-                          onNext,
-                          onFinish,
-                          selectedAnswer,
-                          onAnswerSelect,
-                          isLastQuestion,
-                      }) => {
+    question,
+    questionNumber,
+    totalQuestions,
+    onPrevious,
+    onNext,
+    onFinish,
+    selectedAnswer,
+    onAnswerSelect,
+    isLastQuestion,
+}) => {
     if (!question) {
         return <div>Loading question...</div>;
     }
@@ -29,42 +31,52 @@ const QuestionCard = ({
     return (
         <Card className="question-card">
             <div className="question-content">
-                {/* Câu hỏi */}
                 <div className="question-left">
-                    <Title level={4}>Question {questionNumber} of {totalQuestions}</Title>
-                    <Paragraph>{question.questionExam}</Paragraph>
+                    <div className="title-quetion-left">
+                        <p>Deleveloping Microsoft Azure Solutions
+                        </p>
+                        <span>
+                            <GoBookmark />
+                        </span>
+                    </div>
+
+                    <div className="title-question-left">
+                        <p>
+                            What is the capital in VietName?
+                        </p>
+                    </div>
                 </div>
 
-                {/* Đáp án */}
                 <div className="question-right">
+                    <div className="header-quest-right">
+                        <div className="title-quest">
+                            <div className="choices-quest1">
+                                <p>Answer choices</p>
+                            </div>
+                            <div className="choose-quest">
+                                <p>Please choose all correct answers.</p>
+                            </div>
+                        </div>
+                        <div className="btn-clear-quest">
+                            <MdClearAll /> <p>Clear</p>
+                        </div>
+
+                    </div>
                     <Radio.Group
+                        className="custom-radio-group"
                         onChange={(e) => onAnswerSelect(e.target.value)}
                         value={selectedAnswer}
                     >
                         {answers.map((answer, index) => (
-                            <Radio key={index} value={index + 1} className="answer-option">
-                                {answer}
+                            <Radio key={index} value={index + 1} className="custom-radio">
+                                <p> {answer}</p>
                             </Radio>
                         ))}
                     </Radio.Group>
+
                 </div>
             </div>
 
-            {/* Footer */}
-            <div className="question-footer">
-                <Button onClick={onPrevious} disabled={questionNumber === 1}>
-                    Previous
-                </Button>
-                {!isLastQuestion ? (
-                    <Button type="primary" onClick={onNext} disabled={!selectedAnswer}>
-                        Next
-                    </Button>
-                ) : (
-                    <Button type="primary" danger onClick={onFinish} disabled={!selectedAnswer}>
-                        Finish and Submit Assignment
-                    </Button>
-                )}
-            </div>
         </Card>
     );
 };
