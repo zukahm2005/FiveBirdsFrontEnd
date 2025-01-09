@@ -19,14 +19,14 @@ const routes = [
   { path: "/pages", element: <Pages /> },
   { path: "/features", element: <Features /> },
   { path: "/blog", element: <Blog /> },
-  { path: "/login", element: <Login /> },
+  { path: "/candidate-login", element: <Login /> },
   { path: "/exam", element: <ExamPage /> },
 ];
 
 const User = () => {
     const localtion = useLocation();
 
-    const noHeaderFooter = ["/login", "/exam"];
+    const noHeaderFooter = ["/candidate-login", "/exam"];
 
     const showHeaderFooter = !noHeaderFooter.includes(localtion.pathname);
   return (

@@ -322,7 +322,7 @@ const CreateTest = () => {
       setAlertType("success");
       setAlertDescription("All questions and answers created successfully!");
       setAlertVisible(true);
-    
+      
     } catch (error) {
       console.error("Error creating questions or answers:", error);
       setAlertType("error");
