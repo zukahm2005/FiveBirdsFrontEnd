@@ -1,4 +1,4 @@
-import { Button } from "antd";
+import { Modal, Button } from "antd";
 import React, { useState } from "react";
 import { GoClock } from "react-icons/go";
 import { HiOutlineClipboardDocumentList } from "react-icons/hi2";
@@ -18,6 +18,8 @@ const ExamPage = () => {
   const [loading, setLoading] = useState(false);
   const [userId, setUserId] = useState(null);
   const [examId, setExamId] = useState(null);
+  const [resultData, setResultData] = useState(null); // Lưu dữ liệu kết quả từ API
+  const [isModalVisible, setIsModalVisible] = useState(false); // Hiển thị Modal
 
   const sections = [
     { name: "Kiến thức chung", count: 6 },
@@ -95,12 +97,40 @@ const ExamPage = () => {
         answerId: Number(answer?.answerId || 0),
         examAnswer: Number(answer?.examAnswer || 0),
       }));
-      await apiService.submitAnswer(answerData);
-      alert("Bài thi đã được nộp thành công!");
+
+      const submitResponse = await apiService.submitAnswer(answerData);
+      console.log("submitAnswer response:", submitResponse);
+
+      if (!submitResponse || submitResponse.errorCode !== 200) {
+        alert("Có lỗi xảy ra khi nộp bài thi. Vui lòng thử lại.");
+        return;
+      }
+
+      const testPayload = {
+        userId: Number(userId),
+        examId: Number(examId),
+      };
+
+      const testResponse = await apiService.addTest(testPayload);
+      console.log("addTest response:", testResponse);
+
+      if (!testResponse || testResponse.errorCode !== 200) {
+        alert("Có lỗi xảy ra khi thêm bài thi. Vui lòng thử lại.");
+        return;
+      }
+
+      // Lưu dữ liệu và hiển thị Modal
+      setResultData(testResponse.data);
+      setIsModalVisible(true);
     } catch (error) {
-      console.error("Error submitting exam:", error);
-      alert("Có lỗi xảy ra khi nộp bài thi. Vui lòng thử lại.");
+      console.error("Error during finish exam:", error);
+      alert("Có lỗi xảy ra. Vui lòng thử lại.");
     }
+  };
+
+  const handleModalOk = () => {
+    setIsModalVisible(false);
+    window.location.href = "/login"; // Chuyển hướng về trang login sau khi đóng Modal
   };
 
   const handleQuestionClick = (newIndex) => {
@@ -196,6 +226,24 @@ const ExamPage = () => {
             Hoàn thành bài thi
           </Button>
         </div>
+
+        {/* Modal hiển thị kết quả */}
+        <Modal
+            title="Kết quả bài thi"
+            visible={isModalVisible}
+            onOk={handleModalOk}
+            cancelButtonProps={{ style: { display: "none" } }}
+        >
+          {resultData && (
+              <div>
+                <p>ID: {resultData.id}</p>
+                <p>User ID: {resultData.userId}</p>
+                <p>Exam ID: {resultData.examId}</p>
+                <p>Điểm: {resultData.point}</p>
+                <p>{resultData.isPast ? "Bạn đã trúng tuyển" : "Bạn đã trượt"}</p>
+              </div>
+          )}
+        </Modal>
       </div>
   );
 };

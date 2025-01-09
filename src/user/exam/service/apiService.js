@@ -69,4 +69,24 @@ export const apiService = {
             throw error;
         }
     },
+
+    addTest: async (testData) => {
+        try {
+            const response = await api.post("/candidate/test/add", testData);
+            return response.data;
+        } catch (error) {
+            console.error("Error adding test:", error.response?.data || error.message);
+            throw error;
+        }
+    },
+
+    logout: async () => {
+        try {
+            const response = await api.post("/users/logout");
+            return response.data;
+        } catch (error) {
+            console.error("Error logging out:", error);
+            throw error;
+        }
+    },
 };
