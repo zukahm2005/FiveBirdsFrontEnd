@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Button, Table, Typography, Spin, Select, DatePicker, Space } from "antd";
+import {Button, Table, Typography, Spin, Select, DatePicker} from "antd";
 import ExamRequest from "./ExamRequest";
 import moment from "moment/moment";
 import { Input } from 'antd';
 const { Search } = Input;
 import { getAllCandidate, getCandidate, getCandidatePositions, getExam } from "../../../common/api/apiDashBoard";
+
+const { RangePicker } = DatePicker;
 
 const { Text } = Typography;
 
@@ -22,12 +24,7 @@ const columns = [
   {
     title: "Email",
     dataIndex: "email",
-    key: "email",
-  },
-  {
-    title: "Phone",
-    dataIndex: "phone",
-    key: "phone",
+    key: "email"
   },
   {
     title: "Education",
@@ -95,7 +92,7 @@ const TableDashBoard = () => {
   const [error, setError] = useState(null);
   const [filteredData, setFilteredData] = useState([]);
   const [exam, setExam] = useState([]);
-  const [statusEmail, SetStatusEmail] = useState('PENDING')
+  const [statusEmail, SetStatusEmail] = useState('')
   const [candidatePositionId, SetcandidatePositionId] = useState('')
   const [candidatePositions, setCandidatePositions] = useState([])
 
@@ -114,7 +111,6 @@ const TableDashBoard = () => {
         const resultCandidatePositions = await getCandidatePositions();
         const dataCandidate = await getCandidate();
         const getExamData = await getExam();
-        console.log(getExamData.data)
         if (result.data) {
           setCandidatePositions(resultCandidatePositions.data.data);
           setExam(getExamData.data);
@@ -189,7 +185,7 @@ const TableDashBoard = () => {
     <div style={{ width: "100%", display: "flex", gap: "25px" }}>
       <div
         style={{
-          width: onClose ? "67%" : "100%",
+          width: onClose ? "70%" : "100%",
           padding: "30px",
           border: "1px solid #f0f0f0",
           margin: "45px 0",
@@ -217,12 +213,12 @@ const TableDashBoard = () => {
 
           <div>
             <Select
-              defaultValue="PENDING"
               style={{
-                width: 120,
+                width: 170,
                 color: statusEmail === "PENDING" ? "orange" : "green",
               }}
               options={[
+                { value: "", label: <span>All Status</span> },
                 { value: "PENDING", label: <span style={{ color: "orange" }}>Pending</span> },
                 { value: "SUCCESS", label: <span style={{ color: "green" }}>Success</span> },
               ]}
@@ -233,7 +229,7 @@ const TableDashBoard = () => {
 
           <div>
             <Select
-              placeholder="Select Candidate Position"
+              placeholder="Select Position"
               style={{ width: 170 }}
               value={candidatePositionId || undefined}
               onChange={(id) => {
@@ -248,6 +244,10 @@ const TableDashBoard = () => {
                 </Select.Option>
               ))}
             </Select>
+          </div>
+
+          <div>
+            <RangePicker />
           </div>
 
         </div>
