@@ -24,7 +24,19 @@ const columns = [
   {
     title: "Email",
     dataIndex: "email",
-    key: "email"
+    key: "email",
+    render: (text) => (
+        <div
+            style={{
+              maxWidth: "150px",
+              whiteSpace: "normal",
+              overflow: "visible",
+              wordWrap: "break-word",
+            }}
+        >
+          {text}
+        </div>
+    )
   },
   {
     title: "Education",
@@ -95,6 +107,7 @@ const TableDashBoard = () => {
   const [statusEmail, SetStatusEmail] = useState('')
   const [candidatePositionId, SetcandidatePositionId] = useState('')
   const [candidatePositions, setCandidatePositions] = useState([])
+  const [dateRange, setDateRange] = useState([]);
 
 
   const [pagination, setPagination] = useState({
@@ -107,7 +120,13 @@ const TableDashBoard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await getAllCandidate(pagination.current, pagination.pageSize, statusEmail, candidatePositionId);
+        let startDate = '', endDate = '';
+        if (dateRange && dateRange.length === 2) {
+          startDate = dateRange[0].format("YYYY-MM-DD");
+          endDate = dateRange[1].format("YYYY-MM-DD");
+        }
+
+        const result = await getAllCandidate(pagination.current, pagination.pageSize, statusEmail, candidatePositionId, startDate, endDate);
         const resultCandidatePositions = await getCandidatePositions();
         const dataCandidate = await getCandidate();
         const getExamData = await getExam();
@@ -131,7 +150,7 @@ const TableDashBoard = () => {
     };
     setLoading(true);
     fetchData();
-  }, [pagination.current, pagination.pageSize, statusEmail, candidatePositionId]);
+  }, [pagination.current, pagination.pageSize, statusEmail, candidatePositionId, dateRange]);
 
 
   const start = () => {
@@ -193,69 +212,76 @@ const TableDashBoard = () => {
           boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
         }}
       >
-        <div style={{ marginBottom: 16, display: "flex", gap: "16px" }}>
+        <div style={{marginBottom: 16, display: "flex", gap: "16px"}}>
           <Button
-            type="primary"
-            onClick={start}
-            disabled={!hasSelected}
-            loading={loading}
+              type="primary"
+              onClick={start}
+              disabled={!hasSelected}
+              loading={loading}
           >
             Reload
           </Button>
 
-          <div style={{ width: "25%" }}>
+          <div style={{width: "25%"}}>
             <Search
-              placeholder="input search text"
-              allowClear
-              onSearch={onSearch}
+                placeholder="input search text"
+                allowClear
+                onSearch={onSearch}
             />
           </div>
 
           <div>
             <Select
-              style={{
-                width: 170,
-                color: statusEmail === "PENDING" ? "orange" : "green",
-              }}
-              options={[
-                { value: "", label: <span>All Status</span> },
-                { value: "PENDING", label: <span style={{ color: "orange" }}>Pending</span> },
-                { value: "SUCCESS", label: <span style={{ color: "green" }}>Success</span> },
-              ]}
-              placeholder="Select a status"
-              onChange={(value) => SetStatusEmail(value)}
+                style={{
+                  width: 170,
+                  color: statusEmail === "PENDING" ? "orange" : "green",
+                }}
+                options={[
+                  {value: "", label: <span>All Status</span>},
+                  {value: "PENDING", label: <span style={{color: "orange"}}>Pending</span>},
+                  {value: "SUCCESS", label: <span style={{color: "green"}}>Success</span>},
+                ]}
+                placeholder="Select a status"
+                onChange={(value) => SetStatusEmail(value)}
             />
           </div>
 
           <div>
             <Select
-              placeholder="Select Position"
-              style={{ width: 170 }}
-              value={candidatePositionId || undefined}
-              onChange={(id) => {
-                SetcandidatePositionId(id);
-              }}
+                placeholder="Select Position"
+                style={{width: 170}}
+                value={candidatePositionId || undefined}
+                onChange={(id) => {
+                  SetcandidatePositionId(id);
+                }}
             >
               <Select.Option value="" disabled key="placeholder">Select Position</Select.Option>
               <Select.Option value="" key="all-position">All Position</Select.Option>
               {candidatePositions.map((status) => (
-                <Select.Option key={status.id || `fallback-${status.name}`} value={status.id}>
-                  {status.name}
-                </Select.Option>
+                  <Select.Option key={status.id || `fallback-${status.name}`} value={status.id}>
+                    {status.name}
+                  </Select.Option>
               ))}
             </Select>
           </div>
 
           <div>
-            <RangePicker />
+            <RangePicker
+                onChange={(dates) => {
+                  setDateRange(dates);
+                }}
+                value={dateRange}
+                format="YYYY-MM-DD"
+                allowClear
+            />
           </div>
 
         </div>
 
         {loading ? (
-          <Spin />
+            <Spin/>
         ) : error ? (
-          <Text type="danger">{error}</Text>
+            <Text type="danger">{error}</Text>
         ) : data.length === 0 ? (
           <Text type="warning">No data to display</Text>
         ) : (

@@ -16,8 +16,8 @@ const getCandidate = async () => {
     );
     return response;
 }
-const getAllCandidate = async (pageNumber, pageSize, statusEmail, CandidatePositionId) => {
-    const response = await axios.get(apiUrl + `candidates/get/all?pageNumber=${pageNumber}&pageSize=${pageSize}&statusEmail=${statusEmail}&CandidatePositionId=${CandidatePositionId}`,
+const getAllCandidate = async (pageNumber, pageSize, statusEmail, CandidatePositionId, startDate , endDate) => {
+    const response = await axios.get(apiUrl + `candidates/get/all?pageNumber=${pageNumber}&pageSize=${pageSize}&statusEmail=${statusEmail}&CandidatePositionId=${CandidatePositionId}&startDate=${startDate}&endDate=${endDate}`,
         {
             headers: {
                 'Authorization': `Bearer ${token}`,
