@@ -34,7 +34,6 @@ const LoginAdmin = () => {
   const checkRole = async (token) => {
     const response = await fetch("http://46.202.178.139:5050/api/v1/users/checkrole", {
     // const response = await fetch("http://localhost:5005/api/v1/users/checkrole", {
-      
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`
