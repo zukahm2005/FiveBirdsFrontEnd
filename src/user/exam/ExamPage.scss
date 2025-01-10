@@ -84,12 +84,43 @@
 .question-navigation .selected-dot::after {
   content: '';
   position: absolute;
-  bottom: 10%; /* Vị trí của dấu chấm */
+  bottom: 10%; 
   left: 50%;
   transform: translateX(-50%);
-  width: 6px; /* Kích thước của dấu chấm */
-  height: 6px; /* Kích thước của dấu chấm */
-  background-color: #5aa8f1; /* Màu sắc của dấu chấm */
-  border-radius: 50%; /* Bo tròn để thành hình tròn */
+  width: 6px;
+  height: 6px; 
+  background-color: #5aa8f1;
+  border-radius: 50%; 
 }
 
+.title-pass-exam{
+  text-align: center;
+  p{
+    color: rgb(98, 135, 42);
+    font-size: 2rem;
+  }
+}
+
+.rate-container{
+  position: relative;
+}
+.your-point{
+  position: absolute;
+  left: 380px;
+  top: 60%;
+  p{
+    color: black;
+    font-size: 1.2rem;
+  }
+}
+
+.rate-container-time{
+  p{
+    font-size: 1.2rem;
+  }
+}
+
+.ant-spin-text {
+  font-size: 14px; /* Kích thước chữ nhỏ hơn cho nút */
+  color: white; /* Đổi màu chữ */
+}
