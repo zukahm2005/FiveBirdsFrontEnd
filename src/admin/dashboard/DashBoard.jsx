@@ -2,16 +2,19 @@ import React, { useEffect, useState } from "react";
 import { Card, Row, Col, Avatar, Space, Typography, Alert } from "antd";
 import { MoreOutlined, ArrowUpOutlined, PrinterOutlined, ExportOutlined, DownloadOutlined } from "@ant-design/icons";
 import TableDashBoard from "./components/TableDashBoard";
-import {getCandidate} from "./../../common/api/apiDashBoard";
+import {getCandidate, getCandidateTest} from "./../../common/api/apiDashBoard";
 import "./dashboard.scss";
 
 const DashboardContent = () => {
   const { Text, Title } = Typography;
   const [data, setData] = useState([]);
-  
+  const [dataTest, setDataTest] = useState([]);
+
   useEffect(() => {
     const fetchData = async () => {
-        const result =  await getCandidate();
+      const result =  await getCandidate();
+      const resultCandidateTest =  await getCandidateTest();
+      setDataTest(resultCandidateTest.data.data)
         setData(result.data.data);
     };
     fetchData();
@@ -47,7 +50,7 @@ const DashboardContent = () => {
         <Col xs={24} sm={6}>
           <Card className="cardStyle" bodyStyle={{ padding: 0 }}>
             <Space style={{ display: "flex", justifyContent: "space-between" }}>
-              <Text style={{ fontSize: "16px" }} strong>Total candidates</Text>
+              <Text style={{ fontSize: "16px" }} strong>Total Candidates</Text>
               <MoreOutlined style={{ fontSize: "23px" }} />
             </Space>
             <Space style={{ display: "flex", justifyContent: "space-between" }}>
@@ -81,7 +84,7 @@ const DashboardContent = () => {
         <Col xs={24} sm={6} style={{ borderLeft: "1px solid  #f0f0f0" }}>
           <Card className="cardStyle2" bodyStyle={{ padding: 0 }}>
             <Space style={{ display: "flex", justifyContent: "space-between" }}>
-              <Text style={{ fontSize: "16px" }} strong>Pending candidates</Text>
+              <Text style={{ fontSize: "16px" }} strong>Pending Candidates</Text>
               <MoreOutlined style={{ fontSize: "23px" }} />
             </Space>
             <Space style={{ display: "flex", justifyContent: "space-between" }}>
@@ -98,19 +101,13 @@ const DashboardContent = () => {
         <Col xs={24} sm={6}>
           <Card className="cardStyle3" bodyStyle={{ padding: 0 }}>
             <Space style={{ display: "flex", justifyContent: "space-between" }}>
-              <Text style={{ fontSize: "16px" }} strong>Active candidates</Text>
+              <Text style={{ fontSize: "16px" }} strong>Candidate Passed</Text>
               <MoreOutlined style={{ fontSize: "23px" }} />
             </Space>
             <Space style={{ display: "flex", justifyContent: "space-between" }}>
               <Title level={2} style={{ margin: "16px 0", border: "none" }}>
-                400
+                {dataTest.filter(item => item.isPast === true).length}
               </Title>
-              <Avatar.Group maxCount={4}>
-                <Avatar src="https://randomuser.me/api/portraits/women/1.jpg" />
-                <Avatar src="https://randomuser.me/api/portraits/men/2.jpg" />
-                <Avatar src="https://randomuser.me/api/portraits/women/3.jpg" />
-                <Avatar src="https://randomuser.me/api/portraits/men/4.jpg" />
-              </Avatar.Group>
             </Space>
           </Card>
         </Col>
