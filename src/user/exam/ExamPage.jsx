@@ -1,7 +1,6 @@
 import { Modal, Button } from "antd";
 import React, { useState } from "react";
 import { BsFillStopFill } from "react-icons/bs";
-import { GoClock } from "react-icons/go";
 import { HiOutlineClipboardDocumentList } from "react-icons/hi2";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import "./ExamPage.scss";
@@ -154,16 +153,12 @@ const ExamPage = () => {
 
   if (!isStarted) {
     const examInfo = {
-      title: examTitle,
+      title: "Welcome to the screening screen!",
       description: (
           <div className="exam-info">
           <span className="exam-info-details">
             <HiOutlineClipboardDocumentList className="exam-icon" />
             20 problems
-          </span>
-            <span className="exam-info-details">
-            <GoClock className="exam-icon" />
-            60 minutes
           </span>
           </div>
       ),
