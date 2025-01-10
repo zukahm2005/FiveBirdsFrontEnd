@@ -1,7 +1,8 @@
+import { Progress } from "antd";
 import React, { useEffect, useState } from "react";
 import "./Timer.css";
 
-const Timer = ({ durationMinutes, onTimeout, sectionTitle }) => {
+const Timer = ({ durationMinutes, onTimeout, sectionTitle, totalQuestions, completedQuestions }) => {
   const [timeLeft, setTimeLeft] = useState(durationMinutes * 60);
 
   useEffect(() => {
@@ -22,20 +23,40 @@ const Timer = ({ durationMinutes, onTimeout, sectionTitle }) => {
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${minutes}M ${secs}s`;
+    return `${minutes}m ${secs}s`;
   };
 
+  const progressPercentage = (completedQuestions / totalQuestions) * 100; // Tính phần trăm tiến trình
+
   return (
-      <div className="timer-container">
-        <div className="timer-header">
+    <div className="timer-container">
+      <div className="section-title">
+        <strong>{sectionTitle}</strong>
+      </div>
+      <div className="timer-header">
+        <div>
           <span className="timer-icon">⏱️</span>
           <span className="time-left">{formatTime(timeLeft)}</span>
-          <span className="session-text">TIME LEFT IN THIS ASSIGNMENT SESSION</span>
         </div>
-        <div className="section-title">
-          <strong>Current Section:</strong> {sectionTitle}
+        <div>
+          <span className="session-text">
+            <p>TIME LEFT IN THIS ASSIGNMENT SESSION</p>
+          </span>
         </div>
       </div>
+      <div>
+        <Progress 
+          percent={progressPercentage} // Hiển thị phần trăm dựa trên số câu hỏi hoàn thành
+          status="active"
+          strokeColor={{
+            "0%": "#108ee9",
+            "100%": "#87d068",
+          }}
+          showInfo={false} // Ẩn thông tin phần trăm
+        />
+        <p>{completedQuestions}/{totalQuestions} Questions attempted</p>
+      </div>
+    </div>
   );
 };
 

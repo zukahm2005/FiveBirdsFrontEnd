@@ -20,15 +20,19 @@ const ExamCard = ({ exam, onStartExam, loading }) => {
                     <Paragraph className="instructions-title"><p>INSTRUCTIONS</p></Paragraph>
                     <Paragraph className="instructions-text">
                         1. This is an online Theory/Programming Exam.<br />
-                        2. Please make sure that you are using the latest version of the browser.<br />
-                        3. Disable all browser extensions and open the test in incognito mode.<br />
-                        4. All inputs are from STDIN and output to STDOUT.<br />
-                        5. Contact your test administrator for assistance.<br />
+                        2. Please make sure that you are using the latest version of the browser. We recommend using Google Chrome<br />
+                        3. It's mandatory to disable all the browser extensions and enable Add-ons and open the test in incognito mode.<br />
+                        4. For Practical Exam, you are free to choose your preferred programming language from the options that have been listed for you.
+                        Note that - All inputs are from STDIN and output to STDOUT.<br />
+                        5. To understand our test environment better, or know about other parameter like the time limits, etc you can read our FAQs.<br />
+                        6. To know the test results or figure out the next course of action, please contact your test administrator and they will guide you.<br/>
+                        Best wishes from Nafta! <br/>
                     </Paragraph>
                     <Button
                         type="primary"
                         onClick={onStartExam}
                         className="start-exam-btn"
+                        loading={loading}
                     >
                         <p><FaPlay /> START TAKING THIS ASSIGMENT</p>
                     </Button>

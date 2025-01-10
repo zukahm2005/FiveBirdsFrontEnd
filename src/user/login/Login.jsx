@@ -1,6 +1,6 @@
+import Cookies from "js-cookie";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Cookies from "js-cookie";
 import "./login.scss";
 
 const Login = () => {
@@ -17,7 +17,6 @@ const Login = () => {
 
   // Hàm gọi API login
   const handleLogin = async () => {
-    // const response = await fetch("http://localhost:5005/api/v1/users/candidate/login", {
     const response = await fetch("http://46.202.178.139:5050/api/v1/users/candidate/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -46,7 +45,6 @@ const Login = () => {
     e.preventDefault();
 
     const newErrors = {};
-    // Validation
     if (!formValues.username) {
       newErrors.username = "Please input your username!";
     } else if (formValues.username.length < 3) {
