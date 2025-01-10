@@ -9,6 +9,7 @@ import LoginAdmin from "./loginAdmin/LoginAdmin";
 import ProtectedRoute from "./protectedroute/ProtectedRoute";
 import DetailExam from "./exam/detailexam/DetailExam";
 import UserExam from "./userExam/UserExam";
+import PositionManagement from "./positionManagement/PositionManagement.jsx";
 const routes = [
   { path: "/login", element: <LoginAdmin /> },
   {
@@ -24,6 +25,7 @@ const routes = [
       { path: "test/create-test", element: <CreateTest/>},
       { path: "administration", element: <UserExam/> },
       { path: "manager-candidate", element: <ListManagerCandidate/>},
+      {path: "position", element: <PositionManagement/>},
       { path: "detail-exam/:id", element: <DetailExam/> },
     ],
   },
