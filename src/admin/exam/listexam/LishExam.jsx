@@ -9,16 +9,15 @@ import GlobalAlert from "../../../common/globalAlert/GlobalAlert";
 import './listexam.scss';
 
 const LishExam = () => {
-  const [allData, setAllData] = useState([]); // Lưu toàn bộ dữ liệu
-  const [data, setData] = useState([]); // Dữ liệu hiển thị theo trang
+  const [allData, setAllData] = useState([]);
+  const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [pagination, setPagination] = useState({
-    current: 1, // Trang hiện tại
-    pageSize: 10, // Số phần tử mỗi trang
-    total: 0, // Tổng số phần tử
+    current: 1,
+    pageSize: 10,
+    total: 0,
   });
 
-  // State cho GlobalAlert
   const [alertVisible, setAlertVisible] = useState(false);
   const [alertType, setAlertType] = useState('');
   const [alertDescription, setAlertDescription] = useState('');
@@ -28,7 +27,6 @@ const LishExam = () => {
     try {
       const token = Cookies.get('token');
 
-      // Gọi API (toàn bộ dữ liệu, không phân trang)
       const response = await axios.get(
         'http://46.202.178.139:5050/api/v1/exams/get/all?pageNumber=0&pageSize=1000',
         {
@@ -40,14 +38,12 @@ const LishExam = () => {
 
       const { data } = response.data;
 
-      // Cập nhật toàn bộ dữ liệu và phân trang
       setAllData(data || []);
       setPagination((prev) => ({
         ...prev,
-        total: data.length, // Tổng số phần tử
+        total: data.length,
       }));
 
-      // Lấy dữ liệu trang đầu tiên
       setData(data.slice(0, pagination.pageSize));
     } catch (error) {
       setAlertType('error');
@@ -63,15 +59,13 @@ const LishExam = () => {
     fetchData();
   }, []);
 
-  // Xử lý chuyển trang
   const handleTableChange = (pagination) => {
     const { current, pageSize } = pagination;
 
-    // Lấy dữ liệu trang hiện tại
     const startIndex = (current - 1) * pageSize;
     const endIndex = startIndex + pageSize;
 
-    setData(allData.slice(startIndex, endIndex)); // Lấy dữ liệu theo trang
+    setData(allData.slice(startIndex, endIndex));
     setPagination({
       ...pagination,
       current,
@@ -79,11 +73,10 @@ const LishExam = () => {
     });
   };
 
-  const navigate = useNavigate(); // Hook để điều hướng
+  const navigate = useNavigate();
 
   const handleViewDetail = (record) => {
-    // Điều hướng sang trang chi tiết với ID bài kiểm tra
-    navigate(`/admin/detail-exam/${record.id}`); // Đường dẫn đúng
+    navigate(`/admin/detail-exam/${record.id}`);
   };
 
   const handleDelete = async (id) => {
@@ -99,7 +92,7 @@ const LishExam = () => {
       setAlertDescription('Xóa thành công!');
       setAlertVisible(true);
 
-      fetchData(); // Tải lại dữ liệu sau khi xóa
+      fetchData();
     } catch (error) {
       setAlertType('error');
       setAlertDescription('Xóa không thành công!');
@@ -125,17 +118,20 @@ const LishExam = () => {
       key: 'description',
     },
     {
+      title: 'Position',
+      key: 'candidatePosition',
+      render: (record) => record.candidatePosition?.name || 'N/A',
+    },
+    {
       title: 'Action',
       key: 'action',
       render: (_, record) => (
         <Space size="middle">
-          {/* Icon View */}
           <Button
             type="link"
             onClick={() => handleViewDetail(record)}
             icon={<GrView />}
           />
-          {/* Icon Delete */}
           <Popconfirm
             title="Bạn có chắc chắn muốn xóa bài kiểm tra này?"
             onConfirm={() => handleDelete(record.id)}
@@ -176,7 +172,7 @@ const LishExam = () => {
             showSizeChanger: true,
           }}
           scroll={{
-            y: 530, // Chiều cao cố định của nội dung bảng
+            y: 530,
           }}
           onChange={handleTableChange}
         />
