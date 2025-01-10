@@ -2,7 +2,6 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 const token = Cookies.get("token");
-console.log(token)
 const apiUrl = "http://46.202.178.139:5050/api/v1/";
 
 
@@ -16,8 +15,8 @@ const getCandidate = async () => {
     );
     return response;
 }
-const getAllCandidate = async (pageNumber, pageSize, statusEmail, CandidatePositionId, startDate , endDate) => {
-    const response = await axios.get(apiUrl + `candidates/get/all?pageNumber=${pageNumber}&pageSize=${pageSize}&statusEmail=${statusEmail}&CandidatePositionId=${CandidatePositionId}&startDate=${startDate}&endDate=${endDate}`,
+const getCandidateTest = async () => {
+    const response = await axios.get("http://localhost:5005/api/v1/candidate/test/get",
         {
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -25,6 +24,18 @@ const getAllCandidate = async (pageNumber, pageSize, statusEmail, CandidatePosit
         }
     );
     return response;
+}
+
+const getAllCandidate = async (pageNumber, pageSize, statusEmail, CandidatePositionId, startDate , endDate) => {
+    const response = await fetch(apiUrl + `candidates/get/all?pageNumber=${pageNumber}&pageSize=${pageSize}&statusEmail=${statusEmail}&CandidatePositionId=${CandidatePositionId}&startDate=${startDate}&endDate=${endDate}`,
+        {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            }
+        }
+    );
+    return response.json();
 }
 const getExam = async () => {
     const dataExam = await fetch("http://46.202.178.139:5050/api/v1/exams/get", {
@@ -79,5 +90,6 @@ export {
     getExam,
     sendEmailCandidate,
     addUserExam,
-    getCandidatePositions
+    getCandidatePositions,
+    getCandidateTest
 }

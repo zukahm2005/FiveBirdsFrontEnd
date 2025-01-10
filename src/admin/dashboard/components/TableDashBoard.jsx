@@ -118,7 +118,6 @@ const TableDashBoard = () => {
 
 
   useEffect(() => {
-    const timeout = setTimeout(() => {
       const fetchData = async () => {
         try {
           let startDate = '', endDate = '';
@@ -134,8 +133,8 @@ const TableDashBoard = () => {
           if (result.data) {
             setCandidatePositions(resultCandidatePositions.data.data);
             setExam(getExamData.data);
-            setData(result.data.data);
-            setFilteredData(result.data.data);
+            setData(result.data);
+            setFilteredData(result.data);
             setPagination((prev) => ({
               ...prev,
               total: dataCandidate.data.data.length,
@@ -152,11 +151,7 @@ const TableDashBoard = () => {
 
       setLoading(true);
       fetchData();
-    }, 500);
-    return () => clearTimeout(timeout);
   }, [pagination.current, pagination.pageSize, statusEmail, candidatePositionId, dateRange]);
-
-
 
   const start = () => {
     setLoading(true);
