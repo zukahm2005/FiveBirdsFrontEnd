@@ -16,6 +16,7 @@ const QuestionCard = ({
     selectedAnswer,
     onAnswerSelect,
     isLastQuestion,
+    examTitle,
 }) => {
     if (!question) {
         return <div>Loading question...</div>;
@@ -33,7 +34,7 @@ const QuestionCard = ({
             <div className="question-content">
                 <div className="question-left">
                     <div className="title-quetion-left">
-                        <p>Deleveloping Microsoft Azure Solutions
+                        <p>{examTitle || "Exam Title Not Available"}
                         </p>
                         <span>
                             <GoBookmark />
@@ -42,7 +43,7 @@ const QuestionCard = ({
 
                     <div className="title-question-left">
                         <p>
-                            What is the capital in VietName?
+                            {question.questionText || "Question Text Not Available"}
                         </p>
                     </div>
                 </div>

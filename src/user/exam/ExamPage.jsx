@@ -10,13 +10,12 @@ import QuestionCard from "./components/QuestionCard";
 import Timer from "./components/Timer";
 import { apiService } from "./service/apiService";
 
-
 const ExamPage = () => {
   const [isStarted, setIsStarted] = useState(false);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [questions, setQuestions] = useState([]);
-  const [answers, setAnswers] = useState([]);
-  const [selectedAnswer, setSelectedAnswer] = useState(null);
+  const [selectedAnswers, setSelectedAnswers] = useState({});
+  const [completedQuestions, setCompletedQuestions] = useState(0);
   const [duration, setDuration] = useState(30);
   const [loading, setLoading] = useState(false);
   const [userId, setUserId] = useState(null);
@@ -24,33 +23,12 @@ const ExamPage = () => {
   const [resultData, setResultData] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
-  const totalQuestions = 20;
-  const [completedQuestions, setCompletedQuestions] = useState(0);
-  const [selectedAnswers, setSelectedAnswers] = useState({});
+  const totalQuestions = questions.length;
 
-
-  const handleAnswerSelect = (answerValue) => {
-    if (!selectedAnswers[currentQuestionIndex]) {
-      setCompletedQuestions(completedQuestions + 1);
-    }
-
-    setSelectedAnswers({ ...selectedAnswers, [currentQuestionIndex]: answerValue });
-  };
-  const handleNext = () => {
-    if (currentQuestionIndex < totalQuestions - 1) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
-    }
-  };
-
-  const handlePrevious = () => {
-    if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex(currentQuestionIndex - 1);
-    }
-  };
   const sections = [
-    { name: "Kiến thức chung", count: 6 },
-    { name: "Toán học", count: 6 },
-    { name: "Công nghệ máy tính", count: 8 },
+    { name: "General knowledge", count: 6 },
+    { name: "Mathematics", count: 6 },
+    { name: "Computer technology", count: 8 },
   ];
 
   const getCurrentSection = () => {
@@ -68,8 +46,8 @@ const ExamPage = () => {
     const section = getCurrentSection();
     if (!section) return [];
     const sectionStartIndex = sections
-      .slice(0, section.sectionIndex)
-      .reduce((sum, s) => sum + s.count, 0);
+        .slice(0, section.sectionIndex)
+        .reduce((sum, s) => sum + s.count, 0);
     const sectionEndIndex = sectionStartIndex + section.count;
     return questions.slice(sectionStartIndex, sectionEndIndex);
   };
@@ -91,44 +69,53 @@ const ExamPage = () => {
 
       setDuration(examDuration || 30);
       setQuestions(questionList);
-      setAnswers(questionList.map(() => null));
+      setSelectedAnswers({});
+      setCompletedQuestions(0);
       setIsStarted(true);
       setCurrentQuestionIndex(0);
       setLoading(false);
     } catch (error) {
-      console.error("Error starting the exam:", error);
       setLoading(false);
     }
   };
 
-  const saveAnswer = () => {
-    const currentQuestion = questions[currentQuestionIndex];
-    if (selectedAnswer !== null) {
-      const updatedAnswers = [...answers];
-      updatedAnswers[currentQuestionIndex] = {
-        questionId: currentQuestion.id,
-        answerId: selectedAnswer,
-        examAnswer: selectedAnswer,
-      };
-      setAnswers(updatedAnswers);
+  const handleAnswerSelect = (answerValue) => {
+    if (!selectedAnswers[currentQuestionIndex]) {
+      setCompletedQuestions((prev) => prev + 1);
+    }
+
+    setSelectedAnswers({ ...selectedAnswers, [currentQuestionIndex]: answerValue });
+  };
+
+  const handleNext = () => {
+    if (currentQuestionIndex < totalQuestions - 1) {
+      setCurrentQuestionIndex((prev) => prev + 1);
+    }
+  };
+
+  const handlePrevious = () => {
+    if (currentQuestionIndex > 0) {
+      setCurrentQuestionIndex((prev) => prev - 1);
     }
   };
 
   const handleFinishExam = async () => {
     try {
-      const answerData = answers.map((answer, index) => ({
+      const answerData = Object.entries(selectedAnswers).map(([index, answerValue]) => ({
         userId: Number(userId),
         examId: Number(examId),
         questionId: Number(questions[index]?.id),
-        answerId: Number(answer?.answerId || 0),
-        examAnswer: Number(answer?.examAnswer || 0),
+        answerId: Number(answerValue),
+        examAnswer: Number(answerValue),
       }));
 
       const submitResponse = await apiService.submitAnswer(answerData);
-      console.log("submitAnswer response:", submitResponse);
 
       if (!submitResponse || submitResponse.errorCode !== 200) {
-        alert("Có lỗi xảy ra khi nộp bài thi. Vui lòng thử lại.");
+        Modal.error({
+          title: "Submission Error",
+          content: "An error occurred while submitting your test. Please try again.",
+        });
         return;
       }
 
@@ -138,10 +125,12 @@ const ExamPage = () => {
       };
 
       const testResponse = await apiService.addTest(testPayload);
-      console.log("addTest response:", testResponse);
 
       if (!testResponse || testResponse.errorCode !== 200) {
-        alert("Có lỗi xảy ra khi thêm bài thi. Vui lòng thử lại.");
+        Modal.error({
+          title: "Test Submission Error",
+          content: "There was an error with the test results. Please try again.",
+        });
         return;
       }
 
@@ -149,136 +138,132 @@ const ExamPage = () => {
       setIsModalVisible(true);
     } catch (error) {
       console.error("Error during finish exam:", error);
-      alert("Có lỗi xảy ra. Vui lòng thử lại.");
+      Modal.error({
+        title: "Unexpected Error",
+        content: "Please check again and submit.",
+      });
     }
   };
 
   const handleModalOk = () => {
     setIsModalVisible(false);
-    window.location.href = "/login";
-  };
-
-  const handleQuestionClick = (newIndex) => {
-    saveAnswer();
-    setCurrentQuestionIndex(newIndex);
-    setSelectedAnswer(answers[newIndex]?.examAnswer || null);
+    window.location.href = "/candidate-login";
   };
 
   if (!isStarted) {
     const examInfo = {
       title: "TH-7091-Sem 3-Developing Microsoft Azure Solutions",
       description: (
-        <div className="exam-info">
+          <div className="exam-info">
           <span className="exam-info-details">
             <HiOutlineClipboardDocumentList className="exam-icon" />
             20 problems
           </span>
-          <span className="exam-info-details">
+            <span className="exam-info-details">
             <GoClock className="exam-icon" />
-            40 minutes
+            60 minutes
           </span>
-        </div>
+          </div>
       ),
     };
 
     return (
-      <div className="exam-page">
-        <ExamCard exam={examInfo} onStartExam={handleStart} loading={loading} />
-      </div>
+        <div className="exam-page">
+          <ExamCard exam={examInfo} onStartExam={handleStart} loading={loading} />
+        </div>
     );
   }
 
   const currentQuestion = questions[currentQuestionIndex];
 
   return (
-    <div className="exam-page">
-      <div className="header">
-        <Timer
-          durationMinutes={duration}
-          onTimeout={() => alert("Time's up!")}
-          sectionTitle="Quiz Progress"
-          totalQuestions={totalQuestions}
-          completedQuestions={completedQuestions}
+      <div className="exam-page">
+        <div className="header">
+          <Timer
+              durationMinutes={duration}
+              onTimeout={() => {
+                Modal.warning({
+                  title: "Time's up!",
+                  content: "The test time has ended. Please submit your test.",
+                  onOk: handleFinishExam,
+                });
+              }}
+              sectionTitle={getCurrentSection()?.name}
+              totalQuestions={totalQuestions}
+              completedQuestions={completedQuestions}
+          />
+        </div>
+        <div className="question-navigation">
+          <Button
+              className="prev-next-btn"
+              onClick={handlePrevious}
+              disabled={currentQuestionIndex === 0}
+          >
+            <IoIosArrowBack />
+            PREV
+          </Button>
+          {getQuestionsForCurrentSection().map((_, index) => {
+            const globalQuestionIndex =
+                sections
+                    .slice(0, getCurrentSection().sectionIndex)
+                    .reduce((sum, s) => sum + s.count, 0) + index;
+
+            return (
+                <Button
+                    key={globalQuestionIndex}
+                    type={currentQuestionIndex === globalQuestionIndex ? "primary" : "default"}
+                    onClick={() => setCurrentQuestionIndex(globalQuestionIndex)}
+                    className={selectedAnswers[globalQuestionIndex] ? "selected-dot" : ""}
+                >
+                  {globalQuestionIndex + 1}
+                </Button>
+            );
+          })}
+
+          <Button
+              className="prev-next-btn"
+              onClick={handleNext}
+              disabled={currentQuestionIndex === questions.length - 1}
+          >
+            NEXT
+            <IoIosArrowForward />
+          </Button>
+        </div>
+        <QuestionCard
+            question={currentQuestion}
+            questionNumber={currentQuestionIndex + 1}
+            totalQuestions={questions.length}
+            selectedAnswer={selectedAnswers[currentQuestionIndex]}
+            onAnswerSelect={handleAnswerSelect}
         />
-      </div>
-      <div className="question-navigation">
-        <Button
-          className="prev-next-btn"
-          onClick={() => handleQuestionClick(currentQuestionIndex - 1)}
-          disabled={currentQuestionIndex === 0}
-        >
-          <IoIosArrowBack />
-          PREV
-        </Button>
-        {getQuestionsForCurrentSection().map((_, index) => {
-          const globalQuestionIndex =
-            sections
-              .slice(0, getCurrentSection().sectionIndex)
-              .reduce((sum, s) => sum + s.count, 0) + index;
-
-          return (
-            <Button
-              key={globalQuestionIndex}
-              type={currentQuestionIndex === globalQuestionIndex ? "primary" : "default"}
-              onClick={() => handleQuestionClick(globalQuestionIndex)}
-              className={selectedAnswers[globalQuestionIndex] ? "selected-dot" : ""}
-            >
-              {globalQuestionIndex + 1}
-            </Button>
-          );
-        })}
-
-        <Button
-          className="prev-next-btn"
-          onClick={() => handleQuestionClick(currentQuestionIndex + 1)}
-          disabled={currentQuestionIndex === questions.length - 1}
-        >
-          NEXT
-          <IoIosArrowForward />
-
-        </Button>
-      </div>
-      <QuestionCard
-        question={questions[currentQuestionIndex]}
-        questionNumber={currentQuestionIndex + 1}
-        totalQuestions={totalQuestions}
-        selectedAnswer={selectedAnswers[currentQuestionIndex]}
-        onAnswerSelect={handleAnswerSelect}
-        onPrevious={handlePrevious}
-        onNext={handleNext}
-        isLastQuestion={currentQuestionIndex === totalQuestions - 1}
-
-      />
-      <div className="footer-completed">
-        <Button
-          type="primary"
-          onClick={handleFinishExam}
-          disabled={answers.some((answer) => answer === null)}
-        >
-          <span> <BsFillStopFill /></span>
-          <p>
+        <div className="footer-completed">
+          <Button
+              type="primary"
+              onClick={handleFinishExam}
+              disabled={completedQuestions !== totalQuestions}
+          >
+            <BsFillStopFill />
             FINISH AND SUBMIT
-          </p>
-        </Button>
-      </div>
+          </Button>
+        </div>
 
-      <Modal
-        title="Test results"
-        visible={isModalVisible}
-        onOk={handleModalOk}
-        cancelButtonProps={{ style: { display: "none" } }}
-      >
-        {resultData && (
-          <div>
-            <p>ID: {resultData.id}</p>
-            <p>User ID: {resultData.username}</p>
-            <p>Exam ID: {resultData.examAnswer}</p>
-            <p>Point: {resultData.point}</p>
-            <p>{resultData.isPast ? "You have been accepted." : "You have failed"}</p>
-          </div>
-        )}
-      </Modal>
-    </div>
+        <Modal
+            title="Test results"
+            visible={isModalVisible}
+            onOk={handleModalOk}
+            cancelButtonProps={{ style: { display: "none" } }}
+        >
+          {resultData && (
+              <div>
+                <p>ID: {resultData.id}</p>
+                <p>User ID: {resultData.userId}</p>
+                <p>Exam ID: {resultData.examId}</p>
+                <p>Point: {resultData.point}</p>
+                <p>{resultData.isPast ? "You have been accepted." : "You have failed."}</p>
+              </div>
+          )}
+        </Modal>
+      </div>
   );
 };
 
