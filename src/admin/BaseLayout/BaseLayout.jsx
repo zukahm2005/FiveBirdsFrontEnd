@@ -117,6 +117,11 @@ const BaseLayout = () => {
                             label: <a href="/admin/administration">Administration</a>,
                         },
                         {
+                            key: "/admin/position",
+                            icon: <UserOutlined />,
+                            label: <a href="/admin/position">Position Management</a>,
+                        },
+                        {
                             key: "/admin/manager-candidate",
                             icon: <UserOutlined />,
                             label: <a href="/admin/manager-candidate">Manager Candidate </a>,
