@@ -233,32 +233,47 @@ const UserExam = () => {
   };
 
   const handleSave = async () => {
-    // Gọi API để cập nhật
     try {
+      // Sử dụng email từ selectedUser nếu không thay đổi
+      const payload = {
+        userName: formValues.userName || selectedUser.user.userName,
+        password: formValues.password,       // Mật khẩu hiện tại
+        newPassword: formValues.newPassword, // Mật khẩu mới        // Mật khẩu mới
+        email: selectedUser.user.email, 
+      };
+  
+      console.log("Payload gửi đi:", payload); // Log payload để kiểm tra
+  
       await axios.put(
-        `http://46.202.178.139:5050/api/v1/user-exam/update/${selectedUser.id}`,
-        formValues,
+        `http://46.202.178.139:5050/api/v1/users/update/${selectedUser.key}`,
+        payload,
         {
           headers: {
             Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
           },
         }
       );
+  
       setAlertType("success");
       setAlertDescription("User updated successfully!");
       setAlertVisible(true);
-
+  
       // Reload dữ liệu
       setPagination({ ...pagination });
     } catch (error) {
       setAlertType("error");
       setAlertDescription("Failed to update user.");
       setAlertVisible(true);
+      console.error(
+        "Error updating user:",
+        error.response ? error.response.data : error.message
+      );
     } finally {
       setIsEditModalVisible(false); // Đóng modal
     }
   };
-
+    
   return (
     <div className="list-admin">
       <GlobalAlert
@@ -330,31 +345,41 @@ const UserExam = () => {
 </Modal>
       {/* Popup chỉnh sửa */}
       <Modal
-        title="Edit Admin"
-        visible={isEditModalVisible}
-        onCancel={() => setIsEditModalVisible(false)}
-        onOk={handleSave}
-        okText="Save"
-        cancelText="Cancel"
-      >
-        <div>
-          <label>User Name:</label>
-          <Input
-            name="userName"
-            value={formValues.userName}
-            onChange={handleFormChange}
-          />
-        </div>
-        <div style={{ marginTop: 10 }}>
-          <label>Password:</label>
-          <Input
-            name="password"
-            type="password"
-            value={formValues.password}
-            onChange={handleFormChange}
-          />
-        </div>
-      </Modal>
+  title="Edit Admin"
+  visible={isEditModalVisible}
+  onCancel={() => setIsEditModalVisible(false)}
+  onOk={handleSave}
+  okText="Save"
+  cancelText="Cancel"
+>
+  <div>
+    <label>User Name:</label>
+    <Input
+      name="userName"
+      value={formValues.userName}
+      onChange={handleFormChange}
+    />
+  </div>
+  <div style={{ marginTop: 10 }}>
+    <label>Current Password:</label>
+    <Input
+      name="password"
+      type="password"
+      value={formValues.password}
+      onChange={handleFormChange}
+    />
+  </div>
+  <div style={{ marginTop: 10 }}>
+    <label>New Password:</label>
+    <Input
+      name="newPassword"
+      type="password"
+      value={formValues.newPassword}
+      onChange={handleFormChange}
+    />
+  </div>
+</Modal>
+
     </div>
   );
 };
