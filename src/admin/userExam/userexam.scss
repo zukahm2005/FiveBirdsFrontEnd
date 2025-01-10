@@ -26,4 +26,27 @@
       }
     }
   }
-  
+  .admin-header{
+    
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 10px;
+    .button-add-admin{
+      padding: 0.7rem 1.5rem;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #fff;
+    background-color: #28a745;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex
+;
+    justify-content: flex-end;
+    margin-bottom: 10px;
+      background-color: #28a745;
+      &:hover {
+        background-color: #218838;
+      }
+    }
+  }
