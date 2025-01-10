@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import {Table, Button, Space, Spin, message, Form, Modal, Input} from "antd";
 import { apiService } from "../service/api";
+import {MdDelete} from "react-icons/md";
+import {GrView} from "react-icons/gr";
 
 const ListPositions = () => {
     const [positions, setPositions] = useState([]);
@@ -82,10 +84,12 @@ const ListPositions = () => {
                     <Button
                         type="primary"
                         onClick={() => openUpdateModal(record)}
+                        icon={<GrView />}
                     >
                         Update
                     </Button>
-                    <Button type="primary" danger onClick={() => deletePosition(record.id)}>
+                    <Button type="primary" danger onClick={() => deletePosition(record.id)}
+                            icon={<MdDelete />}>
                         Delete
                     </Button>
                 </Space>
