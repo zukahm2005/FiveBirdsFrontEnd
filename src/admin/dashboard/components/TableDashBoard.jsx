@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {Button, Table, Typography, Spin, Select, DatePicker} from "antd";
+import {Button, Table, Typography, Spin, Select, DatePicker, Empty} from "antd";
 import ExamRequest from "./ExamRequest";
 import moment from "moment/moment";
 import { Input } from 'antd';
@@ -118,39 +118,44 @@ const TableDashBoard = () => {
 
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        let startDate = '', endDate = '';
-        if (dateRange && dateRange.length === 2) {
-          startDate = dateRange[0].format("YYYY-MM-DD");
-          endDate = dateRange[1].format("YYYY-MM-DD");
-        }
+    const timeout = setTimeout(() => {
+      const fetchData = async () => {
+        try {
+          let startDate = '', endDate = '';
+          if (dateRange && dateRange.length === 2) {
+            startDate = dateRange[0].format("YYYY-MM-DD");
+            endDate = dateRange[1].format("YYYY-MM-DD");
+          }
 
-        const result = await getAllCandidate(pagination.current, pagination.pageSize, statusEmail, candidatePositionId, startDate, endDate);
-        const resultCandidatePositions = await getCandidatePositions();
-        const dataCandidate = await getCandidate();
-        const getExamData = await getExam();
-        if (result.data) {
-          setCandidatePositions(resultCandidatePositions.data.data);
-          setExam(getExamData.data);
-          setData(result.data.data);
-          setFilteredData(result.data.data);
-          setPagination((prev) => ({
-            ...prev,
-            total: dataCandidate.data.data.length,
-          }));
-        } else {
-          setError("No data available");
+          const result = await getAllCandidate(pagination.current, pagination.pageSize, statusEmail, candidatePositionId, startDate, endDate);
+          const resultCandidatePositions = await getCandidatePositions();
+          const dataCandidate = await getCandidate();
+          const getExamData = await getExam();
+          if (result.data) {
+            setCandidatePositions(resultCandidatePositions.data.data);
+            setExam(getExamData.data);
+            setData(result.data.data);
+            setFilteredData(result.data.data);
+            setPagination((prev) => ({
+              ...prev,
+              total: dataCandidate.data.data.length,
+            }));
+          } else {
+            setError("No data available");
+          }
+        } catch (err) {
+          setError(err.message);
+        } finally {
+          setLoading(false);
         }
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-    setLoading(true);
-    fetchData();
+      };
+
+      setLoading(true);
+      fetchData();
+    }, 500);
+    return () => clearTimeout(timeout);
   }, [pagination.current, pagination.pageSize, statusEmail, candidatePositionId, dateRange]);
+
 
 
   const start = () => {
@@ -279,11 +284,7 @@ const TableDashBoard = () => {
         </div>
 
         {loading ? (
-            <Spin/>
-        ) : error ? (
-            <Text type="danger">{error}</Text>
-        ) : data.length === 0 ? (
-          <Text type="warning">No data to display</Text>
+            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
         ) : (
           <Table
             rowSelection={rowSelection}

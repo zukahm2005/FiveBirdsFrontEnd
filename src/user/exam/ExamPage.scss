@@ -1,0 +1,95 @@
+.exam-page{
+}
+
+.question-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  max-width: 65%;
+  margin: 0 auto;
+  padding: 0.4rem 0;
+  margin-top: -50px;
+  background-color: rgb(250, 250, 250);
+  display: flex;
+  flex-direction: row;
+  gap: 1.5rem;
+}
+
+.question-navigation .ant-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 16px;
+  line-height: 1.5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+ 
+}
+
+.question-navigation .prev-next-btn {
+  width: auto;
+  height: auto;
+  padding: 0 15px;
+  font-size: 16px;
+  border-radius: 20px;
+  background-color: transparent;
+  color: #1890ff;
+  font-weight: bold;
+  border: none;
+}
+
+.question-navigation .prev-next-btn:hover {
+  background-color: rgba(24, 144, 255, 0.1);
+}
+
+.exam-info{
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  align-items: center;
+}
+
+.exam-info-details{
+  display: flex;
+  flex-direction: row;
+  gap: 0.2rem;
+  align-items: center;
+}
+
+.footer-completed{
+  max-width: 65%;
+  margin: 0 auto;
+  padding-top: 1rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+  p,span{
+    color: red;
+    font-size: 1rem;
+  }
+  
+}
+
+.ant-progress .ant-progress-inner{
+  background-color: white;
+}
+
+.question-navigation .selected-dot {
+  position: relative;
+}
+
+.question-navigation .selected-dot::after {
+  content: '';
+  position: absolute;
+  bottom: 10%; /* Vị trí của dấu chấm */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px; /* Kích thước của dấu chấm */
+  height: 6px; /* Kích thước của dấu chấm */
+  background-color: #5aa8f1; /* Màu sắc của dấu chấm */
+  border-radius: 50%; /* Bo tròn để thành hình tròn */
+}
+
