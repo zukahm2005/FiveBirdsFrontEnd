@@ -8,14 +8,8 @@ const { Title, Paragraph } = Typography;
 
 const QuestionCard = ({
     question,
-    questionNumber,
-    totalQuestions,
-    onPrevious,
-    onNext,
-    onFinish,
     selectedAnswer,
     onAnswerSelect,
-    isLastQuestion,
     examTitle,
 }) => {
     if (!question) {
@@ -43,7 +37,7 @@ const QuestionCard = ({
 
                     <div className="title-question-left">
                         <p>
-                            {question.questionText || "Question Text Not Available"}
+                            {question.questionExam || "Question Text Not Available"}
                         </p>
                     </div>
                 </div>

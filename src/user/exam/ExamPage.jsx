@@ -1,4 +1,4 @@
-import { Button, Modal } from "antd";
+import { Modal, Button } from "antd";
 import React, { useState } from "react";
 import { BsFillStopFill } from "react-icons/bs";
 import { GoClock } from "react-icons/go";
@@ -20,6 +20,7 @@ const ExamPage = () => {
   const [loading, setLoading] = useState(false);
   const [userId, setUserId] = useState(null);
   const [examId, setExamId] = useState(null);
+  const [examTitle, setExamTitle] = useState("Exam Title Not Available");
   const [resultData, setResultData] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -62,6 +63,7 @@ const ExamPage = () => {
       const userExams = await apiService.getUserExams(roleData.userId);
       const exam = userExams?.data[0]?.exam;
       setExamId(exam?.examId);
+      setExamTitle(exam?.title || "Exam Title Not Available");
 
       const examDetails = await apiService.getExamDetails(exam?.examId);
       const questionList = examDetails?.data?.question || [];
@@ -152,7 +154,7 @@ const ExamPage = () => {
 
   if (!isStarted) {
     const examInfo = {
-      title: "TH-7091-Sem 3-Developing Microsoft Azure Solutions",
+      title: examTitle,
       description: (
           <div className="exam-info">
           <span className="exam-info-details">
@@ -235,6 +237,7 @@ const ExamPage = () => {
             totalQuestions={questions.length}
             selectedAnswer={selectedAnswers[currentQuestionIndex]}
             onAnswerSelect={handleAnswerSelect}
+            examTitle={examTitle}
         />
         <div className="footer-completed">
           <Button
@@ -256,10 +259,8 @@ const ExamPage = () => {
           {resultData && (
               <div>
                 <p>ID: {resultData.id}</p>
-                <p>User ID: {resultData.userId}</p>
-                <p>Exam ID: {resultData.examId}</p>
-                <p>Point: {resultData.point}</p>
                 <p>{resultData.isPast ? "You have been accepted." : "You have failed."}</p>
+                <p>Your Point: {resultData.point}</p>
               </div>
           )}
         </Modal>
