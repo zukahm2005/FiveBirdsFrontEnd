@@ -45,7 +45,15 @@ const getExam = async () => {
         }
     });
     return await dataExam.json();
-
+}
+const getExamByName = async (name) => {
+    const dataExam = await fetch(`http://46.202.178.139:5050/api/v1/exams/get-position/${name}`, {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+        }
+    });
+    return await dataExam.json();
 }
 
 const sendEmailCandidate = async (examTitle, comment, selectedTime, selectedDate, itemId) => {
@@ -91,5 +99,6 @@ export {
     sendEmailCandidate,
     addUserExam,
     getCandidatePositions,
-    getCandidateTest
+    getCandidateTest,
+    getExamByName
 }
