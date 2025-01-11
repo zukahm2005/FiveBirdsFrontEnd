@@ -16,7 +16,7 @@ const getCandidate = async () => {
     return response;
 }
 const getCandidateTest = async () => {
-    const response = await axios.get("http://localhost:5005/api/v1/candidate/test/get",
+    const response = await axios.get("http://46.202.178.139:5050/api/v1/candidate/test/get",
         {
             headers: {
                 'Authorization': `Bearer ${token}`,
