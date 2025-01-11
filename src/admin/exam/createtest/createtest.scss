@@ -40,16 +40,51 @@
   }
   
   .question-list {
-    flex: 1; /* Cho phép danh sách câu hỏi chiếm không gian */
-    overflow-y: auto; /* Cuộn danh sách nếu nội dung dài */
+    flex: 1;
+    overflow-y: auto;
   }
-  
-  .button-group {
+
+  .button-group-1 {
     display: flex;
-    justify-content: space-between; /* Căn đều các nút */
-    margin-top: 20px;
+    align-items: center;
+    gap: 16px;
+
+    .add-question-btn {
+      flex: none;
+    }
+
+    .import-file-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .submit-btn {
+      margin-left: auto;
+    }
   }
-  
+
+  .icon-button-left {
+    display: flex;
+    align-items: center;
+    color: #007bff;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    border: none;
+    background: none;
+    padding: 0;
+  }
+
+  .icon-button-left:hover {
+    color: #0056b3;
+  }
+
+  .icon-button-left svg {
+    margin-right: 8px;
+    font-size: 1.2rem;
+  }
   .create-questions-btn {
     background-color: #28a745;
     color: white;
@@ -338,27 +373,7 @@
     box-sizing: border-box;
   }
 }
-.icon-button-left {
-  display: flex;
-  align-items: center;
-  color: #007bff; /* Màu xanh chữ */
-  font-size: 1rem; /* Kích thước chữ */
-  font-weight: bold; /* Đậm chữ */
-  cursor: pointer; /* Thay đổi con trỏ chuột */
-  transition: color 0.3s ease; /* Hiệu ứng hover */
-  border: none; /* Loại bỏ viền button */
-  background: none; /* Loại bỏ nền button */
-  padding: 0; /* Loại bỏ padding */
-}
 
-.icon-button-left:hover {
-  color: #0056b3; /* Đổi màu khi hover */
-}
-
-.icon-button-left svg {
-  margin-right: 8px; /* Khoảng cách giữa icon và text */
-  font-size: 1.2rem; /* Kích thước icon */
-}
 .detail-question-details{
   margin-top: 15px;
   padding: 20px;

@@ -5,12 +5,12 @@ import { AiOutlineDown } from "react-icons/ai";
 import { GoPlus } from "react-icons/go";
 import GlobalAlert from "../../../common/globalAlert/GlobalAlert";
 import "./createtest.scss";
+import ImportFile from "./ImportFile.jsx";
 
 const CreateTest = () => {
   const [exams, setExams] = useState([]);
   const [selectedExam, setSelectedExam] = useState("");
 
-  // States for Exam
   const [showTitleInput, setShowTitleInput] = useState(false);
   const [examTitle, setExamTitle] = useState("");
   const [showDescriptionInput, setShowDescriptionInput] = useState(false);
@@ -22,7 +22,6 @@ const CreateTest = () => {
   const [showCandidatePositionDropdown, setShowCandidatePositionDropdown] = useState(false);
 
 
-  // States for questions
   const [questions, setQuestions] = useState([
     {
       questionExam: "",
@@ -62,7 +61,6 @@ const CreateTest = () => {
       setLoading(false);
     }
   };
-  // Fetch exams from API
   useEffect(() => {
     fetchExams();
   }, []);
@@ -80,7 +78,6 @@ const CreateTest = () => {
       const names = response.data.data.map((item) => item.name);
       console.log("Candidate Names:", names);
       const data = response.data.data;
-      // Đảm bảo response.data luôn là một mảng
       setCandidatePositions(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error("Error fetching candidate positions:", error);
@@ -91,12 +88,10 @@ const CreateTest = () => {
   };
   
 
-  // Gọi API khi component mount
   useEffect(() => {
     fetchCandidatePositions();
   }, []);
 
-  // Handle creating an exam
   const handleCreateExam = async (e) => {
     e.preventDefault();
     if (!examTitle || !examDescription || !examDuration) {
@@ -116,7 +111,7 @@ const CreateTest = () => {
           title: examTitle,
           description: examDescription,
           duration: examDuration,
-          candidatePositionId: selectedCandidatePosition, // Gửi id của Candidate Position
+          candidatePositionId: selectedCandidatePosition,
 
         },
         {
@@ -126,15 +121,12 @@ const CreateTest = () => {
         }
       );
 
-      // Hiển thị thông báo thành công
       setAlertType("success");
       setAlertDescription("Exam created successfully!");
       setAlertVisible(true);
 
-      // Gọi lại API để lấy danh sách mới nhất
       await fetchExams();
 
-      // Reset form
       setExamTitle("");
       setExamDescription("");
       setExamDuration("");
@@ -161,12 +153,11 @@ const CreateTest = () => {
       const examData = response.data;
       console.log("Fetched exam details:", examData);
 
-      // Cập nhật câu hỏi chỉ khi cần thiết
       if (examData.questions) {
         setQuestions(
           examData.questions.map((q) => ({
             ...q,
-            isNew: false, // Đánh dấu rằng đây không phải câu hỏi mới
+            isNew: false,
           }))
         );
       } else {
@@ -195,7 +186,6 @@ const CreateTest = () => {
         }
       );
 
-      // Cập nhật danh sách câu hỏi từ API
       setQuestions(response.data.data.question || []);
     } catch (error) {
       console.error("Error fetching exam details:", error);
@@ -235,15 +225,15 @@ const CreateTest = () => {
 
   const saveNewQuestion = (index) => {
     const updatedQuestions = [...questions];
-    updatedQuestions[index].isNew = false; // Đánh dấu câu hỏi này không còn là mới
+    updatedQuestions[index].isNew = false;
     setQuestions(updatedQuestions);
   };
 
-  // Handle question input change
+
   const handleQuestionChange = (index, field, value) => {
     const updatedQuestions = [...questions];
     if (field === "correctAnswer") {
-      updatedQuestions[index][field] = parseInt(value, 10) || 0; // Chuyển thành số nguyên
+      updatedQuestions[index][field] = parseInt(value, 10) || 0;
     } else {
       updatedQuestions[index][field] = value;
     }
@@ -252,7 +242,7 @@ const CreateTest = () => {
 
   const handleAnswerChange = (qIndex, aIndex, value) => {
     const updatedQuestions = [...questions];
-    updatedQuestions[qIndex].answers[`answer${aIndex}`] = value || ""; // Đảm bảo không null
+    updatedQuestions[qIndex].answers[`answer${aIndex}`] = value || "";
     setQuestions(updatedQuestions);
   };
 
@@ -273,7 +263,7 @@ const CreateTest = () => {
     const token = Cookies.get("token");
 
     try {
-      const newQuestions = questions.filter((q) => q.isNew); // Lọc chỉ câu hỏi mới
+      const newQuestions = questions.filter((q) => q.isNew);
     
       for (const question of newQuestions) {
         console.log("Payload gửi đến /questions/add:", {
@@ -317,8 +307,7 @@ const CreateTest = () => {
           }
         );
       }
-    
-      // Thông báo thành công sau khi tất cả câu hỏi được tạo
+
       setAlertType("success");
       setAlertDescription("All questions and answers created successfully!");
       setAlertVisible(true);
@@ -331,7 +320,7 @@ const CreateTest = () => {
     } finally {
       setLoading(false);
     }
-  };    
+  };
 
   return (
     <div className="manage-questions-answers-container">
@@ -342,7 +331,6 @@ const CreateTest = () => {
         description={alertDescription}
       />
 
-      {/* Left Section: Create Exam */}
       <div className="left-section">
         <h2>Create Exam</h2>
         <form onSubmit={handleCreateExam} className="exam-form">
@@ -443,17 +431,16 @@ const CreateTest = () => {
               exams.length > 0 &&
               exams.map((exam) => (
                 <option key={exam.id} value={exam.id}>
+                  {exam.id} <br/>
                   {exam.title}
                 </option>
               ))}
           </select>
         </div>
 
-        {/* Questions List */}
         <div className="question-list">
           {questions.map((q, index) => (
             <div key={index} className="question-group">
-              {/* Header câu hỏi với dropdown */}
               <div
                 className="question-header"
                 onClick={() => toggleQuestionDetails(index)}
@@ -471,7 +458,6 @@ const CreateTest = () => {
                 />
               </div>
 
-              {/* Nội dung chi tiết của câu hỏi */}
               {expandedQuestions[index] && (
                 <div className="question-details">
                   {q.isNew ? (
@@ -480,7 +466,7 @@ const CreateTest = () => {
                       <input
                         type="text"
                         placeholder="Enter question"
-                        value={q.questionExam} // Đảm bảo lấy giá trị từ state
+                        value={q.questionExam}
                         onChange={(e) =>
                           handleQuestionChange(
                             index,
@@ -546,14 +532,18 @@ const CreateTest = () => {
           ))}
         </div>
 
-        {/* Buttons */}
-        <div className="button-group">
-          <button className="icon-button-left" onClick={handleAddQuestion}>
-            <GoPlus /> Add Question
-          </button>
+        <div className="button-group-1">
+          <div className="add-question-btn">
+            <button className="icon-button-left" onClick={handleAddQuestion}>
+              <GoPlus/> Add Question
+            </button>
+          </div>
+          <div className="import-file-container">
+            <ImportFile selectedExam={selectedExam}/>
+          </div>
           <button
-            className="submit-btn create-questions-btn"
-            onClick={handleCreateAll}
+              className="submit-btn create-questions-btn"
+              onClick={handleCreateAll}
           >
             Create
           </button>
