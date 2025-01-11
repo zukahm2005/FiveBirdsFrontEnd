@@ -64,32 +64,32 @@ const UserExam = () => {
       title: "Action",
       key: "action",
       render: (_, record) => (
-        <Space size="middle">
-          <button
-            style={{
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              color: "#1890ff",
-            }}
-            title="Edit"
-            onClick={() => handleEdit(record)}
-          >
-            <MdEdit size={20} />
-          </button>
-          <button
-            style={{
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              color: "red",
-            }}
-            title="Delete"
-            onClick={() => handleDelete(record.key)} // Lấy `key` làm `id`
-          >
-            <MdDelete size={20} />
-          </button>
-        </Space>
+          <Space size="middle">
+            <button
+                style={{
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                  color: "#1890ff",
+                }}
+                title="Edit"
+                onClick={() => handleEdit(record)}
+            >
+              <MdEdit size={20}/>
+            </button>
+            <button
+                style={{
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                  color: "red",
+                }}
+                title="Delete"
+                onClick={() => handleDelete(record.key)}
+            >
+              <MdDelete size={20}/>
+            </button>
+          </Space>
       ),
     },
   ];
@@ -100,7 +100,7 @@ const UserExam = () => {
 
       try {
         const response = await axios.get(
-          `http://46.202.178.139:5050/api/v1/users/get-admin/all?pageNumber=${pagination.current}&pageSize=${pagination.pageSize}`,
+            `http://46.202.178.139:5050/api/v1/users/get-admin/all?pageNumber=${pagination.current}&pageSize=${pagination.pageSize}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -135,36 +135,39 @@ const UserExam = () => {
   }, [pagination]);
 
   const handleDelete = async (id) => {
-    try {
-      // Gọi API để xóa
-      await axios.delete(
-        `http://46.202.178.139:5050/api/v1/users/delete/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
+    Modal.confirm({
+      title: "Are you sure?",
+      content: "Do you really want to delete this admin? This action cannot be undone.",
+      okText: "Yes",
+      cancelText: "No",
+      onOk: async () => {
+        try {
+          await axios.delete(
+              `http://46.202.178.139:5050/api/v1/users/delete/${id}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                  "Content-Type": "application/json",
+                },
+              }
+          );
+          setAlertType("success");
+          setAlertDescription("Admin deleted successfully!");
+          setAlertVisible(true);
+          setData((prevData) => prevData.filter((item) => item.key !== id));
+        } catch (error) {
+          setAlertType("error");
+          setAlertDescription("Failed to delete admin.");
+          setAlertVisible(true);
+          console.error(
+              "Error deleting admin:",
+              error.response ? error.response.data : error.message
+          );
         }
-      );
-
-      // Hiển thị thông báo thành công
-      setAlertType("success");
-      setAlertDescription("Admin deleted successfully!");
-      setAlertVisible(true);
-
-      // Cập nhật lại danh sách
-      setData((prevData) => prevData.filter((item) => item.key !== id));
-    } catch (error) {
-      // Hiển thị thông báo lỗi
-      setAlertType("error");
-      setAlertDescription("Failed to delete admin.");
-      setAlertVisible(true);
-      console.error(
-        "Error deleting admin:",
-        error.response ? error.response.data : error.message
-      );
-    }
+      },
+    });
   };
+
 
   const handleTableChange = (pagination) => {
     setPagination({
