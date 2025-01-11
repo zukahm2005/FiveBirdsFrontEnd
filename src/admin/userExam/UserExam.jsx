@@ -38,6 +38,12 @@ const UserExam = () => {
 
   const columns = [
     {
+      title: "STT",
+      dataIndex: "index",
+      key: "index",
+      render: (_, __, index) => index + 1, // index bắt đầu từ 0, nên cộng 1
+    },
+    {
       title: "Name",
       dataIndex: ["user", "userName"],
       key: "userName",
