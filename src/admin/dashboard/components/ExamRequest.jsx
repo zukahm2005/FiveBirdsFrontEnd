@@ -9,7 +9,7 @@ import { sendEmailCandidate, addUserExam, getCandidateById } from "../../../comm
 const { Option } = Select;
 const { TextArea } = Input;
 
-const ExamRequest = ({ exam, data, onClose, setClose, setSelectedRows, setSelectedRowKeys, selectedRowKeys }) => {
+const ExamRequest = ({ exam, data, onClose, setClose, setSelectedRows, setSelectedRowKeys}) => {
     const [examTitle, setExams] = useState(null);
     const [examId, setExamId] = useState(null);
     const [comment, setComment] = useState(null);

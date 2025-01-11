@@ -1,14 +1,19 @@
 import React, { useEffect, useState } from "react";
-import {Button, Table, Typography, Spin, Select, DatePicker, Empty} from "antd";
+import { Button, Table, Typography, Spin, Select, DatePicker, Empty, Input } from "antd";
 import ExamRequest from "./ExamRequest";
-import moment from "moment/moment";
-import { Input } from 'antd';
-const { Search } = Input;
-import { getAllCandidate, getCandidate, getCandidatePositions, getExam } from "../../../common/api/apiDashBoard";
+import moment from "moment";
+import {
+  getAllCandidate,
+  getCandidate,
+  getCandidatePositions,
+  getExamByName,
+} from "../../../common/api/apiDashBoard";
+import GlobalAlert from "../../../common/globalAlert/GlobalAlert.jsx";
 
 const { RangePicker } = DatePicker;
-
+const { Search } = Input;
 const { Text } = Typography;
+
 
 const columns = [
   {
@@ -36,7 +41,7 @@ const columns = [
         >
           {text}
         </div>
-    )
+    ),
   },
   {
     title: "Education",
@@ -59,29 +64,21 @@ const columns = [
     dataIndex: "statusEmail",
     key: "statusEmail",
     render: (status) => {
-      let color;
-      let borderColor;
-
-      if (status === "PENDING") {
-        color = "orange";
-        borderColor = "orange";
-      } else if (status === "SUCCESS") {
-        color = "green";
-        borderColor = "green";
-      } else {
-        color = "gray";
-        borderColor = "gray";
-      }
-
+      const colors = {
+        PENDING: "orange",
+        SUCCESS: "green",
+        DEFAULT: "gray",
+      };
+      const color = colors[status] || colors.DEFAULT;
       return (
-        <span
-          style={{
-            color,
-            border: `2px solid ${borderColor}`,
-            padding: "2px 5px",
-            borderRadius: "4px",
-          }}
-        >
+          <span
+              style={{
+                color,
+                border: `2px solid ${color}`,
+                padding: "2px 5px",
+                borderRadius: "4px",
+              }}
+          >
           {status}
         </span>
       );
@@ -104,54 +101,88 @@ const TableDashBoard = () => {
   const [error, setError] = useState(null);
   const [filteredData, setFilteredData] = useState([]);
   const [exam, setExam] = useState([]);
-  const [statusEmail, SetStatusEmail] = useState('')
-  const [candidatePositionId, SetcandidatePositionId] = useState('')
-  const [candidatePositions, setCandidatePositions] = useState([])
+  const [statusEmail, setStatusEmail] = useState("");
+  const [candidatePositionId, setCandidatePositionId] = useState("");
+  const [candidatePositions, setCandidatePositions] = useState([]);
   const [dateRange, setDateRange] = useState([]);
-
-
   const [pagination, setPagination] = useState({
     current: 1,
     pageSize: 10,
-    total: 0
+    total: 0,
   });
+  const [alertVisible, setAlertVisible] = useState(false);
+  const [alertType, setAlertType] = useState("");
+  const [alertDescription, setAlertDescription] = useState("");
 
+
+  const fetchData = async () => {
+    try {
+      let startDate = "";
+      let endDate = "";
+      if (dateRange.length === 2) {
+        startDate = dateRange[0].format("YYYY-MM-DD");
+        endDate = dateRange[1].format("YYYY-MM-DD");
+      }
+
+      setLoading(true);
+
+      const [result, resultCandidatePositions, dataCandidate] = await Promise.all([
+        getAllCandidate(
+            pagination.current,
+            pagination.pageSize,
+            statusEmail,
+            candidatePositionId,
+            startDate,
+            endDate
+        ),
+        getCandidatePositions(),
+        getCandidate(),
+      ]);
+
+      if (result.data) {
+        setCandidatePositions(resultCandidatePositions.data.data);
+        setData(result.data);
+        setFilteredData(result.data);
+        setPagination((prev) => ({
+          ...prev,
+          total: dataCandidate.data.data.length,
+        }));
+      } else {
+        setError("No data available");
+      }
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-      const fetchData = async () => {
-        try {
-          let startDate = '', endDate = '';
-          if (dateRange && dateRange.length === 2) {
-            startDate = dateRange[0].format("YYYY-MM-DD");
-            endDate = dateRange[1].format("YYYY-MM-DD");
-          }
+    fetchData();
+  }, [pagination.current, pagination.pageSize, statusEmail, candidatePositionId, dateRange]);
 
-          const result = await getAllCandidate(pagination.current, pagination.pageSize, statusEmail, candidatePositionId, startDate, endDate);
-          const resultCandidatePositions = await getCandidatePositions();
-          const dataCandidate = await getCandidate();
-          const getExamData = await getExam();
-          if (result.data) {
-            setCandidatePositions(resultCandidatePositions.data.data);
+  useEffect(() => {
+    if (selectedRows.length > 0) {
+      const name = selectedRows.map((item) => item.candidatePosition.name);
+      const fetchExamData = async () => {
+        try {
+          const getExamData = await getExamByName(name);
+          if (getExamData.data) {
             setExam(getExamData.data);
-            setData(result.data);
-            setFilteredData(result.data);
-            setPagination((prev) => ({
-              ...prev,
-              total: dataCandidate.data.data.length,
-            }));
           } else {
-            setError("No data available");
+            setExam([])
+            setAlertType("warning");
+            setAlertDescription(<>No exams available <strong>{name}</strong></>);
+            setAlertVisible(true);
           }
         } catch (err) {
-          setError(err.message);
-        } finally {
-          setLoading(false);
+          console.error(err);
         }
       };
 
-      setLoading(true);
-      fetchData();
-  }, [pagination.current, pagination.pageSize, statusEmail, candidatePositionId, dateRange]);
+      fetchExamData();
+    }
+  }, [selectedRows]);
 
   const start = () => {
     setLoading(true);
@@ -166,22 +197,18 @@ const TableDashBoard = () => {
   const onSearch = (value) => {
     const lowerValue = value.toLowerCase();
     const filtered = data.filter(
-      (item) =>
-        item.fullName.toLowerCase().includes(lowerValue) ||
-        item.email.toLowerCase().includes(lowerValue) ||
-        item.phone.includes(lowerValue) ||
-        item.education.toLowerCase().includes(lowerValue) ||
-        item.experience.toLowerCase().includes(lowerValue)
+        (item) =>
+            item.fullName.toLowerCase().includes(lowerValue) ||
+            item.email.toLowerCase().includes(lowerValue) ||
+            item.education.toLowerCase().includes(lowerValue) ||
+            item.experience.toLowerCase().includes(lowerValue)
     );
     setFilteredData(filtered);
   };
 
   const onSelectChange = (newSelectedRowKeys) => {
     setSelectedRowKeys(newSelectedRowKeys);
-    const newSelectedRows = data.filter((item) =>
-      newSelectedRowKeys.includes(item.id)
-    );
-    setSelectedRows(newSelectedRows);
+    setSelectedRows(data.filter((item) => newSelectedRowKeys.includes(item.id)));
     setClose(newSelectedRowKeys.length > 0);
   };
 
@@ -198,124 +225,106 @@ const TableDashBoard = () => {
     onChange: onSelectChange,
   };
 
-  const hasSelected = selectedRowKeys.length > 0;
-
   return (
-    <div style={{ width: "100%", display: "flex", gap: "25px" }}>
-      <div
-        style={{
-          width: onClose ? "70%" : "100%",
-          padding: "30px",
-          border: "1px solid #f0f0f0",
-          margin: "45px 0",
-          borderRadius: "10px",
-          boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-        }}
-      >
-        <div style={{marginBottom: 16, display: "flex", gap: "16px"}}>
-          <Button
-              type="primary"
-              onClick={start}
-              disabled={!hasSelected}
-              loading={loading}
-          >
-            Reload
-          </Button>
+      <div style={{ width: "100%", display: "flex", gap: "25px" }}>
+        <GlobalAlert
+            setVisible={setAlertVisible}
+            visible={alertVisible}
+            type={alertType}
+            description={alertDescription}
+        />
+        <div
+            style={{
+              width: onClose ? "70%" : "100%",
+              padding: "30px",
+              border: "1px solid #f0f0f0",
+              margin: "45px 0",
+              borderRadius: "10px",
+              boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+            }}
+        >
+          <div style={{ marginBottom: 16, display: "flex", gap: "16px" }}>
+            <Button type="primary" onClick={start} disabled={!selectedRowKeys.length} loading={loading}>
+              Reload
+            </Button>
 
-          <div style={{width: "25%"}}>
             <Search
-                placeholder="input search text"
+                placeholder="Search"
                 allowClear
                 onSearch={onSearch}
+                style={{ width: "25%" }}
             />
-          </div>
 
-          <div>
             <Select
-                style={{
-                  width: 170,
-                  color: statusEmail === "PENDING" ? "orange" : "green",
-                }}
+                style={{ width: 170 }}
                 options={[
-                  {value: "", label: <span>All Status</span>},
-                  {value: "PENDING", label: <span style={{color: "orange"}}>Pending</span>},
-                  {value: "SUCCESS", label: <span style={{color: "green"}}>Success</span>},
+                  { value: "", label: "All Status" },
+                  { value: "PENDING", label: "Pending" },
+                  { value: "SUCCESS", label: "Success" },
                 ]}
                 placeholder="Select a status"
-                onChange={(value) => SetStatusEmail(value)}
+                onChange={setStatusEmail}
             />
-          </div>
 
-          <div>
             <Select
                 placeholder="Select Position"
-                style={{width: 170}}
+                style={{ width: 170 }}
                 value={candidatePositionId || undefined}
-                onChange={(id) => {
-                  SetcandidatePositionId(id);
-                }}
+                onChange={setCandidatePositionId}
             >
-              <Select.Option value="" disabled key="placeholder">Select Position</Select.Option>
-              <Select.Option value="" key="all-position">All Position</Select.Option>
+              <Select.Option value="" key="all-position">All Positions</Select.Option>
               {candidatePositions.map((status) => (
-                  <Select.Option key={status.id || `fallback-${status.name}`} value={status.id}>
+                  <Select.Option key={status.id} value={status.id}>
                     {status.name}
                   </Select.Option>
               ))}
             </Select>
-          </div>
 
-          <div>
             <RangePicker
-                onChange={(dates) => {
-                  setDateRange(dates);
-                }}
+                onChange={setDateRange}
                 value={dateRange}
                 format="YYYY-MM-DD"
                 allowClear
             />
           </div>
 
+          {loading ? (
+              <Spin size="large" style={{ display: "block", margin: "20px auto" }} />
+          ) : (
+              <Table
+                  rowSelection={rowSelection}
+                  columns={columns}
+                  dataSource={filteredData}
+                  rowKey="id"
+                  pagination={{
+                    current: pagination.current,
+                    pageSize: pagination.pageSize,
+                    total: pagination.total,
+                    showSizeChanger: true,
+                    onChange: (page, pageSize) => {
+                      setPagination((prev) => ({
+                        ...prev,
+                        current: page,
+                        pageSize,
+                      }));
+                    },
+                  }}
+                  onChange={handleTableChange}
+              />
+          )}
         </div>
 
-        {loading ? (
-            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
-        ) : (
-          <Table
-            rowSelection={rowSelection}
-            columns={columns}
-            dataSource={filteredData}
-            rowKey="id"
-            pagination={{
-              current: pagination.current,
-              pageSize: pagination.pageSize,
-              total: pagination.total,
-              showSizeChanger: true,
-              onChange: (page, pageSize) => {
-                setPagination((prev) => ({
-                  ...prev,
-                  current: page,
-                  pageSize: pageSize,
-                }));
-              },
-            }}
-            onChange={handleTableChange}
-          />
-
+        {onClose && (
+            <ExamRequest
+                exam={exam}
+                data={selectedRows}
+                onClose={onClose}
+                setClose={setClose}
+                setSelectedRows={setSelectedRows}
+                setSelectedRowKeys={setSelectedRowKeys}
+            />
         )}
       </div>
-      {onClose && (
-        <ExamRequest
-          exam={exam}
-          data={selectedRows}
-          onClose={onClose}
-          setClose={setClose}
-          setSelectedRows={setSelectedRows}
-          setSelectedRowKeys={setSelectedRowKeys}
-          selectedRowKeys={selectedRowKeys}
-        />
-      )}
-    </div>
   );
 };
 

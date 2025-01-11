@@ -55,7 +55,7 @@ const CreateTest = () => {
     } catch (error) {
       console.error("Error fetching exams:", error);
       setAlertType("error");
-      setAlertDescription("Failed to fetch exams.");
+      setAlertDescription(`Failed to fetch exams.`);
       setAlertVisible(true);
     } finally {
       setLoading(false);
