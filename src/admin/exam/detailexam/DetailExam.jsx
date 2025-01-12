@@ -6,9 +6,10 @@ import GlobalAlert from "../../../common/globalAlert/GlobalAlert";
 import {AiOutlineDown} from "react-icons/ai";
 import {MdDelete, MdEdit} from "react-icons/md";
 import {GoPlus} from "react-icons/go";
-
-
+import { Modal, message } from "antd";
 import "./detailexam.scss";
+
+const { confirm } = Modal;
 
 const DetailExam = () => {
     const {id} = useParams();
@@ -28,8 +29,8 @@ const DetailExam = () => {
     const [newQuestions, setNewQuestions] = useState([]);
     const [isEditingLoading, setIsEditingLoading] = useState(false);
     const [isSavingQuestionsLoading, setIsSavingQuestionsLoading] = useState(false);
-
     const [expandedQuestions, setExpandedQuestions] = useState({});
+
 
     useEffect(() => {
         const fetchExamDetails = async () => {
@@ -235,21 +236,34 @@ const DetailExam = () => {
             const token = Cookies.get("token");
 
             await axios.delete(`http://46.202.178.139:5050/api/v1/questions/delete/${questionId}`, {
-                headers: {Authorization: `Bearer ${token}`},
+                headers: { Authorization: `Bearer ${token}` },
             });
 
-            setAlertType("success");
-            setAlertDescription("Question deleted successfully!");
-            setAlertVisible(true);
+            message.success("Question deleted successfully!");
 
             const updatedQuestions = exam.question.filter((q) => q.id !== questionId);
-            setExam({...exam, question: updatedQuestions});
+            setExam({ ...exam, question: updatedQuestions });
         } catch (error) {
-            console.error("Error deleting question:", error);
-            setAlertType("error");
-            setAlertDescription("Failed to delete question.");
-            setAlertVisible(true);
+            message.error("Failed to delete question.");
         }
+    };
+
+    const showDeleteConfirm = (questionId) => {
+        confirm({
+            title: "Are you sure you want to delete this question?",
+            content: "This action cannot be undone.",
+            okText: "Yes",
+            okType: "danger",
+            cancelText: "No",
+            onOk() {
+                // Gọi hàm xóa nếu nhấn "Yes"
+                handleDeleteQuestion(questionId);
+            },
+            onCancel() {
+                // Thông báo hành động bị hủy và popup sẽ tự động đóng
+                message.info("Delete action cancelled.");
+            },
+        });
     };
 
     const toggleQuestionDetails = (questionId) => {
@@ -376,7 +390,7 @@ const DetailExam = () => {
                                 title="Delete Question"
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                    handleDeleteQuestion(q.id);
+                                    showDeleteConfirm(q.id);
                                 }}
                             />
                         </div>

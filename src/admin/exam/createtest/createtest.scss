@@ -15,11 +15,11 @@
   }
 
   .left-section {
-    max-width: 40%; /* Giới hạn chiều rộng phần Create Exam */
+    max-width: 40%;
   }
 
   .right-section {
-    max-width: 60%; /* Giới hạn chiều rộng phần Manage Questions */
+    max-width: 60%;
   }
 
   h2 {
@@ -68,4 +68,23 @@
     color: red;
   }
 }
+//
+//.panel-content {
+//  display: grid;
+//  grid-template-columns: 1fr 1fr;
+//  gap: 10px;
+//  margin-top: 10px;
+//}
+//
+//.panel-content p {
+//  margin: 0;
+//}
+//
+//.correct-answer {
+//  grid-column: span 2;
+//  color: blue;
+//  font-weight: bold;
+//  text-align: left;
+//  margin-top: 10px;
+//}
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Form, Input, Button, Select, message, Typography, Collapse, Divider } from "antd";
+import {Form, Input, Button, Select, message, Typography, Collapse, Divider, Row, Col} from "antd";
 import axios from "axios";
 import Cookies from "js-cookie";
 import ImportFile from "./ImportFile";
@@ -251,26 +251,43 @@ const CreateTest = () => {
             <div style={{ height: "300px", overflowY: "scroll", border: "1px solid #ccc" }}>
               <Collapse>
                 {questions.map((q, index) => (
-                    <Panel header={q.questionExam || `Question ${index + 1}`} key={index}>
-                      <p>Points: {q.point}</p>
-                      <p>Answer1: {q.answers.answer1}</p>
-                      <p>Answer2: {q.answers.answer2}</p>
-                      <p>Answer3: {q.answers.answer3}</p>
-                      <p>Answer4: {q.answers.answer4}</p>
-                      <p>Correct Answer: {q.correctAnswer}</p>
+                    <Panel header={`${index + 1}. ` + q.questionExam} key={index}>
+                      <div>
+                        <Row gutter={16}>
+                          <Col span={12}>
+                            <p>Answer 1: {q.answers.answer1}</p>
+                          </Col>
+                          <Col span={12}>
+                            <p>Answer 2: {q.answers.answer2}</p>
+                          </Col>
+                          <Col span={12}>
+                            <p>Answer 3: {q.answers.answer3}</p>
+                          </Col>
+                          <Col span={12}>
+                            <p>Answer 4: {q.answers.answer4}</p>
+                          </Col>
+                        </Row>
+                        <Row>
+                          <Col span={24}>
+                            <p style={{color: "blue", fontWeight: "bold"}}>
+                              Correct Answer: {q.correctAnswer}
+                            </p>
+                          </Col>
+                        </Row>
+                      </div>
                     </Panel>
                 ))}
               </Collapse>
             </div>
 
             {newQuestion && (
-                <div style={{ marginTop: "20px", border: "1px solid #ccc", padding: "10px" }}>
+                <div style={{marginTop: "20px", border: "1px solid #ccc", padding: "10px"}}>
                   <Form layout="vertical">
                     <Form.Item label="Question Text" required>
                       <Input
                           value={newQuestion.questionExam}
                           onChange={(e) =>
-                              setNewQuestion((prev) => ({ ...prev, questionExam: e.target.value }))
+                              setNewQuestion((prev) => ({...prev, questionExam: e.target.value}))
                           }
                       />
                     </Form.Item>
