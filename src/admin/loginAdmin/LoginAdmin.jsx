@@ -72,6 +72,10 @@ const LoginAdmin = () => {
         const roleData = await checkRole(Cookies.get("token"));
 
         if (roleData.role === "ROLE_ADMIN") {
+          const visited = localStorage.getItem("visited");
+          if (visited) {
+              localStorage.removeItem("visited");
+          }          
           navigate("/admin"); // Chuyển hướng vào trang admin
         } else {
           alert("Access Denied: You are not an admin!");
