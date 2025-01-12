@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {Table, Button, Space, Spin, message, Form, Modal, Input} from "antd";
 import { apiService } from "../service/api";
-import {MdDelete} from "react-icons/md";
+import {MdDelete, MdEdit} from "react-icons/md";
 import {GrView} from "react-icons/gr";
 
 const ListPositions = () => {
@@ -82,16 +82,12 @@ const ListPositions = () => {
             render: (_, record) => (
                 <Space>
                     <Button
-                        type="primary"
+                        type="link"
                         onClick={() => openUpdateModal(record)}
-                        icon={<GrView />}
-                    >
-                        Update
-                    </Button>
-                    <Button type="primary" danger onClick={() => deletePosition(record.id)}
-                            icon={<MdDelete />}>
-                        Delete
-                    </Button>
+                        icon={<MdEdit />}
+                    />
+                    <Button type="link" danger onClick={() => deletePosition(record.id)}
+                            icon={<MdDelete />}/>
                 </Space>
             ),
         }
@@ -111,7 +107,6 @@ const ListPositions = () => {
             <h2>List of Positions</h2>
             <Table columns={columns} dataSource={positions} rowKey="id" />
 
-            {/* Update Modal */}
             <Modal
                 title="Update Position"
                 visible={isUpdateModalVisible}

@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Space, Table, Tag, Modal, Input, Button } from "antd";
+import {Space, Table, Modal, Input, Button, message} from "antd";
 import axios from "axios";
 import Cookies from "js-cookie";
-import { GrView } from "react-icons/gr";
 import { MdDelete, MdEdit } from "react-icons/md";
 import { GoPlus } from "react-icons/go";
-
 import dayjs from "dayjs";
 import GlobalAlert from "../../common/globalAlert/GlobalAlert";
 import "./userexam.scss";
@@ -20,19 +18,19 @@ const UserExam = () => {
     current: 1,
     pageSize: 10,
   });
-  const [isAddModalVisible, setIsAddModalVisible] = useState(false); // Hiển thị popup thêm admin
+  const [isAddModalVisible, setIsAddModalVisible] = useState(false);
   const [newAdminValues, setNewAdminValues] = useState({
     userName: "",
     email: "",
     password: "",
-  }); // Lưu giá trị form thêm admin
+  });
 
-  const [isEditModalVisible, setIsEditModalVisible] = useState(false); // Hiển thị popup
-  const [selectedUser, setSelectedUser] = useState(null); // Lưu thông tin user đang chỉnh sửa
+  const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
   const [formValues, setFormValues] = useState({
     userName: "",
     password: "",
-  }); // Lưu giá trị form
+  });
 
   const token = Cookies.get("token");
 
@@ -41,7 +39,7 @@ const UserExam = () => {
       title: "STT",
       dataIndex: "index",
       key: "index",
-      render: (_, __, index) => index + 1, // index bắt đầu từ 0, nên cộng 1
+      render: (_, __, index) => index + 1,
     },
     {
       title: "Name",
@@ -67,37 +65,20 @@ const UserExam = () => {
       render: (date) => dayjs(date).format("YYYY-MM-DD"),
     },
     {
-      title: "Action",
-      key: "action",
+      title: "Actions",
+      key: "actions",
       render: (_, record) => (
-          <Space size="middle">
-            <button
-                style={{
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                  color: "#1890ff",
-                }}
-                title="Edit"
+          <Space>
+            <Button
+                type="link"
                 onClick={() => handleEdit(record)}
-            >
-              <MdEdit size={20}/>
-            </button>
-            <button
-                style={{
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                  color: "red",
-                }}
-                title="Delete"
-                onClick={() => handleDelete(record.key)}
-            >
-              <MdDelete size={20}/>
-            </button>
+                icon={<MdEdit />}
+            />
+            <Button type="link" danger onClick={() => handleDelete(record.key)}
+                    icon={<MdDelete />}/>
           </Space>
       ),
-    },
+    }
   ];
 
   useEffect(() => {
@@ -116,7 +97,7 @@ const UserExam = () => {
         );
 
         const transformedData = response.data.data.map((item) => ({
-          key: item.userId, // Khóa duy nhất cho từng hàng
+          key: item.userId,
           user: {
             userName: item.userName,
             email: item.email,
@@ -148,7 +129,7 @@ const UserExam = () => {
       cancelText: "No",
       onOk: async () => {
         try {
-          await axios.delete(
+          const response = await axios.delete(
               `http://46.202.178.139:5050/api/v1/users/delete/${id}`,
               {
                 headers: {
@@ -157,39 +138,35 @@ const UserExam = () => {
                 },
               }
           );
-          setAlertType("success");
-          setAlertDescription("Admin deleted successfully!");
-          setAlertVisible(true);
-          setData((prevData) => prevData.filter((item) => item.key !== id));
+
+          if (response.status === 200 || response.status === 204) {
+            message.success("Admin deleted successfully!");
+            setData((prevData) => prevData.filter((item) => item.key !== id));
+          } else {
+            message.error("Failed to delete admin. Please try again.");
+          }
         } catch (error) {
-          setAlertType("error");
-          setAlertDescription("Failed to delete admin.");
-          setAlertVisible(true);
-          console.error(
-              "Error deleting admin:",
-              error.response ? error.response.data : error.message
-          );
+          console.error("Error deleting admin:", error);
+          message.error("Failed to delete admin.");
         }
       },
     });
   };
 
-
   const handleTableChange = (pagination) => {
     setPagination({
       ...pagination,
-      current: pagination.current || 1, // Đảm bảo current là số
-      pageSize: pagination.pageSize || 10, // Đảm bảo pageSize là số
+      current: pagination.current || 1,
+      pageSize: pagination.pageSize || 10,
     });
   };
 
   const handleEdit = (record) => {
-    // Mở popup và đặt giá trị form
 
     setSelectedUser(record);
     setFormValues({
       userName: record?.user?.userName || "",
-      password: "", // Password không được lưu trước
+      password: "",
     });
     setIsEditModalVisible(true);
   };
@@ -200,7 +177,6 @@ const UserExam = () => {
   
   const handleAddAdmin = async () => {
     try {
-      // Gọi API để thêm admin
       await axios.post(
         `http://46.202.178.139:5050/api/v1/users/register-admin`,
         newAdminValues,
@@ -211,13 +187,10 @@ const UserExam = () => {
           },
         }
       );
+
+      message.success("Admin added successfully!")
   
-      // Hiển thị thông báo thành công
-      setAlertType("success");
-      setAlertDescription("Admin added successfully!");
-      setAlertVisible(true);
-  
-      // Đóng modal và reset form
+
       setIsAddModalVisible(false);
       setNewAdminValues({
         userName: "",
@@ -225,14 +198,9 @@ const UserExam = () => {
         password: "",
       });
   
-      // Reload danh sách admin
-      setPagination({ ...pagination }); // Tự động fetch lại dữ liệu
+      setPagination({ ...pagination });
     } catch (error) {
-      // Hiển thị thông báo lỗi
-      setAlertType("error");
-      setAlertDescription("Failed to add admin.");
-      setAlertVisible(true);
-      console.error("Error adding admin:", error.response ? error.response.data : error.message);
+      message.error("Failed to add admin.")
     }
   };
   
@@ -243,15 +211,12 @@ const UserExam = () => {
 
   const handleSave = async () => {
     try {
-      // Sử dụng email từ selectedUser nếu không thay đổi
       const payload = {
         userName: formValues.userName || selectedUser.user.userName,
-        password: formValues.password,       // Mật khẩu hiện tại
-        newPassword: formValues.newPassword, // Mật khẩu mới        // Mật khẩu mới
+        password: formValues.password,
+        newPassword: formValues.newPassword,
         email: selectedUser.user.email, 
       };
-  
-      console.log("Payload gửi đi:", payload); // Log payload để kiểm tra
   
       await axios.put(
         `http://46.202.178.139:5050/api/v1/users/update/${selectedUser.key}`,
@@ -264,22 +229,13 @@ const UserExam = () => {
         }
       );
   
-      setAlertType("success");
-      setAlertDescription("User updated successfully!");
-      setAlertVisible(true);
+      message.success("User updated successfully!")
   
-      // Reload dữ liệu
       setPagination({ ...pagination });
     } catch (error) {
-      setAlertType("error");
-      setAlertDescription("Failed to update user.");
-      setAlertVisible(true);
-      console.error(
-        "Error updating user:",
-        error.response ? error.response.data : error.message
-      );
+      message.error("Failed to update user.")
     } finally {
-      setIsEditModalVisible(false); // Đóng modal
+      setIsEditModalVisible(false);
     }
   };
     
@@ -294,9 +250,16 @@ const UserExam = () => {
 
       <h1>Admin List</h1>
       <div className="admin-header">
-          <button className="button-add-admin" onClick={() => setIsAddModalVisible(true)}>
+          <Button type="primary"
+                  onClick={() => setIsAddModalVisible(true)}
+                  className="add-admin-button"
+                  style={{
+                    backgroundColor: "#4e78f5",
+                    borderColor: "#4CAF50",
+                    float: "right",
+                  marginBottom: "20px"}}>
             <GoPlus /> Add Admin
-          </button>
+          </Button>
       </div>
 
       <div className="admin-container">
@@ -312,12 +275,11 @@ const UserExam = () => {
             showSizeChanger: true,
           }}
           scroll={{
-            y: 530, // Chiều cao cố định của nội dung bảng
+            y: 530,
           }}
           onChange={handleTableChange}
         />
       </div>
-      //popup add
       <Modal
   title="Add Admin"
   visible={isAddModalVisible}
@@ -352,7 +314,6 @@ const UserExam = () => {
     />
   </div>
 </Modal>
-      {/* Popup chỉnh sửa */}
       <Modal
   title="Edit Admin"
   visible={isEditModalVisible}
