@@ -86,22 +86,22 @@ h1 {
     }
 
     .candidate-info {
+      width: 100%;
       margin-left: 20px;
-
+      display: flex;
       h2 {
         margin: 0;
+      }
+      .info{
+        width: 35%;
       }
 
       p {
         margin: 5px 0;
       }
-
-      .action-buttons {
-        margin-top: 10px;
-
-        button {
-          margin-right: 10px;
-        }
+      .btn-select{
+        display: flex;
+        gap: 10px;
       }
     }
   }
