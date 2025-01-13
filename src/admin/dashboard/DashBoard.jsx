@@ -11,23 +11,29 @@ const DashboardContent = () => {
   const [dataTest, setDataTest] = useState([]);
 
   useEffect(() => {
+    const fetchData = async () => {
+      const result = await getCandidate();
+      const resultCandidateTest = await getCandidateTest();
+      setData(result.data.data);
+      setDataTest(resultCandidateTest.data.data);
+    };
+
     const isFirstVisit = !localStorage.getItem("visited");
+
     if (isFirstVisit) {
       localStorage.setItem("visited", "true");
-      window.location.reload();
+      fetchData();
+      setTimeout(() => {
+        fetchData();
+      }, 1000);
     } else {
-      const fetchData = async () => {
-        const result = await getCandidate();
-        const resultCandidateTest = await getCandidateTest();
-        setData(result.data.data);
-        setDataTest(resultCandidateTest.data.data);
-      };
       fetchData();
     }
   }, []);
 
 
-                     
+
+
   return (
     <div className="container-dashbord">
       {/* <Row justify="space-between" align="middle"
