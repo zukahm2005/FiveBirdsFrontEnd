@@ -2,10 +2,12 @@ import { Progress } from "antd";
 import React, { useEffect, useState } from "react";
 import "./Timer.css";
 
-const Timer = ({ durationMinutes, onTimeout, onTimeUpdate,  sectionTitle, totalQuestions, completedQuestions }) => {
+const Timer = ({ durationMinutes, onTimeout, onTimeUpdate,  sectionTitle, totalQuestions, isSubmitted, completedQuestions }) => {
   const [timeLeft, setTimeLeft] = useState(durationMinutes * 60);
 
   useEffect(() => {
+    if (isSubmitted) return;
+
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
         if (prev <= 1) {

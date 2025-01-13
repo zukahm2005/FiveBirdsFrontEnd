@@ -24,6 +24,7 @@ const ExamPage = () => {
   const [resultData, setResultData] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const totalQuestions = questions.length;
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const [remainingTime, setRemainingTime] = useState(duration * 60);
 
   const sections = [
@@ -107,6 +108,7 @@ const ExamPage = () => {
   };
 
   const handleFinishExam = async () => {
+    setIsSubmitted(true);
     setLoading(true);
     try {
       const answerData = Object.entries(selectedAnswers).map(([index, value]) => ({
@@ -215,6 +217,7 @@ const ExamPage = () => {
               });
             }}
             onTimeUpdate={handleTimeUpdate}
+            isSubmitted={isSubmitted}
             sectionTitle={getCurrentSection()?.name}
             totalQuestions={totalQuestions}
             completedQuestions={completedQuestions}
