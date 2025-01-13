@@ -17,10 +17,10 @@ const QuestionCard = ({
     }
 
     const answers = [
-        question.answers[0]?.answer1,
-        question.answers[0]?.answer2,
-        question.answers[0]?.answer3,
-        question.answers[0]?.answer4,
+        { id: question.answers[0]?.id, text: question.answers[0]?.answer1, index: 1 },
+        { id: question.answers[0]?.id, text: question.answers[0]?.answer2, index: 2 },
+        { id: question.answers[0]?.id, text: question.answers[0]?.answer3, index: 3 },
+        { id: question.answers[0]?.id, text: question.answers[0]?.answer4, index: 4 },
     ];
 
     return (
@@ -59,16 +59,18 @@ const QuestionCard = ({
                     </div>
                     <Radio.Group
                         className="custom-radio-group"
-                        onChange={(e) => onAnswerSelect(e.target.value)}
-                        value={selectedAnswer}
+                        onChange={(e) => {
+                            const selectedAnswer = answers.find((answer) => answer.index === e.target.value);
+                            onAnswerSelect(selectedAnswer.id, selectedAnswer.index);
+                        }}
+                        value={selectedAnswer?.examAnswer}
                     >
-                        {answers.map((answer, index) => (
-                            <Radio key={index} value={index + 1} className="custom-radio">
-                                <p> {answer}</p>
+                        {answers.map((answer) => (
+                            <Radio key={answer.index} value={answer.index} className="custom-radio">
+                                <p>{answer.text}</p>
                             </Radio>
                         ))}
                     </Radio.Group>
-
                 </div>
             </div>
 

@@ -80,13 +80,18 @@ const ExamPage = () => {
     }
   };
 
-  const handleAnswerSelect = (answerValue) => {
+  const handleAnswerSelect = (answerId, index) => {
     if (!selectedAnswers[currentQuestionIndex]) {
       setCompletedQuestions((prev) => prev + 1);
     }
 
-    setSelectedAnswers({ ...selectedAnswers, [currentQuestionIndex]: answerValue });
+    setSelectedAnswers({
+      ...selectedAnswers,
+      [currentQuestionIndex]: { answerId, examAnswer: index },
+    });
   };
+
+
 
   const handleNext = () => {
     if (currentQuestionIndex < totalQuestions - 1) {
@@ -103,12 +108,12 @@ const ExamPage = () => {
   const handleFinishExam = async () => {
     setLoading(true);
     try {
-      const answerData = Object.entries(selectedAnswers).map(([index, answerValue]) => ({
+      const answerData = Object.entries(selectedAnswers).map(([index, value]) => ({
         userId: Number(userId),
         examId: Number(examId),
         questionId: Number(questions[index]?.id),
-        answerId: Number(answerValue),
-        examAnswer: Number(answerValue),
+        answerId: Number(value.answerId),
+        examAnswer: Number(value.examAnswer),
       }));
 
       const submitResponse = await apiService.submitAnswer(answerData);
@@ -223,7 +228,7 @@ const ExamPage = () => {
                 key={globalQuestionIndex}
                 type={currentQuestionIndex === globalQuestionIndex ? "primary" : "default"}
                 onClick={() => setCurrentQuestionIndex(globalQuestionIndex)}
-                className={selectedAnswers[globalQuestionIndex] ? "selected-dot" : ""}
+                className={selectedAnswers[globalQuestionIndex]?.examAnswer ? "selected-dot" : ""}
               >
                 {globalQuestionIndex + 1}
               </Button>

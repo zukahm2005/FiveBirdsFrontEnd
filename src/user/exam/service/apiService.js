@@ -60,16 +60,6 @@ export const apiService = {
             throw error;
         }
     },
-    updateAnswer: async (id, updatedAnswerData) => {
-        try {
-            const response = await api.put(`/results/update/${id}`, updatedAnswerData);
-            return response.data;
-        } catch (error) {
-            console.error("Error updating answer:", error);
-            throw error;
-        }
-    },
-
     addTest: async (testData) => {
         try {
             const response = await api.post("/candidate/test/add", testData);
