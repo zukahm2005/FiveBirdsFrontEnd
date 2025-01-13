@@ -2,7 +2,7 @@ import { Progress } from "antd";
 import React, { useEffect, useState } from "react";
 import "./Timer.css";
 
-const Timer = ({ durationMinutes, onTimeout, sectionTitle, totalQuestions, completedQuestions }) => {
+const Timer = ({ durationMinutes, onTimeout, onTimeUpdate,  sectionTitle, totalQuestions, completedQuestions }) => {
   const [timeLeft, setTimeLeft] = useState(durationMinutes * 60);
 
   useEffect(() => {
@@ -13,12 +13,14 @@ const Timer = ({ durationMinutes, onTimeout, sectionTitle, totalQuestions, compl
           onTimeout();
           return 0;
         }
-        return prev - 1;
+        const updatedTime = prev - 1;
+        onTimeUpdate(updatedTime);
+        return updatedTime;
       });
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [onTimeout]);
+  }, [onTimeout, onTimeUpdate]);
 
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);

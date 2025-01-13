@@ -24,6 +24,7 @@ const ExamPage = () => {
   const [resultData, setResultData] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const totalQuestions = questions.length;
+  const [remainingTime, setRemainingTime] = useState(duration * 60);
 
   const sections = [
     { name: "General knowledge", count: 6 },
@@ -182,12 +183,22 @@ const ExamPage = () => {
 
   const currentQuestion = questions[currentQuestionIndex];
 
-  const data = [
-    { name: "Yes", value: 66 },
-    { name: "No", value: 34 },
-  ];
+  // const data = [
+  //     { name: "Yes", value: resultData.point },
+  //   { name: "No", value: 100 - resultData.point },
+  // ];
 
   const COLORS = ["rgb(24, 159, 204)", "rgb(199, 30, 30)"];
+
+  const handleTimeUpdate = (timeLeft) => {
+    setRemainingTime(timeLeft);
+  };
+
+  const formatCompletedTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${minutes}m ${secs}s`;
+  };
 
   return (
     <Spin spinning={loading} tip="Processing your exam, please wait...">
@@ -203,6 +214,7 @@ const ExamPage = () => {
                 onOk: handleFinishExam,
               });
             }}
+            onTimeUpdate={handleTimeUpdate}
             sectionTitle={getCurrentSection()?.name}
             totalQuestions={totalQuestions}
             completedQuestions={completedQuestions}
@@ -286,7 +298,10 @@ const ExamPage = () => {
               <div style={{ width: "100%", height: "100%" }} >
                 <PieChart width={1000} height={400}>
                   <Pie
-                    data={data}
+                      data={[
+                        { name: "Yes", value: resultData.point },
+                        { name: "No", value: 100 - resultData.point },
+                      ]}
                     dataKey="value"
                     cx="45%"
                     cy="75%"
@@ -299,12 +314,8 @@ const ExamPage = () => {
                       `${name} ${Math.round(percent * 100)}%`
                     }
                   >
-                    {data.map((entry, index) => (
-                      <Cell
-                        key={`cell-${index}`}
-                        fill={COLORS[index % COLORS.length]}
-                      />
-                    ))}
+                    <Cell fill="rgb(24, 159, 204)" />
+                    <Cell fill="rgb(199, 30, 30)" />
                   </Pie>
 
                   <Pie
@@ -318,7 +329,7 @@ const ExamPage = () => {
                 </PieChart>
               </div>
               <div className="rate-container-time">
-                <p>Times: 20ph30s</p>
+                <p>Times: {formatCompletedTime(duration * 60 - remainingTime)}</p>
               </div>
             </div>
           )}
