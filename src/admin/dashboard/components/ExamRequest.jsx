@@ -175,8 +175,8 @@ const ExamRequest = ({ exam, data, onClose, setClose, setSelectedRows, setSelect
                     <Button onClick={handleOnclose} style={{ marginRight: 8 }}>
                         Cancel
                     </Button>
-                    <Button type="primary" onClick={() => { setLoading(true); handleUpdate(); }} loading={loading} >
-                        Send
+                    <Button type="primary" style={{width: "25%"}} onClick={() => { setLoading(true); handleUpdate(); }} loading={loading} disabled={!examTitle || !comment || !selectedTime || !selectedDate || !data }>
+                        Send Email
                     </Button>
                 </div>
             </div>
