@@ -10,7 +10,7 @@ import {
     UserOutlined,
     LogoutOutlined,
 } from "@ant-design/icons";
-import img from "../../common/img/image.png"; // Đường dẫn logo
+import img from "../../common/img/image.png";
 import "./baselayout.scss";
 
 const { Header, Sider, Content } = Layout;
@@ -19,7 +19,7 @@ const BaseLayout = () => {
     const [collapsed, setCollapsed] = useState(false);
     const [isLogoutModalVisible, setIsLogoutModalVisible] = useState(false); // Trạng thái Modal
     const navigate = useNavigate();
-    const location = useLocation(); // Lấy đường dẫn hiện tại
+    const location = useLocation();
 
     const {
         token: { colorBgContainer },
@@ -41,7 +41,6 @@ const BaseLayout = () => {
 
     return (
         <Layout style={{ height: "100vh" }}>
-            {/* Sidebar */}
             <Sider
                 trigger={null}
                 collapsible
@@ -114,12 +113,12 @@ const BaseLayout = () => {
                         {
                             key: "/admin/administration",
                             icon: <UserOutlined />,
-                            label: <a href="/admin/administration">Administration</a>,
+                            label: <a href="/admin/administration">Management Admin</a>,
                         },
                         {
                             key: "/admin/position",
                             icon: <UserOutlined />,
-                            label: <a href="/admin/position">Position Management</a>,
+                            label: <a href="/admin/position">Management Position</a>,
                         },
                         {
                             key: "/admin/manager-candidate",
@@ -130,7 +129,7 @@ const BaseLayout = () => {
                             key: "logout",
                             icon: <LogoutOutlined />,
                             label: "Logout",
-                            onClick: showLogoutModal, // Hiển thị Modal khi ấn Logout
+                            onClick: showLogoutModal,
                         },
                     ]}
                 />
