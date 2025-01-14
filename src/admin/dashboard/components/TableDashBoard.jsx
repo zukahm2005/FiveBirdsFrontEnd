@@ -14,83 +14,6 @@ const { RangePicker } = DatePicker;
 const { Search } = Input;
 const { Text } = Typography;
 
-
-const columns = [
-  {
-    title: "ID",
-    dataIndex: "id",
-    key: "id",
-  },
-  {
-    title: "Full Name",
-    dataIndex: "fullName",
-    key: "fullName",
-  },
-  {
-    title: "Email",
-    dataIndex: "email",
-    key: "email",
-    render: (text) => (
-        <div
-            style={{
-              maxWidth: "150px",
-              whiteSpace: "normal",
-              overflow: "visible",
-              wordWrap: "break-word",
-            }}
-        >
-          {text}
-        </div>
-    ),
-  },
-  {
-    title: "Education",
-    dataIndex: "education",
-    key: "education",
-  },
-  {
-    title: "Experience",
-    dataIndex: "experience",
-    key: "experience",
-  },
-  {
-    title: "Position",
-    dataIndex: "candidatePosition",
-    key: "candidatePosition",
-    render: (candidatePosition) => candidatePosition?.name || "N/A",
-  },
-  {
-    title: "Send exam",
-    dataIndex: "statusEmail",
-    key: "statusEmail",
-    render: (status) => {
-      const colors = {
-        PENDING: "orange",
-        SUCCESS: "green",
-        DEFAULT: "gray",
-      };
-      const color = colors[status] || colors.DEFAULT;
-      return (
-          <span
-              style={{
-                color,
-                padding: "2px 5px",
-                borderRadius: "4px",
-              }}
-          >
-          {status}
-        </span>
-      );
-    },
-  },
-  {
-    title: "Created At",
-    dataIndex: "createdAt",
-    key: "createdAt",
-    render: (text) => moment(text).format("YYYY-MM-DD HH:mm:ss"),
-  },
-];
-
 const TableDashBoard = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
@@ -113,6 +36,71 @@ const TableDashBoard = () => {
   const [alertType, setAlertType] = useState("");
   const [alertDescription, setAlertDescription] = useState("");
 
+
+  const columns = [
+    {
+      title: "ID",
+      dataIndex: "id",
+      key: "id",
+    },
+    {
+      title: "Full Name",
+      dataIndex: "fullName",
+      key: "fullName",
+    },
+    ...(onClose ? [] : [
+    {
+      title: "Email",
+      dataIndex: "email",
+      key: "email"
+    }]),
+    {
+      title: "Education",
+      dataIndex: "education",
+      key: "education",
+    },
+    {
+      title: "Experience",
+      dataIndex: "experience",
+      key: "experience",
+    },
+    {
+      title: "Position",
+      dataIndex: "candidatePosition",
+      key: "candidatePosition",
+      render: (candidatePosition) => candidatePosition?.name || "N/A",
+    },
+    {
+      title: "Send exam",
+      dataIndex: "statusEmail",
+      key: "statusEmail",
+      render: (status) => {
+        const colors = {
+          PENDING: "orange",
+          SUCCESS: "green",
+          DEFAULT: "gray",
+        };
+        const color = colors[status] || colors.DEFAULT;
+        return (
+            <span
+                style={{
+                  color,
+                  padding: "2px 5px",
+                  borderRadius: "4px",
+                }}
+            >
+          {status}
+        </span>
+        );
+      },
+    },
+    {
+      title: "Created At",
+      dataIndex: "createdAt",
+      key: "createdAt",
+      render: (text) => moment(text).format("YYYY-MM-DD HH:mm:ss"),
+    },
+  ];
 
   const fetchData = async () => {
     try {
@@ -237,7 +225,7 @@ const TableDashBoard = () => {
   };
 
   return (
-      <div style={{ width: "100%", display: "flex", gap: "25px" }}>
+      <div style={{ width: "100%", display: "flex", gap: "15px" }}>
         <GlobalAlert
             setVisible={setAlertVisible}
             visible={alertVisible}
@@ -246,7 +234,7 @@ const TableDashBoard = () => {
         />
         <div
             style={{
-              width: onClose ? "70%" : "100%",
+              width: onClose ? "55%" : "100%",
               padding: "30px",
               border: "1px solid #f0f0f0",
               margin: "45px 0",

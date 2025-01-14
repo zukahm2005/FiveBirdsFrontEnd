@@ -9,6 +9,8 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 import './ListManagerCandidate.scss';
 import GlobalAlert from '../../common/globalAlert/GlobalAlert';
 import Search from "antd/es/input/Search.js";
+import { useLocation  } from 'react-router-dom';
+
 
 export default function ListManagerCandidate() {
   const [candidates, setCandidates] = useState([]);
@@ -24,8 +26,34 @@ export default function ListManagerCandidate() {
   const [alertDescription, setAlertDescription] = useState(null);
   const [visible, setVisible] = useState(false)
   const [filteredCandidates, setFilteredCandidates] = useState([]);
-  const [filterStatus, setFilterStatus] = useState("");
+  const [statusFilter, setStatusFilter] = useState(null);
+  const [emailFilter, setEmailFilter] = useState(null);
   dayjs.extend(customParseFormat);
+
+
+  const location = useLocation();
+  console.log('Location:', location);
+
+  const queryParams = new URLSearchParams(location.search);
+  const filter = location.state?.filter || queryParams.get('filter');
+
+  console.log('Filter:', filter);
+
+
+  useEffect(() => {
+    if (filter === 'Pass') {
+      handleFilterChange("Pass", "status");
+    } else if (filter === 'Failed') {
+      handleFilterChange("Failed", "status");
+    } else if (filter === 'In progress') {
+      handleFilterChange("In progress", "status");
+    }else if (filter === 'True') {
+      handleFilterChange("True", "email");
+    } else {
+      setFilteredCandidates(candidates); // Hiển thị tất cả nếu không có filter cụ thể
+    }
+  }, [filter, candidates]); // Thêm `candidates` vào dependency để cập nhật nếu dữ liệu thay đổi
+
 
 
   useEffect(() => {
@@ -58,7 +86,6 @@ export default function ListManagerCandidate() {
       })
       .then((response) => {
         setSelectedCandidate(response.data.data);
-        console.log(response.data.data)
         setIsModalVisible(true);
       })
       .catch((error) => {
@@ -68,23 +95,39 @@ export default function ListManagerCandidate() {
         setLoading(false);
       });
   };
-  const handleFilterChange = (value) => {
-    setFilterStatus(value);
+  const handleFilterChange = (value, type) => {
+    let updatedStatusFilter = statusFilter;
+    let updatedEmailFilter = emailFilter;
 
-    if (value === "") {
-      setFilteredCandidates(candidates);
-    } else {
-      const filtered = candidates.filter((candidate) => {
-        if (value === "Failed") return candidate.isPast === false;
-        if (value === "Pass") return candidate.isPast === true;
-        if (value === "In progress") return candidate.isPast === null;
-        if (value == "True") return  candidate.isInterview == true;
-        if (value == "False") return  candidate.isInterview == false;
-        return true;
-      });
-      setFilteredCandidates(filtered);
+    if (type === 'status') {
+      setStatusFilter(value);
+      updatedStatusFilter = value;
+    } else if (type === 'email') {
+      setEmailFilter(value);
+      updatedEmailFilter = value;
     }
+
+    const filtered = candidates.filter((candidate) => {
+      const matchesStatus =
+          !updatedStatusFilter ||
+          (updatedStatusFilter === 'Failed' && candidate.isPast === false) ||
+          (updatedStatusFilter === 'Pass' && candidate.isPast === true) ||
+          (updatedStatusFilter === 'In progress' && candidate.isPast === null);
+
+      const matchesEmail =
+          !updatedEmailFilter ||
+          (updatedEmailFilter === 'True' && candidate.isInterview === true) ||
+          (updatedEmailFilter === 'False' && candidate.isInterview === false);
+
+      return matchesStatus && matchesEmail;
+    });
+    setFilteredCandidates(filtered);
+
   };
+
+
+
+
   const onSearch = (value) => {
     const lowerValue = value.toLowerCase();
     const filtered = candidates.filter(
@@ -233,64 +276,29 @@ export default function ListManagerCandidate() {
           <Select
               placeholder="Filter by status"
               style={{ width: 200 }}
-              value={filterStatus || undefined}
-              onChange={handleFilterChange}
-              optionLabelProp="label"
+              value={statusFilter || undefined}
+              onChange={(value) => handleFilterChange(value, 'status')}
               options={[
-                {
-                  value: "",
-                  label: (
-                      <span style={{ color: "black" }}> All Status </span>
-                  ),
-                },
-                {
-                  value: "Failed",
-                  label: (
-                      <span style={{ color: "red" }}> Failed </span>
-                  ),
-                },
-                {
-                  value: "Pass",
-                  label: (
-                      <span style={{ color: "green" }}> Pass </span>
-                  ),
-                },
-                {
-                  value: "In progress",
-                  label: (
-                      <span style={{ color: "orange" }}>In progress </span>
-                  ),
-                },
+                { value: '', label: <span style={{ color: 'black' }}> All Status </span> },
+                { value: 'Failed', label: <span style={{ color: 'red' }}> Failed </span> },
+                { value: 'Pass', label: <span style={{ color: 'green' }}> Pass </span> },
+                { value: 'In progress', label: <span style={{ color: 'orange' }}> In progress </span> },
               ]}
           />
 
           <Select
               placeholder="Filter by status email"
               style={{ width: 200 }}
-              value={filterStatus || undefined}
-              onChange={handleFilterChange}
-              optionLabelProp="label"
+              value={emailFilter || undefined}
+              onChange={(value) => handleFilterChange(value, 'email')}
               options={[
-                {
-                  value: "",
-                  label: (
-                      <span style={{ color: "black" }}> All Status </span>
-                  ),
-                },
-                {
-                  value: "False",
-                  label: (
-                      <span style={{ color: "red" }}> Unsent email </span>
-                  ),
-                },
-                {
-                  value: "True",
-                  label: (
-                      <span style={{ color: "green" }}> Email sent </span>
-                  ),
-                },
+                { value: '', label: <span style={{ color: 'black' }}> All Emails </span> },
+                { value: 'True', label: <span style={{ color: 'green' }}> Sent </span> },
+                { value: 'False', label: <span style={{ color: 'red' }}> Not Sent </span> },
               ]}
           />
+
+
         </div>
 
 

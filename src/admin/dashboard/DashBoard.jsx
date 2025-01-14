@@ -4,13 +4,17 @@ import { MoreOutlined, ArrowUpOutlined, PrinterOutlined, ExportOutlined, Downloa
 import TableDashBoard from "./components/TableDashBoard";
 import {getCandidate, getCandidateTest} from "./../../common/api/apiDashBoard";
 import "./dashboard.scss";
+import {Link, useNavigate} from "react-router-dom";
+
 
 const DashboardContent = () => {
   const { Text, Title } = Typography;
   const [data, setData] = useState([]);
   const [dataTest, setDataTest] = useState([]);
+  const navigate = useNavigate();
 
-  useEffect(() => {
+
+    useEffect(() => {
     const fetchData = async () => {
       try {
         const [result, resultCandidateTest] = await Promise.all([
@@ -40,8 +44,15 @@ const DashboardContent = () => {
   }, []);
 
 
-
-
+    const handleNavigate = () => {
+        navigate('/admin/manager-candidate', { state: { filter: 'Pass' } });
+    };
+    const handleNavigate2 = () => {
+        navigate('/admin/manager-candidate', { state: { filter: 'Failed' } });
+    };
+    const handleNavigate3 = () => {
+        navigate('/admin/manager-candidate', { state: { filter: 'True' } });
+    };
 
   return (
     <div className="container-dashbord">
@@ -70,69 +81,80 @@ const DashboardContent = () => {
       </Row> */}
       <Row style={{ boxShadow: "0 4px 12px rgba(0,0,0,0.1)", borderRadius: "15px" }}>
         <Col xs={24} sm={6}>
-          <Card className="cardStyle" bodyStyle={{ padding: 0 }}>
-            <Space style={{ display: "flex", justifyContent: "space-between" }}>
-              <Text style={{ fontSize: "16px" }} strong>Total Candidates</Text>
-              <MoreOutlined style={{ fontSize: "23px" }} />
-            </Space>
-            <Space style={{ display: "flex", justifyContent: "space-between" }}>
-              <Title level={2} style={{ margin: "16px 0" }}>
-                {data.length}
-              </Title>
-              <Text style={{ color: "green" }}>
-                <ArrowUpOutlined /> 20%
-              </Text>
-            </Space>
-          </Card>
+          <Link to="/admin/manager-candidate">
+              <Card className="cardStyle" bodyStyle={{ padding: 0 }}>
+                  <Space style={{ display: "flex", justifyContent: "space-between" }}>
+                      <Text style={{ fontSize: "20px" }} strong>Total Candidates</Text>
+                      <MoreOutlined style={{ fontSize: "23px" }} />
+                  </Space>
+                  <Space style={{ display: "flex", justifyContent: "space-between" }}>
+                      <Title level={2} style={{ margin: "16px 0" }}>
+                          {data.length}
+                      </Title>
+                      <Text style={{ color: "green" }}>
+                          <ArrowUpOutlined /> 20%
+                      </Text>
+                  </Space>
+              </Card>
+          </Link>
         </Col>
 
         <Col xs={24} sm={6}>
-          <Card className="cardStyle2" bodyStyle={{ padding: 0 }}>
-            <Space style={{ display: "flex", justifyContent: "space-between" }}>
-              <Text style={{ fontSize: "16px" }} strong>Email Sent</Text>
-              <MoreOutlined style={{ fontSize: "23px" }} />
-            </Space>
-            <Space style={{ display: "flex", justifyContent: "space-between" }}>
-              <Title level={2} style={{ margin: "16px 0" }}>
-              {data.filter(item => item.statusEmail === 'SUCCESS').length}
-              </Title>
-              <Text style={{ color: "red" }}>
-                <ArrowUpOutlined /> 40%
-              </Text>
-            </Space>
-          </Card>
-        </Col>
-
-        <Col xs={24} sm={6} style={{ borderLeft: "1px solid  #f0f0f0" }}>
-          <Card className="cardStyle2" bodyStyle={{ padding: 0 }}>
-            <Space style={{ display: "flex", justifyContent: "space-between" }}>
-              <Text style={{ fontSize: "16px" }} strong>Pending Candidates</Text>
-              <MoreOutlined style={{ fontSize: "23px" }} />
-            </Space>
-            <Space style={{ display: "flex", justifyContent: "space-between" }}>
-              <Title level={2} style={{ margin: "16px 0" }}>
-              {data.filter(item => item.statusEmail === 'PENDING').length}
-              </Title>
-              <Text style={{ color: "orange" }}>
-                <ArrowUpOutlined /> 10%
-              </Text>
-            </Space>
-          </Card>
+                <a onClick={handleNavigate3}>
+                    <Card className="cardStyle2" bodyStyle={{ padding: 0 }}>
+                        <Space style={{ display: "flex", justifyContent: "space-between" }}>
+                            <Text style={{ fontSize: "20px" }} strong>Sent Interview Email</Text>
+                            <MoreOutlined style={{ fontSize: "23px" }} />
+                        </Space>
+                        <Space style={{ display: "flex", justifyContent: "space-between" }}>
+                            <Title level={2} style={{ margin: "16px 0" }}>
+                                {data.filter(item => item.isInterview === true).length}
+                            </Title>
+                            <Text style={{ color: "red" }}>
+                                <ArrowUpOutlined /> 40%
+                            </Text>
+                        </Space>
+                    </Card>
+                </a>
         </Col>
 
         <Col xs={24} sm={6}>
-          <Card className="cardStyle3" bodyStyle={{ padding: 0 }}>
+            <a onClick={handleNavigate}>
+            <Card className="cardStyle3" bodyStyle={{ padding: 0 }}>
             <Space style={{ display: "flex", justifyContent: "space-between" }}>
-              <Text style={{ fontSize: "16px" }} strong>Candidate Passed</Text>
+              <Text style={{ fontSize: "20px" }} strong>Candidate Passed</Text>
               <MoreOutlined style={{ fontSize: "23px" }} />
             </Space>
             <Space style={{ display: "flex", justifyContent: "space-between" }}>
               <Title level={2} style={{ margin: "16px 0", border: "none" }}>
                 {dataTest.filter(item => item.isPast === true).length}
               </Title>
+                <Text style={{ color: "green" }}>
+                    <ArrowUpOutlined /> 20%
+                </Text>
             </Space>
           </Card>
+            </a>
         </Col>
+
+          <Col xs={24} sm={6} style={{ borderLeft: "1px solid  #f0f0f0" }}>
+              <a onClick={handleNavigate2}>
+                  <Card className="cardStyle2" bodyStyle={{ padding: 0 }}>
+                      <Space style={{ display: "flex", justifyContent: "space-between" }}>
+                          <Text style={{ fontSize: "20px" }} strong>Candidate Failed.</Text>
+                          <MoreOutlined style={{ fontSize: "23px" }} />
+                      </Space>
+                      <Space style={{ display: "flex", justifyContent: "space-between" }}>
+                          <Title level={2} style={{ margin: "16px 0" }}>
+                              {dataTest.filter(item => item.isPast === false).length}
+                          </Title>
+                          <Text style={{ color: "orange" }}>
+                              <ArrowUpOutlined /> 10%
+                          </Text>
+                      </Space>
+                  </Card>
+              </a>
+          </Col>
       </Row>
 
       <div style={{ display: "flex", justifyContent: "space-between", gap: "20px" }}>
