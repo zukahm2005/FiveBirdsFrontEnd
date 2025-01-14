@@ -12,24 +12,33 @@ const DashboardContent = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const result = await getCandidate();
-      const resultCandidateTest = await getCandidateTest();
-      setData(result.data.data);
-      setDataTest(resultCandidateTest.data.data);
+      try {
+        const [result, resultCandidateTest] = await Promise.all([
+          getCandidate(),
+          getCandidateTest(),
+        ]);
+        setData(result.data.data);
+        setDataTest(resultCandidateTest.data.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
     };
 
-    const isFirstVisit = !localStorage.getItem("visited");
+    const initializeData = () => {
+      const isFirstVisit = !localStorage.getItem("visited");
+      console.log(isFirstVisit);
 
-    if (isFirstVisit) {
-      localStorage.setItem("visited", "true");
-      fetchData();
-      setTimeout(() => {
+      if (isFirstVisit) {
+        localStorage.setItem("visited", "true");
+        window.location.reload();
+      } else {
         fetchData();
-      }, 1000);
-    } else {
-      fetchData();
-    }
+      }
+    };
+
+    initializeData();
   }, []);
+
 
 
 

@@ -60,7 +60,7 @@ const columns = [
     render: (candidatePosition) => candidatePosition?.name || "N/A",
   },
   {
-    title: "Status",
+    title: "Send exam",
     dataIndex: "statusEmail",
     key: "statusEmail",
     render: (status) => {
@@ -74,7 +74,6 @@ const columns = [
           <span
               style={{
                 color,
-                border: `2px solid ${color}`,
                 padding: "2px 5px",
                 borderRadius: "4px",
               }}
@@ -166,10 +165,10 @@ const TableDashBoard = () => {
       const name = selectedRows.map((item) => item.candidatePosition.name);
 
       if (new Set(name).size > 1) {
+        setExam([]);
         setAlertType("error");
         setAlertDescription("Selected positions are not the same. Please select only candidates with the same position.");
         setAlertVisible(true);
-        setExam([]);
         return;
       }
 

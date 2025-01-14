@@ -8,6 +8,7 @@ import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import './ListManagerCandidate.scss';
 import GlobalAlert from '../../common/globalAlert/GlobalAlert';
+import Search from "antd/es/input/Search.js";
 
 export default function ListManagerCandidate() {
   const [candidates, setCandidates] = useState([]);
@@ -77,10 +78,23 @@ export default function ListManagerCandidate() {
         if (value === "Failed") return candidate.isPast === false;
         if (value === "Pass") return candidate.isPast === true;
         if (value === "In progress") return candidate.isPast === null;
+        if (value == "True") return  candidate.isInterview == true;
+        if (value == "False") return  candidate.isInterview == false;
         return true;
       });
       setFilteredCandidates(filtered);
     }
+  };
+  const onSearch = (value) => {
+    const lowerValue = value.toLowerCase();
+    const filtered = candidates.filter(
+        (item) =>
+            item.fullName.toLowerCase().includes(lowerValue) ||
+            item.email.toLowerCase().includes(lowerValue) ||
+            item.phone.toLowerCase().includes(lowerValue) ||
+            item.experience.toLowerCase().includes(lowerValue)
+    );
+    setFilteredCandidates(filtered);
   };
 
 
@@ -122,10 +136,16 @@ export default function ListManagerCandidate() {
       key: 'experience',
     },
     {
-      title: 'Status',
+      title: 'Test Pass Status',
       dataIndex: 'isPast',
       key: 'isPast',
       render: (isPast) => renderExamResult(isPast),
+    },
+    {
+      title: 'Status Email',
+      dataIndex: 'isInterview',
+      key: 'isInterview',
+      render: (isInterview) => renderExamResultIsInterview(isInterview),
     },
     {
       title: 'Detail',
@@ -140,13 +160,20 @@ export default function ListManagerCandidate() {
       ),
     },
   ];
+  const renderExamResultIsInterview = (isInterview) => {
+    if (isInterview === true) {
+      return <span style={{ color: 'green' }}>EMAIL SENT</span>;
+    } else if (isInterview === false) {
+      return <span style={{ color: 'red' }}>UNSENT EMAIL</span>;
+    }
+  };
   const renderExamResult = (isPast) => {
     if (isPast === false) {
-      return <span style={{ color: 'red' }}>Failed</span>;
+      return <span style={{ color: 'red' }}>FAILED</span>;
     } else if (isPast === true) {
-      return <span style={{ color: 'green' }}>Pass</span>;
+      return <span style={{ color: 'green' }}>PASS</span>;
     } else {
-      return <span style={{ color: 'orange' }}>In progress</span>;
+      return <span style={{ color: 'orange' }}>IN PROGRESS</span>;
     }
   };
 
@@ -167,7 +194,6 @@ export default function ListManagerCandidate() {
   const handleSendEmail = async (id, date, time) => {
     try {
       const response = await axios.post(`http://46.202.178.139:5050/api/v1/candidates/send/email/interview/${id}`,{date, time});
-
 
       if(response) {
         setAlertDescription("Emails sent successfully.");
@@ -196,39 +222,76 @@ export default function ListManagerCandidate() {
         <GlobalAlert setVisible={setVisible} visible={visible} type={alertType} description={alertDescription}/>
         <h1>Candidate List</h1>
 
-        <Select
-            placeholder="Filter by status"
-            style={{ width: 200 }}
-            value={filterStatus || undefined}
-            onChange={handleFilterChange}
-            optionLabelProp="label"
-            options={[
-              {
-                value: "",
-                label: (
-                    <span style={{ color: "black" }}> All Status </span>
-                ),
-              },
-              {
-                value: "Failed",
-                label: (
-                    <span style={{ color: "red" }}> Failed </span>
-                ),
-              },
-              {
-                value: "Pass",
-                label: (
-                    <span style={{ color: "green" }}> Pass </span>
-                ),
-              },
-              {
-                value: "In progress",
-                label: (
-                    <span style={{ color: "orange" }}>In progress </span>
-                ),
-              },
-            ]}
-        />
+        <div style={{display: 'flex',gap: "20px"}}>
+          <Search
+              placeholder="Search"
+              allowClear
+              onSearch={onSearch}
+              style={{ width: "25%" }}
+          />
+
+          <Select
+              placeholder="Filter by status"
+              style={{ width: 200 }}
+              value={filterStatus || undefined}
+              onChange={handleFilterChange}
+              optionLabelProp="label"
+              options={[
+                {
+                  value: "",
+                  label: (
+                      <span style={{ color: "black" }}> All Status </span>
+                  ),
+                },
+                {
+                  value: "Failed",
+                  label: (
+                      <span style={{ color: "red" }}> Failed </span>
+                  ),
+                },
+                {
+                  value: "Pass",
+                  label: (
+                      <span style={{ color: "green" }}> Pass </span>
+                  ),
+                },
+                {
+                  value: "In progress",
+                  label: (
+                      <span style={{ color: "orange" }}>In progress </span>
+                  ),
+                },
+              ]}
+          />
+
+          <Select
+              placeholder="Filter by status email"
+              style={{ width: 200 }}
+              value={filterStatus || undefined}
+              onChange={handleFilterChange}
+              optionLabelProp="label"
+              options={[
+                {
+                  value: "",
+                  label: (
+                      <span style={{ color: "black" }}> All Status </span>
+                  ),
+                },
+                {
+                  value: "False",
+                  label: (
+                      <span style={{ color: "red" }}> Unsent email </span>
+                  ),
+                },
+                {
+                  value: "True",
+                  label: (
+                      <span style={{ color: "green" }}> Email sent </span>
+                  ),
+                },
+              ]}
+          />
+        </div>
 
 
         <Spin spinning={loading} tip="Loading...">
