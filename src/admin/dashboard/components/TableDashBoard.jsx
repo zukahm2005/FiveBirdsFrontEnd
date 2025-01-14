@@ -18,8 +18,8 @@ const { Text } = Typography;
 const columns = [
   {
     title: "ID",
-    dataIndex: "index",
-    render: (text, record, index) => index + 1,
+    dataIndex: "id",
+    key: "id",
   },
   {
     title: "Full Name",
@@ -60,7 +60,7 @@ const columns = [
     render: (candidatePosition) => candidatePosition?.name || "N/A",
   },
   {
-    title: "Status",
+    title: "Send exam",
     dataIndex: "statusEmail",
     key: "statusEmail",
     render: (status) => {
@@ -74,7 +74,6 @@ const columns = [
           <span
               style={{
                 color,
-                border: `2px solid ${color}`,
                 padding: "2px 5px",
                 borderRadius: "4px",
               }}
@@ -164,15 +163,26 @@ const TableDashBoard = () => {
   useEffect(() => {
     if (selectedRows.length > 0) {
       const name = selectedRows.map((item) => item.candidatePosition.name);
+
+      if (new Set(name).size > 1) {
+        setExam([]);
+        setAlertType("error");
+        setAlertDescription("Selected positions are not the same. Please select only candidates with the same position.");
+        setAlertVisible(true);
+        return;
+      }
+
+      const uniqueName = name[0];
+
       const fetchExamData = async () => {
         try {
-          const getExamData = await getExamByName(name);
+          const getExamData = await getExamByName(uniqueName);
           if (getExamData.data) {
             setExam(getExamData.data);
           } else {
-            setExam([])
+            setExam([]);
             setAlertType("warning");
-            setAlertDescription(<>No exams available <strong>{name}</strong></>);
+            setAlertDescription(<>No exams available for <strong>{uniqueName}</strong></>);
             setAlertVisible(true);
           }
         } catch (err) {
@@ -183,6 +193,7 @@ const TableDashBoard = () => {
       fetchExamData();
     }
   }, [selectedRows]);
+
 
   const start = () => {
     setLoading(true);
