@@ -21,8 +21,8 @@ const routes = [
     ),
     children: [
       { path: "", element: <DashBoard /> },
-      { path: "test/all-tests", element:<LishExam/>  },
-      { path: "test/create-test", element: <CreateTest/>},
+      { path: "exam/all-exams", element:<LishExam/>  },
+      { path: "exam/create-exam", element: <CreateTest/>},
       { path: "administration", element: <UserExam/> },
       { path: "manager-candidate", element: <ListManagerCandidate/>},
       {path: "position", element: <PositionManagement/>},

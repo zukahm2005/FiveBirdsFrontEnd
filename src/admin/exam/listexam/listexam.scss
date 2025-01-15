@@ -27,4 +27,37 @@
       }
     }
   }
-  
+  .header {
+    display: flex;
+    align-items: center; /* Căn giữa theo chiều dọc */
+    justify-content: space-between; /* Đẩy nút sang bên phải */
+    margin-bottom: 20px;
+    position: relative; /* Để h1 ở giữa */
+}
+
+.header-title {
+    flex: 1; /* Để tiêu đề chiếm không gian trung tâm */
+    text-align: center; /* Căn giữa tiêu đề */
+    margin: 0;
+}
+
+.create-exam-btn {
+  display: flex;
+  align-items: center; /* Căn giữa icon và text theo chiều dọc */
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.create-exam-btn:hover {
+    background-color: #218838;
+}
+.create-exam-btn .icon {
+  margin-right: 8px; /* Khoảng cách giữa icon và chữ */
+  font-size: 18px; /* Kích thước icon */
+  display: flex;
+  align-items: center;
+}

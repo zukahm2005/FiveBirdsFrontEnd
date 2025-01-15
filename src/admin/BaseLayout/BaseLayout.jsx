@@ -101,12 +101,12 @@ const BaseLayout = () => {
                             label: "Exam",
                             children: [
                                 {
-                                    key: "/admin/test/all-tests",
-                                    label: <a href="/admin/test/all-tests">All Exam</a>,
+                                    key: "/admin/exam/all-exams",
+                                    label: <a href="/admin/exam/all-exams">All Exam</a>,
                                 },
                                 {
-                                    key: "/admin/test/create-test",
-                                    label: <a href="/admin/test/create-test">Create Exam</a>,
+                                    key: "/admin/exam/create-exam",
+                                    label: <a href="/admin/exam/create-exam">Create Exam</a>,
                                 },
                             ],
                         },

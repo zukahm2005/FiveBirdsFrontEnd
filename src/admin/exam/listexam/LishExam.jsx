@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Table, Button, Space, Popconfirm, message } from "antd";
 import axios from "axios";
+import { Link } from 'react-router-dom';
+import {GoPlus} from "react-icons/go";
 import { MdDelete } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { GrView } from "react-icons/gr";
@@ -140,7 +142,17 @@ const LishExam = () => {
 
   return (
       <div className="list-exam">
-        <h1>Exam List</h1>
+                 <div className="header">
+                <h1 className="header-title">Exam List</h1>
+                <Link to="/admin/exam/create" className="create-exam-link">
+                    <button className="btn btn-primary create-exam-btn">
+                        <span className="icon">
+                            <GoPlus />
+                        </span>
+                        <span>Create Exam</span>
+                    </button>
+                </Link>
+            </div>
         <div className="exam-container">
           <Table
               columns={columns}
