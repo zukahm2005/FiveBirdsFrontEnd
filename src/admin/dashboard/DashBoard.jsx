@@ -1,28 +1,25 @@
 import React, { useEffect, useState } from "react";
-import { Card, Row, Col, Avatar, Space, Typography, Alert } from "antd";
+import {Card, Row, Col, Avatar, Space, Typography, Alert, DatePicker} from "antd";
 import { MoreOutlined, ArrowUpOutlined, PrinterOutlined, ExportOutlined, DownloadOutlined } from "@ant-design/icons";
 import TableDashBoard from "./components/TableDashBoard";
 import {getCandidate, getCandidateTest} from "./../../common/api/apiDashBoard";
 import "./dashboard.scss";
 import {Link, useNavigate} from "react-router-dom";
 
+const { RangePicker } = DatePicker;
 
 const DashboardContent = () => {
   const { Text, Title } = Typography;
   const [data, setData] = useState([]);
-  const [dataTest, setDataTest] = useState([]);
   const navigate = useNavigate();
+  const [dateRange, setDateRange] = useState([]);
 
 
     useEffect(() => {
     const fetchData = async () => {
       try {
-        const [result, resultCandidateTest] = await Promise.all([
-          getCandidate(),
-          getCandidateTest(),
-        ]);
+        const result = await getCandidate();
         setData(result.data.data);
-        setDataTest(resultCandidateTest.data.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -42,6 +39,14 @@ const DashboardContent = () => {
 
     initializeData();
   }, []);
+
+    const filteredData = data.filter(item => {
+        if (!dateRange[0] || !dateRange[1]) return true;
+        const createdAt = new Date(item.createdAt);
+        const startDate = new Date(dateRange[0]);
+        const endDate = new Date(dateRange[1]);
+        return createdAt >= startDate && createdAt <= endDate;
+    });
 
 
     const handleNavigate = () => {
@@ -79,7 +84,15 @@ const DashboardContent = () => {
           </Row>
         </Col>
       </Row> */}
-      <Row style={{ boxShadow: "0 4px 12px rgba(0,0,0,0.1)", borderRadius: "15px" }}>
+        <RangePicker
+            format="YYYY-MM-DD"
+            allowClear
+            onChange={(dates, dateStrings) => {
+                setDateRange(dateStrings);
+            }}
+        />
+
+        <Row style={{ boxShadow: "0 4px 12px rgba(0,0,0,0.1)", borderRadius: "15px", marginTop: "25px" }}>
         <Col xs={24} sm={6}>
           <Link to="/admin/manager-candidate">
               <Card className="cardStyle" bodyStyle={{ padding: 0 }}>
@@ -89,7 +102,7 @@ const DashboardContent = () => {
                   </Space>
                   <Space style={{ display: "flex", justifyContent: "space-between" }}>
                       <Title level={2} style={{ margin: "16px 0" }}>
-                          {data.length}
+                          {filteredData.length}
                       </Title>
                       <Text style={{ color: "green" }}>
                           <ArrowUpOutlined /> 20%
@@ -108,7 +121,7 @@ const DashboardContent = () => {
                         </Space>
                         <Space style={{ display: "flex", justifyContent: "space-between" }}>
                             <Title level={2} style={{ margin: "16px 0" }}>
-                                {data.filter(item => item.isInterview === true).length}
+                                {filteredData.filter(item => item.isInterview === true).length}
                             </Title>
                             <Text style={{ color: "red" }}>
                                 <ArrowUpOutlined /> 40%
@@ -120,14 +133,14 @@ const DashboardContent = () => {
 
         <Col xs={24} sm={6}>
             <a onClick={handleNavigate}>
-            <Card className="cardStyle3" bodyStyle={{ padding: 0 }}>
+            <Card className="cardStyle2" bodyStyle={{ padding: 0 }}>
             <Space style={{ display: "flex", justifyContent: "space-between" }}>
               <Text style={{ fontSize: "20px" }} strong>Candidate Passed</Text>
               <MoreOutlined style={{ fontSize: "23px" }} />
             </Space>
             <Space style={{ display: "flex", justifyContent: "space-between" }}>
               <Title level={2} style={{ margin: "16px 0", border: "none" }}>
-                {dataTest.filter(item => item.isPast === true).length}
+                {filteredData.filter(item => item.isPast === true).length}
               </Title>
                 <Text style={{ color: "green" }}>
                     <ArrowUpOutlined /> 20%
@@ -139,14 +152,14 @@ const DashboardContent = () => {
 
           <Col xs={24} sm={6} style={{ borderLeft: "1px solid  #f0f0f0" }}>
               <a onClick={handleNavigate2}>
-                  <Card className="cardStyle2" bodyStyle={{ padding: 0 }}>
+                  <Card className="cardStyle3" bodyStyle={{ padding: 0 }}>
                       <Space style={{ display: "flex", justifyContent: "space-between" }}>
                           <Text style={{ fontSize: "20px" }} strong>Candidate Failed.</Text>
                           <MoreOutlined style={{ fontSize: "23px" }} />
                       </Space>
                       <Space style={{ display: "flex", justifyContent: "space-between" }}>
                           <Title level={2} style={{ margin: "16px 0" }}>
-                              {dataTest.filter(item => item.isPast === false).length}
+                              {filteredData.filter(item => item.isPast === false).length}
                           </Title>
                           <Text style={{ color: "orange" }}>
                               <ArrowUpOutlined /> 10%
