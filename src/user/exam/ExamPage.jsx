@@ -291,7 +291,10 @@ const ExamPage = () => {
           {resultData && (
             <div className="rate-container">
               <div className="title-pass-exam">
-                <p>{resultData.isPast ? "You have been accepted." : "You have failed."}</p>
+                <p style={{ color: resultData.isPast ? "#28a745" : "#ff4d4f" }}>
+                  {resultData.isPast ? "You have been accepted." : "You have failed."}
+                </p>
+
 
               </div>
               <div className="your-point">
@@ -301,10 +304,10 @@ const ExamPage = () => {
               <div style={{ width: "100%", height: "100%" }} >
                 <PieChart width={1000} height={400}>
                   <Pie
-                      data={[
-                        { name: "Yes", value: resultData.point },
-                        { name: "No", value: 100 - resultData.point },
-                      ]}
+                    data={[
+                      { name: "Yes", value: resultData.point },
+                      { name: "No", value: 100 - resultData.point },
+                    ]}
                     dataKey="value"
                     cx="45%"
                     cy="75%"
