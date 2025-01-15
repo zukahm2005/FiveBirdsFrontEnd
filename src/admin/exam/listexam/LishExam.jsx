@@ -142,7 +142,7 @@ const LishExam = () => {
 
   return (
       <div className="list-exam">
-                 <div className="header">
+                 <div className="header1">
                 <h1 className="header-title">Exam List</h1>
                 <Link to="/admin/exam/create-exam" className="create-exam-link">
                     <button className="btn btn-primary create-exam-btn">
