@@ -144,7 +144,7 @@ const LishExam = () => {
       <div className="list-exam">
                  <div className="header">
                 <h1 className="header-title">Exam List</h1>
-                <Link to="/admin/exam/create" className="create-exam-link">
+                <Link to="/admin/exam/create-exam" className="create-exam-link">
                     <button className="btn btn-primary create-exam-btn">
                         <span className="icon">
                             <GoPlus />
