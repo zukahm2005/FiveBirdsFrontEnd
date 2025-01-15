@@ -10,6 +10,9 @@ import './ListManagerCandidate.scss';
 import GlobalAlert from '../../common/globalAlert/GlobalAlert';
 import Search from "antd/es/input/Search.js";
 import { useLocation  } from 'react-router-dom';
+import moment from "moment";
+import isBetween from 'dayjs/plugin/isBetween';
+dayjs.extend(isBetween);
 
 
 export default function ListManagerCandidate() {
@@ -28,8 +31,11 @@ export default function ListManagerCandidate() {
   const [filteredCandidates, setFilteredCandidates] = useState([]);
   const [statusFilter, setStatusFilter] = useState(null);
   const [emailFilter, setEmailFilter] = useState(null);
+  const [dateRange, setDateRange] = useState([]);
+
   dayjs.extend(customParseFormat);
 
+  const { RangePicker } = DatePicker;
 
   const location = useLocation();
   console.log('Location:', location);
@@ -96,8 +102,11 @@ export default function ListManagerCandidate() {
       });
   };
   const handleFilterChange = (value, type) => {
+
+    console.log(value);
     let updatedStatusFilter = statusFilter;
     let updatedEmailFilter = emailFilter;
+    let updatedDateRange  = dateRange;
 
     if (type === 'status') {
       setStatusFilter(value);
@@ -105,6 +114,9 @@ export default function ListManagerCandidate() {
     } else if (type === 'email') {
       setEmailFilter(value);
       updatedEmailFilter = value;
+    } else if (type === 'dateRange') {
+      setDateRange(value || []);
+      updatedDateRange = value || [];
     }
 
     const filtered = candidates.filter((candidate) => {
@@ -119,7 +131,16 @@ export default function ListManagerCandidate() {
           (updatedEmailFilter === 'True' && candidate.isInterview === true) ||
           (updatedEmailFilter === 'False' && candidate.isInterview === false);
 
-      return matchesStatus && matchesEmail;
+      const matchesDateRange =
+          !updatedDateRange.length ||
+          (dayjs(candidate.createdAt).isBetween(
+              dayjs(updatedDateRange[0]).startOf('day'), // Chuyển đổi phần tử đầu tiên thành đối tượng dayjs
+              dayjs(updatedDateRange[1]).endOf('day'), // Chuyển đổi phần tử thứ hai thành đối tượng dayjs
+              null,
+              '[]'
+          ));
+
+      return matchesStatus && matchesEmail && matchesDateRange;
     });
     setFilteredCandidates(filtered);
 
@@ -191,6 +212,12 @@ export default function ListManagerCandidate() {
       render: (isInterview) => renderExamResultIsInterview(isInterview),
     },
     {
+      title: 'Created At',
+      dataIndex: 'createdAt',
+      key: 'createdAt',
+      render: (createdAt) => moment(createdAt).format('YYYY-MM-DD HH:mm:ss'),
+    },
+    {
       title: 'Detail',
       key: 'detail',
       render: (_, record) => (
@@ -219,6 +246,8 @@ export default function ListManagerCandidate() {
       return <span style={{ color: 'orange' }}>IN PROGRESS</span>;
     }
   };
+
+
 
   const onChanges = (date, dateString) => {
     setDate(dateString);
@@ -284,6 +313,7 @@ export default function ListManagerCandidate() {
                 { value: 'Pass', label: <span style={{ color: 'green' }}> Pass </span> },
                 { value: 'In progress', label: <span style={{ color: 'orange' }}> In progress </span> },
               ]}
+              allowClear
           />
 
           <Select
@@ -296,8 +326,15 @@ export default function ListManagerCandidate() {
                 { value: 'True', label: <span style={{ color: 'green' }}> Sent </span> },
                 { value: 'False', label: <span style={{ color: 'red' }}> Not Sent </span> },
               ]}
+              allowClear
           />
 
+          <RangePicker
+              format="YYYY-MM-DD"
+              onChange={(dates, dateStrings) => handleFilterChange(dateStrings, 'dateRange')}
+              style={{ width: 300 }}
+              placeholder={['Start Date', 'End Date']}
+          />
 
         </div>
 
