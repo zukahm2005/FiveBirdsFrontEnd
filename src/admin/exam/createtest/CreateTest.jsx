@@ -30,7 +30,7 @@ const CreateTest = () => {
     const token = Cookies.get("token");
     try {
       const response = await axios.get(
-          "http://46.202.178.139:5050/api/v1/exams/get/all?pageNumber=0&pageSize=1000",
+          "http://localhost:5005/api/v1/exams/get/all?pageNumber=0&pageSize=1000",
           { headers: { Authorization: `Bearer ${token}` } }
       );
       setExams(response.data.data || []);
@@ -43,7 +43,7 @@ const CreateTest = () => {
     const token = Cookies.get("token");
     try {
       const response = await axios.get(
-          "http://46.202.178.139:5050/api/v1/candidate-positions",
+          "http://localhost:5005/api/v1/candidate-positions",
           { headers: { Authorization: `Bearer ${token}` } }
       );
       setCandidatePositions(response.data.data || []);
@@ -62,7 +62,7 @@ const CreateTest = () => {
     setLoading(true);
     try {
       const response = await axios.post(
-          "http://46.202.178.139:5050/api/v1/exams/add",
+          "http://localhost:5005/api/v1/exams/add",
           {
             title: examTitle,
             description: examDescription,
@@ -102,7 +102,7 @@ const CreateTest = () => {
     const token = Cookies.get("token");
     try {
       const response = await axios.get(
-          `http://46.202.178.139:5050/api/v1/exams/get/${examId}`,
+          `http://localhost:5005/api/v1/exams/get/${examId}`,
           { headers: { Authorization: `Bearer ${token}` } }
       );
 
@@ -171,7 +171,7 @@ const CreateTest = () => {
       for (const question of questions) {
         if (question.isNew) {
           const questionResponse = await axios.post(
-              "http://46.202.178.139:5050/api/v1/questions/add",
+              "http://localhost:5005/api/v1/questions/add",
               {
                 examId: selectedExam,
                 questionExam: question.questionExam,
@@ -182,7 +182,7 @@ const CreateTest = () => {
 
           const questionId = questionResponse.data?.data?.id;
           await axios.post(
-              "http://46.202.178.139:5050/api/v1/answers/add",
+              "http://localhost:5005/api/v1/answers/add",
               {
                 questionId,
                 ...question.answers,

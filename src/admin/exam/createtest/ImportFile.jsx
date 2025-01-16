@@ -32,7 +32,7 @@ const ImportFile = () => {
         try {
             const token = Cookies.get("token");
             const response = await axios.post(
-                "http://46.202.178.139:5050/api/Import/excel",
+                "http://localhost:5005/api/Import/excel",
                 formData,
                 {
                     headers: {

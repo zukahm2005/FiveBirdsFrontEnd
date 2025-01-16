@@ -24,7 +24,7 @@ const LishExam = () => {
     try {
       const token = Cookies.get("token");
       const response = await axios.get(
-          "http://46.202.178.139:5050/api/v1/exams/get/all?pageNumber=0&pageSize=1000",
+          "http://localhost:5005/api/v1/exams/get/all?pageNumber=0&pageSize=1000",
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -76,7 +76,7 @@ const LishExam = () => {
   const handleDelete = async (id) => {
     try {
       const token = Cookies.get("token");
-      await axios.delete(`http://46.202.178.139:5050/api/v1/exams/delete/${id}`, {
+      await axios.delete(`http://localhost:5005/api/v1/exams/delete/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

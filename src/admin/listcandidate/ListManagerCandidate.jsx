@@ -65,7 +65,7 @@ export default function ListManagerCandidate() {
   useEffect(() => {
     setLoading(true);
     axios
-      .get('http://46.202.178.139:5050/api/v1/candidates', {
+      .get('http://localhost:5005/api/v1/candidates', {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -85,7 +85,7 @@ export default function ListManagerCandidate() {
   const showModal = (candidateId) => {
     setLoading(true);
     axios
-      .get(`http://46.202.178.139:5050/api/v1/candidates/${candidateId}`, {
+      .get(`http://localhost:5005/api/v1/candidates/${candidateId}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -265,7 +265,7 @@ export default function ListManagerCandidate() {
 
   const handleSendEmail = async (id, date, time) => {
     try {
-      const response = await axios.post(`http://46.202.178.139:5050/api/v1/candidates/send/email/interview/${id}`,{date, time});
+      const response = await axios.post(`http://localhost:5005/api/v1/candidates/send/email/interview/${id}`,{date, time});
 
       if(response) {
         setAlertDescription("Emails sent successfully.");

@@ -2,7 +2,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 const token = Cookies.get("token");
-const apiUrl = "http://46.202.178.139:5050/api/v1/";
+const apiUrl = "http://localhost:5005/api/v1/";
 
 
 const getCandidate = async () => {
@@ -16,7 +16,7 @@ const getCandidate = async () => {
     return response;
 }
 const getCandidateTest = async () => {
-    const response = await axios.get("http://46.202.178.139:5050/api/v1/candidate/test/get",
+    const response = await axios.get("http://localhost:5005/api/v1/candidate/test/get",
         {
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -38,7 +38,7 @@ const getAllCandidate = async (pageNumber, pageSize, statusEmail, CandidatePosit
     return response.json();
 }
 const getExam = async () => {
-    const dataExam = await fetch("http://46.202.178.139:5050/api/v1/exams/get", {
+    const dataExam = await fetch("http://localhost:5005/api/v1/exams/get", {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -47,7 +47,7 @@ const getExam = async () => {
     return await dataExam.json();
 }
 const getExamByName = async (name) => {
-    const dataExam = await fetch(`http://46.202.178.139:5050/api/v1/exams/get-position/${name}`, {
+    const dataExam = await fetch(`http://localhost:5005/api/v1/exams/get-position/${name}`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -57,7 +57,7 @@ const getExamByName = async (name) => {
 }
 
 const sendEmailCandidate = async (examTitle, comment, selectedTime, selectedDate, itemId) => {
-    return await axios.post(`http://46.202.178.139:5050/api/v1/candidates/send/email/${itemId}`, { examTitle, comment, selectedTime, selectedDate },
+    return await axios.post(`http://localhost:5005/api/v1/candidates/send/email/${itemId}`, { examTitle, comment, selectedTime, selectedDate },
         {
             method: 'GET',
             headers: {
@@ -67,7 +67,7 @@ const sendEmailCandidate = async (examTitle, comment, selectedTime, selectedDate
 };
 
 const addUserExam = async (userId, examId, examTime, examDate) => {
-    return await axios.post(`http://46.202.178.139:5050/api/v1/user-exam/add`, { userId, examId, examTime, examDate },
+    return await axios.post(`http://localhost:5005/api/v1/user-exam/add`, { userId, examId, examTime, examDate },
         {
             method: 'POST',
             headers: {
@@ -77,14 +77,14 @@ const addUserExam = async (userId, examId, examTime, examDate) => {
 }
 
 const getCandidateById = async (candidateId) => {
-    return await axios.get(`http://46.202.178.139:5050/api/v1/candidates/${candidateId}`, {
+    return await axios.get(`http://localhost:5005/api/v1/candidates/${candidateId}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
 }
 const getCandidatePositions = async () => {
-    return await axios.get(`http://46.202.178.139:5050/api/v1/candidate-positions`, {
+    return await axios.get(`http://localhost:5005/api/v1/candidate-positions`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }

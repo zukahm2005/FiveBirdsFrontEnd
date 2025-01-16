@@ -70,7 +70,7 @@ export default function Footer() {
     }
     try {
       const response = await axios.post(
-        "http://46.202.178.139:5050/api/v1/candidates",
+        "http://localhost:5005/api/v1/candidates",
         formData,
         {
           headers: {
@@ -136,7 +136,7 @@ export default function Footer() {
     const fetchLocations = async () => {
       try {
         const response = await axios.get(
-          "http://46.202.178.139:5050/api/v1/candidate-positions"
+          "http://localhost:5005/api/v1/candidate-positions"
         );
         setPositions(response.data.data || []);
       } catch (error) {

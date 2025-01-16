@@ -37,7 +37,7 @@ const DetailExam = () => {
             setLoading(true);
             try {
                 const token = Cookies.get("token");
-                const response = await axios.get(`http://46.202.178.139:5050/api/v1/exams/get/${id}`, {
+                const response = await axios.get(`http://localhost:5005/api/v1/exams/get/${id}`, {
                     headers: {Authorization: `Bearer ${token}`},
                 });
                 const data = response.data.data;
@@ -60,7 +60,7 @@ const DetailExam = () => {
         const fetchCandidatePositions = async () => {
             try {
                 const token = Cookies.get("token");
-                const response = await axios.get("http://46.202.178.139:5050/api/v1/candidate-positions", {
+                const response = await axios.get("http://localhost:5005/api/v1/candidate-positions", {
                     headers: {Authorization: `Bearer ${token}`},
                 });
                 setCandidatePositions(response.data.data || []);
@@ -107,7 +107,7 @@ const DetailExam = () => {
             const token = Cookies.get("token");
 
             for (const question of newQuestions) {
-                const questionResponse = await axios.post("http://46.202.178.139:5050/api/v1/questions/add", {
+                const questionResponse = await axios.post("http://localhost:5005/api/v1/questions/add", {
                     examId: exam.id, questionExam: question.questionExam, point: parseInt(question.point, 10),
                 }, {
                     headers: {Authorization: `Bearer ${token}`},
@@ -116,7 +116,7 @@ const DetailExam = () => {
                 const questionId = questionResponse.data?.data?.id;
                 if (!questionId) throw new Error("Không thể lấy ID câu hỏi.");
 
-                await axios.post("http://46.202.178.139:5050/api/v1/answers/add", {
+                await axios.post("http://localhost:5005/api/v1/answers/add", {
                     questionId: questionId,
                     answer1: question.answers.answer1,
                     answer2: question.answers.answer2,
@@ -128,7 +128,7 @@ const DetailExam = () => {
                 });
             }
 
-            const response = await axios.get(`http://46.202.178.139:5050/api/v1/exams/get/${id}`, {
+            const response = await axios.get(`http://localhost:5005/api/v1/exams/get/${id}`, {
                 headers: {Authorization: `Bearer ${token}`},
             });
             setExam(response.data.data);
@@ -159,7 +159,7 @@ const DetailExam = () => {
 
             console.log("Payload:", payload);
 
-            const response = await axios.put(`http://46.202.178.139:5050/api/v1/exams/update/${id}`, payload, {
+            const response = await axios.put(`http://localhost:5005/api/v1/exams/update/${id}`, payload, {
                 headers: {Authorization: `Bearer ${token}`},
             });
 
@@ -191,7 +191,7 @@ const DetailExam = () => {
                 examId: examId, questionExam: editingQuestion.questionExam, point: editingQuestion.point,
             };
 
-            await axios.put(`http://46.202.178.139:5050/api/v1/questions/update/${questionId}`, questionPayload, {
+            await axios.put(`http://localhost:5005/api/v1/questions/update/${questionId}`, questionPayload, {
                 headers: {Authorization: `Bearer ${token}`},
             });
 
@@ -205,7 +205,7 @@ const DetailExam = () => {
                 correctAnswer: editingQuestion.answers[0]?.correctAnswer || "",
             };
 
-            await axios.put(`http://46.202.178.139:5050/api/v1/answers/update/${answerId}`, answerPayload, {
+            await axios.put(`http://localhost:5005/api/v1/answers/update/${answerId}`, answerPayload, {
                 headers: {Authorization: `Bearer ${token}`},
             });
 
@@ -235,7 +235,7 @@ const DetailExam = () => {
         try {
             const token = Cookies.get("token");
 
-            await axios.delete(`http://46.202.178.139:5050/api/v1/questions/delete/${questionId}`, {
+            await axios.delete(`http://localhost:5005/api/v1/questions/delete/${questionId}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
 

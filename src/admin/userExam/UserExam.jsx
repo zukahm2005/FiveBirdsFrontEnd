@@ -87,7 +87,7 @@ const UserExam = () => {
 
       try {
         const response = await axios.get(
-            `http://46.202.178.139:5050/api/v1/users/get-admin/all?pageNumber=${pagination.current}&pageSize=${pagination.pageSize}`,
+            `http://localhost:5005/api/v1/users/get-admin/all?pageNumber=${pagination.current}&pageSize=${pagination.pageSize}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -130,7 +130,7 @@ const UserExam = () => {
       onOk: async () => {
         try {
           const response = await axios.delete(
-              `http://46.202.178.139:5050/api/v1/users/delete/${id}`,
+              `http://localhost:5005/api/v1/users/delete/${id}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`,
@@ -178,7 +178,7 @@ const UserExam = () => {
   const handleAddAdmin = async () => {
     try {
       await axios.post(
-        `http://46.202.178.139:5050/api/v1/users/register-admin`,
+        `http://localhost:5005/api/v1/users/register-admin`,
         newAdminValues,
         {
           headers: {
@@ -219,7 +219,7 @@ const UserExam = () => {
       };
   
       await axios.put(
-        `http://46.202.178.139:5050/api/v1/users/update/${selectedUser.key}`,
+        `http://localhost:5005/api/v1/users/update/${selectedUser.key}`,
         payload,
         {
           headers: {

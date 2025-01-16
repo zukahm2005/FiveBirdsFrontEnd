@@ -18,7 +18,7 @@ const LoginAdmin = () => {
 
   // Hàm gọi API login
   const handleLogin = async () => {
-    const response = await fetch("http://46.202.178.139:5050/api/v1/users/login", {
+    const response = await fetch("http://localhost:5005/api/v1/users/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -27,13 +27,12 @@ const LoginAdmin = () => {
       }),
     });
 
-    return response.json(); // Trả về dữ liệu JSON
+    return response.json();
   };
 
   // Hàm gọi API checkrole
   const checkRole = async (token) => {
-    const response = await fetch("http://46.202.178.139:5050/api/v1/users/checkrole", {
-    // const response = await fetch("http://localhost:5005/api/v1/users/checkrole", {
+    const response = await fetch("http://localhost:5005/api/v1/users/checkrole", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`
